@@ -1,7 +1,7 @@
 <template>
   <div>
     <main class="form-signin">
-      <form>
+      <form @submit.prevent="signin">
         <h1 class="h3 mb-3 fw-normal">請先登入</h1>
 
         <div class="form-floating">
@@ -44,11 +44,24 @@ export default {
   name: "Login",
   data() {
     return {
-        user:{
-            username: '',
-            password: '',
-        }
+      user: {
+        username: "",
+        password: ""
+      }
     };
+  },
+  methods: {
+    signin() {
+      const api = `${process.env.APIPATH}/signin`;
+      const vm = this;
+      this.$http.post(api, vm.user).then(response => {
+        console.log(response.data);
+        // 登入成功導到首頁
+        if (response.data.success) {
+          vm.$router.push("/");
+        }
+      });
+    }
   }
 };
 </script>
