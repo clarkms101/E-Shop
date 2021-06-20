@@ -2,3 +2,5 @@
 // 將bootstrap的variables檔複製一份出來，以方便客製調整
 @import "./helpers/variables";
 @import "~bootstrap/scss/bootstrap";
+
+@import "./dashboard.scss"
