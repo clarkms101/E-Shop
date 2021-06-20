@@ -8,9 +8,14 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
+      path: "*",
+      redirect: "login" // 不存在的路由，都導向login頁面
+    },
+    {
       path: "/",
       name: "HelloWorld",
-      component: HelloWorld
+      component: HelloWorld,
+      meta: { requiresAuth: true } // 需要被驗證的路由
     },
     {
       path: "/login",

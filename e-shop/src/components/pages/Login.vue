@@ -52,12 +52,17 @@ export default {
   },
   methods: {
     signin() {
-      const api = `${process.env.APIPATH}/signin`;
+      const api = `${process.env.APIPATH}/admin/signin`;
       const vm = this;
       this.$http.post(api, vm.user).then(response => {
         console.log(response.data);
         // 登入成功導到首頁
         if (response.data.success) {
+          // // 將後端回傳的token, expired存入cookie
+          // const token = response.data.token;
+          // const expired = response.data.expired;
+          // console.log(token, expired);
+          // document.cookie = `hexToken = ${token};expires=${new Date(expired)}`;
           vm.$router.push("/");
         }
       });
