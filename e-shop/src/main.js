@@ -24,7 +24,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     const api = `${process.env.APIPATH}/api/user/check`;
     axios.post(api).then(response => {
-      console.log(response.data);
+      console.log("login check", response.data);
       if (response.data.success) {
         // 驗證成功，導向指定頁面
         next();
