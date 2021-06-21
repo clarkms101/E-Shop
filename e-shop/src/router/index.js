@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import HelloWorld from "@/components/HelloWorld";
 import Dashboard from "@/components/Dashboard";
 import Login from "@/components/pages/Login";
 import Products from "@/components/pages/Products";
@@ -14,12 +13,6 @@ export default new Router({
       redirect: "login" // 不存在的路由，都導向login頁面
     },
     {
-      path: "/",
-      name: "HelloWorld",
-      component: HelloWorld,
-      meta: { requiresAuth: true } // 需要被驗證的路由
-    },
-    {
       path: "/login",
       name: "Login",
       component: Login
@@ -30,7 +23,7 @@ export default new Router({
       component: Dashboard,
       children: [
         {
-          path: "/products",
+          path: "products",
           name: "Products",
           component: Products,
           meta: { requiresAuth: true }

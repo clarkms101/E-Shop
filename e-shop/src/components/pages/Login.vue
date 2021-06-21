@@ -63,7 +63,7 @@ export default {
           // const expired = response.data.expired;
           // console.log(token, expired);
           // document.cookie = `hexToken = ${token};expires=${new Date(expired)}`;
-          vm.$router.push("/");
+          vm.$router.push("/admin/products");
         }
       });
     }
