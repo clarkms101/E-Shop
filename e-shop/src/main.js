@@ -5,6 +5,7 @@
 import Vue from "vue";
 import axios from "axios";
 import VueAxios from "vue-axios";
+import 'bootstrap';
 
 // 自行定義的
 import App from "./App";
