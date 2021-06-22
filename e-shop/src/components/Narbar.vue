@@ -24,7 +24,7 @@
     />
     <ul class="navbar-nav px-3">
       <li class="nav-item text-nowrap">
-        <a class="nav-link" href="#">Sign out</a>
+        <a class="nav-link" href="#" @click.prevent="signout">Sign out</a>
       </li>
     </ul>
   </header>
@@ -32,8 +32,18 @@
 
 <script>
 export default {
-    setup() {
-        
-    },
+ methods: {
+    signout() {
+      const api = `${process.env.APIPATH}/logout`;
+      const vm = this;
+      this.$http.post(api).then(response => {
+        console.log(response.data);
+        // 登出成功導到登入頁面
+        if (response.data.success) {
+          vm.$router.push("/login");
+        }
+      });
+    }
+  }
 }
 </script>
