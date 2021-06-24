@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-right mt-4">
-      <button class="btn btn-primary" @click="openModal">
+      <button class="btn btn-primary" @click="openModal(true)">
         建立新的產品
       </button>
     </div>
@@ -31,7 +31,12 @@
             <span v-else>未啟用</span>
           </td>
           <td>
-            <button class="btn btn-outline-primary btn-sm">編輯</button>
+            <button
+              class="btn btn-outline-primary btn-sm"
+              @click="openModal(false, item)"
+            >
+              編輯
+            </button>
           </td>
         </tr>
       </tbody>
@@ -201,7 +206,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              @click="createProduct"
+              @click="updateProduct"
             >
               確認
             </button>
@@ -220,7 +225,8 @@ export default {
   data() {
     return {
       products: [],
-      tempProduct: {}
+      tempProduct: {},
+      isNew: false
     };
   },
   methods: {
@@ -238,28 +244,54 @@ export default {
         vm.products = response.data.products;
       });
     },
-    openModal() {
+    openModal(isNew, item) {
+      if (isNew) {
+        this.tempProduct = {};
+        this.isNew = true;
+      } else {
+        this.tempProduct = Object.assign({}, item);
+        this.isNew = false;
+      }
       $("#productModal").modal("show");
     },
-    createProduct() {
-      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
+    updateProduct() {
       const vm = this;
       const token = document.cookie.replace(
         /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
         "$1"
       );
       this.$http.defaults.headers.common.Authorization = `${token}`;
-      this.$http.post(api, { data: vm.tempProduct }).then(response => {
-        console.log(response.data);
-        if (response.data.success) {
-          $("#productModal").modal("hide");
-          vm.getProducts();
-        } else {
-          $("#productModal").modal("hide");
-          vm.getProducts();
-          console.log("新增失敗");
-        }
-      });
+
+      // Create
+      if (vm.isNew) {
+        let api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
+        this.$http.post(api, { data: vm.tempProduct }).then(response => {
+          console.log(response.data);
+          if (response.data.success) {
+            $("#productModal").modal("hide");
+            vm.getProducts();
+          } else {
+            $("#productModal").modal("hide");
+            vm.getProducts();
+            console.log("新增失敗");
+          }
+        });
+      }
+      // Update
+      else {
+        let api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
+        this.$http.put(api, { data: vm.tempProduct }).then(response => {
+          console.log(response.data);
+          if (response.data.success) {
+            $("#productModal").modal("hide");
+            vm.getProducts();
+          } else {
+            $("#productModal").modal("hide");
+            vm.getProducts();
+            console.log("更新失敗");
+          }
+        });
+      }
     }
   },
   created() {
