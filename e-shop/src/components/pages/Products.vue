@@ -406,6 +406,9 @@ export default {
           // 上傳成功取得後端回傳的網址，綁定到ViewModel上面並顯示於頁面
           if (response.data.success) {
             vm.$set(vm.tempProduct, "imageUrl", response.data.imageUrl);
+          } else {
+            // 顯示錯誤訊息
+            this.$bus.$emit("message:push", response.data.message, "danger");
           }
         });
     }
