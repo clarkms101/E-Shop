@@ -93,7 +93,10 @@
                 <div class="form-group">
                   <label for="customFile"
                     >或 上傳圖片
-                    <i class="fas fa-spinner fa-spin"></i>
+                    <i
+                      class="fa fa-refresh fa-spin"
+                      v-if="status.fileUploading"
+                    ></i>
                   </label>
                   <input
                     type="file"
@@ -284,7 +287,10 @@ export default {
       products: [],
       tempProduct: {},
       isNew: false,
-      isLoading: false
+      isLoading: false,
+      status: {
+        fileUploading: false
+      }
     };
   },
   methods: {
@@ -387,6 +393,7 @@ export default {
       formData.append("file-to-upload", uploadFile);
       // 將 formData 上傳到後端
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`;
+      vm.status.fileUploading = true;
       this.$http
         .post(url, formData, {
           headers: {
@@ -395,6 +402,7 @@ export default {
         })
         .then(response => {
           console.log(response.data);
+          vm.status.fileUploading = false;
           // 上傳成功取得後端回傳的網址，綁定到ViewModel上面並顯示於頁面
           if (response.data.success) {
             vm.$set(vm.tempProduct, "imageUrl", response.data.imageUrl);
