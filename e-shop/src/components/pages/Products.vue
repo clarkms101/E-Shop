@@ -97,6 +97,7 @@
                     id="customFile"
                     class="form-control"
                     ref="files"
+                    @change="uploadFile"
                   />
                 </div>
                 <img
@@ -284,7 +285,7 @@ export default {
   },
   methods: {
     getProducts() {
-      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products`;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products`;
       const vm = this;
       const token = document.cookie.replace(
         /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
@@ -292,7 +293,7 @@ export default {
       );
       // 將login token放到headers再請求
       this.$http.defaults.headers.common.Authorization = `${token}`;
-      this.$http.get(api).then(response => {
+      this.$http.get(url).then(response => {
         console.log(response.data);
         vm.products = response.data.products;
       });
@@ -318,8 +319,8 @@ export default {
         "$1"
       );
       this.$http.defaults.headers.common.Authorization = `${token}`;
-      let api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-      this.$http.delete(api).then(response => {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
+      this.$http.delete(url).then(response => {
         console.log(response.data);
         if (response.data.success) {
           $("#delProductModal").modal("hide");
@@ -341,8 +342,8 @@ export default {
 
       // Create
       if (vm.isNew) {
-        let api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
-        this.$http.post(api, { data: vm.tempProduct }).then(response => {
+        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
+        this.$http.post(url, { data: vm.tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -356,8 +357,8 @@ export default {
       }
       // Update
       else {
-        let api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-        this.$http.put(api, { data: vm.tempProduct }).then(response => {
+        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
+        this.$http.put(url, { data: vm.tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -369,6 +370,30 @@ export default {
           }
         });
       }
+    },
+    uploadFile() {
+      console.log(this);
+      // 取得 input file 的上傳檔案
+      const uploadFile = this.$refs.files.files[0];
+      const vm = this;
+      // 將 file 放到 formData裡面
+      const formData = new FormData();
+      formData.append("file-to-upload", uploadFile);
+      // 將 formData 上傳到後端
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`;
+      this.$http
+        .post(url, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(response => {
+          console.log(response.data);
+          // 上傳成功取得後端回傳的網址，綁定到ViewModel上面並顯示於頁面
+          if (response.data.success) {
+            vm.$set(vm.tempProduct, "imageUrl", response.data.imageUrl);
+          }
+        });
     }
   },
   created() {
