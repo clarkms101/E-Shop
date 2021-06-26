@@ -1,5 +1,8 @@
 <template>
   <div>
+    <!-- Loading 遮罩 -->
+    <loading :active.sync="isLoading"></loading>
+
     <!-- 上層新增按鈕 -->
     <div class="text-right mt-4">
       <button class="btn btn-primary" @click="openModal(true)">
@@ -280,7 +283,8 @@ export default {
     return {
       products: [],
       tempProduct: {},
-      isNew: false
+      isNew: false,
+      isLoading: false
     };
   },
   methods: {
@@ -293,9 +297,11 @@ export default {
       );
       // 將login token放到headers再請求
       this.$http.defaults.headers.common.Authorization = `${token}`;
+      vm.isLoading = true;
       this.$http.get(url).then(response => {
         console.log(response.data);
         vm.products = response.data.products;
+        vm.isLoading = false;
       });
     },
     openModal(isNew, item) {
