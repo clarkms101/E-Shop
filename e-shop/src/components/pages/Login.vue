@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Alert />
     <main class="form-signin">
       <form @submit.prevent="signin">
         <h1 class="h3 mb-3 fw-normal">請先登入</h1>
@@ -40,21 +41,26 @@
 </template>
 
 <script>
+import Alert from "../AlertMessage.vue";
+
 export default {
   name: "Login",
+  components: {
+    Alert,
+  },
   data() {
     return {
       user: {
         username: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   methods: {
     signin() {
       const api = `${process.env.APIPATH}/admin/signin`;
       const vm = this;
-      this.$http.post(api, vm.user).then(response => {
+      this.$http.post(api, vm.user).then((response) => {
         console.log("login msg", response.data);
         // 登入成功導到首頁
         if (response.data.success) {
@@ -64,10 +70,13 @@ export default {
           // console.log("login token", token, expired);
           document.cookie = `hexToken = ${token};expires=${new Date(expired)}`;
           vm.$router.push("/admin/products");
+        } else {
+          // 顯示錯誤訊息
+          this.$bus.$emit("message:push", response.data.message, "danger");
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
