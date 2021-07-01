@@ -26,10 +26,10 @@
           <td>{{ item.category }}</td>
           <td>{{ item.title }}</td>
           <td class="text-right">
-            {{ item.origin_price }}
+            {{ item.origin_price | currency }}
           </td>
           <td class="text-right">
-            {{ item.price }}
+            {{ item.price | currency }}
           </td>
           <td>
             <span v-if="item.is_enabled" class="text-success">啟用</span>
@@ -301,8 +301,8 @@ export default {
     };
   },
   components: {
-     Pagination,
-   },
+    Pagination
+  },
   methods: {
     getProducts(page = 1) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products?page=${page}`;
