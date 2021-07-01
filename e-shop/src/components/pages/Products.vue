@@ -53,40 +53,10 @@
       </tbody>
     </table>
     <!-- 資料清單分頁 -->
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item" :class="{ disabled: !pagination.has_pre }">
-          <a
-            class="page-link"
-            href="#"
-            aria-label="Previous"
-            @click.prevent="getProducts(pagination.current_page - 1)"
-          >
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li
-          class="page-item"
-          v-for="page in pagination.total_pages"
-          :key="page"
-          :class="{ active: pagination.current_page === page }"
-        >
-          <a class="page-link" href="#" @click.prevent="getProducts(page)">{{
-            page
-          }}</a>
-        </li>
-        <li class="page-item" :class="{ disabled: !pagination.has_next }">
-          <a
-            class="page-link"
-            href="#"
-            aria-label="Next"
-            @click.prevent="getProducts(pagination.current_page + 1)"
-          >
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <Pagination
+      :pagination="pagination"
+      @getProducts="getProducts"
+    ></Pagination>
 
     <!-- Product Modal (Create, Update) -->
     <div
@@ -315,6 +285,7 @@
 <script>
 // 使用JQuery
 import $ from "jquery";
+import Pagination from "./ProductsPagination.vue";
 
 export default {
   data() {
@@ -325,10 +296,13 @@ export default {
       isNew: false,
       isLoading: false,
       status: {
-        fileUploading: false,
-      },
+        fileUploading: false
+      }
     };
   },
+  components: {
+     Pagination,
+   },
   methods: {
     getProducts(page = 1) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products?page=${page}`;
@@ -341,7 +315,7 @@ export default {
       this.$http.defaults.headers.common.Authorization = `${token}`;
       // 處理中提示
       vm.isLoading = true;
-      this.$http.get(url).then((response) => {
+      this.$http.get(url).then(response => {
         console.log(response.data);
         vm.isLoading = false;
         vm.products = response.data.products;
@@ -372,7 +346,7 @@ export default {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
       // 處理中提示
       vm.isLoading = true;
-      this.$http.delete(url).then((response) => {
+      this.$http.delete(url).then(response => {
         console.log(response.data);
         if (response.data.success) {
           $("#delProductModal").modal("hide");
@@ -397,7 +371,7 @@ export default {
       // Create
       if (vm.isNew) {
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
-        this.$http.post(url, { data: vm.tempProduct }).then((response) => {
+        this.$http.post(url, { data: vm.tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -412,7 +386,7 @@ export default {
       // Update
       else {
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-        this.$http.put(url, { data: vm.tempProduct }).then((response) => {
+        this.$http.put(url, { data: vm.tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -440,10 +414,10 @@ export default {
       this.$http
         .post(url, formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
-          },
+            "Content-Type": "multipart/form-data"
+          }
         })
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
           vm.status.fileUploading = false;
           // 上傳成功取得後端回傳的網址，綁定到ViewModel上面並顯示於頁面
@@ -454,10 +428,10 @@ export default {
             this.$bus.$emit("message:push", response.data.message, "danger");
           }
         });
-    },
+    }
   },
   created() {
     this.getProducts();
-  },
+  }
 };
 </script>
