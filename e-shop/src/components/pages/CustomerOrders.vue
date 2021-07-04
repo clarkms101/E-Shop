@@ -104,18 +104,16 @@
                 現在只要 {{ product.price }} 元
               </div>
             </div>
-            <select
-              name=""
-              class="form-control mt-3"
-              id=""
-              v-model="product.num"
-            >
-              <option value="1">選購 1 件</option>
+            <select name="" class="form-control mt-3" id="" v-model="qty">
+              <option value="" disabled>-- 請選擇數量 --</option>
+              <option v-for="num in 10" :key="num" :value="num">
+                選購 {{ num }} {{ product.unit }}
+              </option>
             </select>
           </div>
           <div class="modal-footer">
             <div class="text-muted text-nowrap mr-3">
-              小計 <strong>{{ product.num * product.price }}</strong
+              小計 <strong>{{ totalPrice }}</strong
               >元
             </div>
             <button type="button" class="btn btn-primary">
@@ -142,11 +140,23 @@ export default {
       products: [],
       product: {},
       pagination: {},
+      qty: "",
       status: {
         loadingItem: "",
       },
       isLoading: false,
     };
+  },
+  computed: {
+    totalPrice() {
+      return this.qty * this.product.price;
+    },
+  },
+  watch: {
+    qty() {
+      const qty = this.qty * 1;
+      this.product.num = qty;
+    },
   },
   methods: {
     getProducts(page = 1) {
@@ -167,6 +177,7 @@ export default {
       this.$http.get(url).then((response) => {
         console.log(response.data);
         vm.product = response.data.product;
+        vm.qty = "";
         $("#productModal").modal("show");
         vm.status.loadingItem = "";
       });
