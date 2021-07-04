@@ -47,7 +47,7 @@
             <button
               type="button"
               class="btn btn-outline-danger btn-sm ml-auto"
-              @click="addtoCart(item.id)"
+              @click="addToCart(item.id)"
             >
               <i
                 class="fa fa-spinner fa-spin"
@@ -123,7 +123,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              @click="addtoCart(product.id, product.num)"
+              @click="addToCart(product.id, product.num)"
             >
               <i
                 class="fa fa-spinner fa-spin"
@@ -148,7 +148,11 @@
         <tbody v-if="cart.carts">
           <tr v-for="item in cart.carts" :key="item.id">
             <td class="align-middle">
-              <button type="button" class="btn btn-outline-danger btn-sm">
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                @click="removeFromCart(item.id)"
+              >
                 <i class="fa fa-trash-o"></i>
               </button>
             </td>
@@ -239,7 +243,7 @@ export default {
         vm.status.loadingItem = "";
       });
     },
-    addtoCart(id, qty = 1) {
+    addToCart(id, qty = 1) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       const vm = this;
       vm.status.loadingItem = id;
@@ -262,6 +266,15 @@ export default {
         console.log(response.data);
         vm.cart = response.data.data;
         vm.isLoading = false;
+      });
+    },
+    removeFromCart(id) {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${id}`;
+      this.isLoading = true;
+      this.$http.delete(url).then((response) => {
+        this.$bus.$emit("message:push", response.data.message, "success");
+        this.getCart();
+        this.isLoading = false;
       });
     },
   },
