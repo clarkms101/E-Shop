@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Dashboard from "@/components/Dashboard";
+import Dashboard from "@/components/pages/Dashboard";
 import Login from "@/components/pages/Login";
 import Products from "@/components/pages/Products";
 import Coupons from "@/components/pages/Coupons";
@@ -14,6 +14,10 @@ export default new Router({
     {
       path: "*",
       redirect: "login" // 不存在的路由，都導向login頁面
+    },
+    {
+      path: "/",
+      redirect: "login"
     },
     {
       path: "/login",

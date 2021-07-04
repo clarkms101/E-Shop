@@ -175,6 +175,23 @@
                     />
                   </div>
                 </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="num">庫存</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="num"
+                      v-model="tempProduct.num"
+                      placeholder="請輸入庫存"
+                    />
+                  </div>
+                  <div class="form-group col-md-6">
+
+                  </div>
+                </div>
+
                 <hr />
 
                 <div class="form-group">
@@ -285,7 +302,7 @@
 <script>
 // 使用JQuery
 import $ from "jquery";
-import Pagination from "./ProductsPagination.vue";
+import Pagination from "../ProductsPagination.vue";
 
 export default {
   data() {
@@ -296,12 +313,12 @@ export default {
       isNew: false,
       isLoading: false,
       status: {
-        fileUploading: false
-      }
+        fileUploading: false,
+      },
     };
   },
   components: {
-    Pagination
+    Pagination,
   },
   methods: {
     getProducts(page = 1) {
@@ -315,7 +332,7 @@ export default {
       this.$http.defaults.headers.common.Authorization = `${token}`;
       // 處理中提示
       vm.isLoading = true;
-      this.$http.get(url).then(response => {
+      this.$http.get(url).then((response) => {
         console.log(response.data);
         vm.isLoading = false;
         vm.products = response.data.products;
@@ -346,7 +363,7 @@ export default {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
       // 處理中提示
       vm.isLoading = true;
-      this.$http.delete(url).then(response => {
+      this.$http.delete(url).then((response) => {
         console.log(response.data);
         if (response.data.success) {
           $("#delProductModal").modal("hide");
@@ -371,7 +388,7 @@ export default {
       // Create
       if (vm.isNew) {
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
-        this.$http.post(url, { data: vm.tempProduct }).then(response => {
+        this.$http.post(url, { data: vm.tempProduct }).then((response) => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -386,7 +403,7 @@ export default {
       // Update
       else {
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-        this.$http.put(url, { data: vm.tempProduct }).then(response => {
+        this.$http.put(url, { data: vm.tempProduct }).then((response) => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -414,10 +431,10 @@ export default {
       this.$http
         .post(url, formData, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
           vm.status.fileUploading = false;
           // 上傳成功取得後端回傳的網址，綁定到ViewModel上面並顯示於頁面
@@ -428,10 +445,10 @@ export default {
             this.$bus.$emit("message:push", response.data.message, "danger");
           }
         });
-    }
+    },
   },
   created() {
     this.getProducts();
-  }
+  },
 };
 </script>

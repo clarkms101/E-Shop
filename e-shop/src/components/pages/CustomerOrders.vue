@@ -110,7 +110,7 @@
               >元
             </div>
             <button type="button" class="btn btn-primary">
-              <i class="fa fa-plus"></i>加到購物車
+              <i class="fa fa-plus"></i> 加到購物車
             </button>
           </div>
         </div>
