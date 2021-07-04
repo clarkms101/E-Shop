@@ -44,7 +44,11 @@
               ></i>
               查看更多
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-sm ml-auto"
+              @click="addtoCart(item.id)"
+            >
               <i
                 class="fa fa-spinner fa-spin"
                 v-if="status.loadingItem === item.id"
@@ -116,8 +120,16 @@
               小計 <strong>{{ totalPrice }}</strong
               >元
             </div>
-            <button type="button" class="btn btn-primary">
-              <i class="fa fa-plus"></i> 加到購物車
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="addtoCart(product.id, product.num)"
+            >
+              <i
+                class="fa fa-spinner fa-spin"
+                v-if="status.loadingItem === product.id"
+              ></i>
+              加到購物車
             </button>
           </div>
         </div>
@@ -182,9 +194,34 @@ export default {
         vm.status.loadingItem = "";
       });
     },
+    addtoCart(id, qty = 1) {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      const vm = this;
+      vm.status.loadingItem = id;
+      const cart = {
+        product_id: id,
+        qty: qty,
+      };
+      this.$http.post(url, { data: cart }).then((response) => {
+        console.log(response.data);
+        vm.status.loadingItem = "";
+        vm.getCart();
+        $("#productModal").modal("hide");
+      });
+    },
+    getCart() {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      const vm = this;
+      vm.isLoading = true;
+      this.$http.get(url).then((response) => {
+        console.log(response.data);
+        vm.isLoading = false;
+      });
+    },
   },
   created() {
     this.getProducts();
+    this.getCart();
   },
 };
 </script>
