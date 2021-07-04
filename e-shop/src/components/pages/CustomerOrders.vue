@@ -135,6 +135,50 @@
         </div>
       </div>
     </div>
+
+    <!-- shopping cart -->
+    <div>
+      <table class="table mt-4">
+        <thead>
+          <th></th>
+          <th>品名</th>
+          <th>數量</th>
+          <th width="150">單價</th>
+        </thead>
+        <tbody v-if="cart.carts">
+          <tr v-for="item in cart.carts" :key="item.id">
+            <td class="align-middle">
+              <button type="button" class="btn btn-outline-danger btn-sm">
+                <i class="fa fa-trash-o"></i>
+              </button>
+            </td>
+            <td class="align-middle">
+              {{ item.product.title }}
+              <div v-if="item.coupon" class="text-success">已套用優惠券</div>
+            </td>
+            <td class="align-middle">{{ item.qty }} {{ item.product.unit }}</td>
+            <td class="align-middle text-right">
+              {{ item.final_total | currency }}
+            </td>
+          </tr>
+        </tbody>
+        <tbody v-else>
+          <tr>
+            <td>尚未加入任何產品，快去逛逛吧！</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-right">總計</td>
+            <td class="text-right">{{ cart.total | currency }}</td>
+          </tr>
+          <tr v-if="cart.final_total !== cart.total">
+            <td colspan="3" class="text-right text-success">折扣價</td>
+            <td class="text-right text-success">{{ cart.final_total }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -150,6 +194,7 @@ export default {
   data() {
     return {
       products: [],
+      cart: {},
       product: {},
       pagination: {},
       qty: "",
@@ -215,6 +260,7 @@ export default {
       vm.isLoading = true;
       this.$http.get(url).then((response) => {
         console.log(response.data);
+        vm.cart = response.data.data;
         vm.isLoading = false;
       });
     },
