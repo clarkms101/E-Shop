@@ -5,7 +5,11 @@
       <div class="col-md-4 mb-4" v-for="item in products" :key="item.id">
         <div class="card border-0 shadow-sm">
           <div
-            style="height: 150px; background-size: cover; background-position: center"
+            style="
+              height: 150px;
+              background-size: cover;
+              background-position: center;
+            "
             :style="{ backgroundImage: `url(${item.imageUrl})` }"
           ></div>
           <div class="card-body">
@@ -51,6 +55,11 @@
         </div>
       </div>
     </div>
+    <!-- 資料清單分頁 -->
+    <Pagination
+      :pagination="pagination"
+      @getProducts="getProducts"
+    ></Pagination>
 
     <!-- Product Modal (Detail) -->
     <div
@@ -121,43 +130,50 @@
 
 <script>
 import $ from "jquery";
+import Pagination from "../Pagination.vue";
 
 export default {
+  name: "CustomerOrder",
+  components: {
+    Pagination,
+  },
   data() {
     return {
       products: [],
       product: {},
+      pagination: {},
       status: {
-        loadingItem: ""
+        loadingItem: "",
       },
-      isLoading: false
+      isLoading: false,
     };
   },
   methods: {
-    getProducts() {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products`;
+    getProducts(page = 1) {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products?page=${page}`;
       const vm = this;
       vm.isLoading = true;
-      this.$http.get(url).then(response => {
+      this.$http.get(url).then((response) => {
         console.log(response.data);
         vm.isLoading = false;
         vm.products = response.data.products;
+        vm.pagination = response.data.pagination;
       });
     },
     getProduct(id) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${id}`;
       const vm = this;
       vm.status.loadingItem = id;
-      this.$http.get(url).then(response => {
+      this.$http.get(url).then((response) => {
         console.log(response.data);
         vm.product = response.data.product;
         $("#productModal").modal("show");
         vm.status.loadingItem = "";
       });
-    }
+    },
   },
   created() {
     this.getProducts();
-  }
+  },
 };
 </script>
