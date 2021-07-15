@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Loading :active.sync="isLoading"></Loading>
+    <loading :active.sync="isLoading"></loading>
     <div class="text-right mt-4">
       <button class="btn btn-primary" @click="openCouponModal(true)">
         建立新的優惠券
@@ -10,6 +10,7 @@
       <thead>
         <tr>
           <th>名稱</th>
+          <th>優惠代碼</th>
           <th>折扣百分比</th>
           <th>到期日</th>
           <th>是否啟用</th>
@@ -19,6 +20,7 @@
       <tbody>
         <tr v-for="(item, key) in coupons" :key="key">
           <td>{{ item.title }}</td>
+          <td>{{ item.code }}</td>
           <td>{{ item.percent }}%</td>
           <td>{{ item.due_date | date }}</td>
           <td>
@@ -140,6 +142,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       coupons: {},
       tempCoupon: {
         title: "",
@@ -177,9 +180,11 @@ export default {
     getCoupons() {
       const vm = this;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupons`;
+      vm.isLoading = true;
       this.$http.get(url, vm.tempProduct).then(response => {
         vm.coupons = response.data.coupons;
         console.log(response);
+        vm.isLoading = false;
       });
     },
     updateCoupon() {

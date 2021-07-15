@@ -139,14 +139,13 @@
     <!-- shopping cart -->
     <div class="container">
       <div class="row align-items-center" style="margin:10%">
-
         <!-- cart -->
         <table class="table mt-4">
           <thead>
             <th></th>
             <th>品名</th>
             <th>數量</th>
-            <th width="150">單價</th>
+            <th>單價</th>
           </thead>
           <tbody v-if="cart.carts">
             <tr v-for="item in cart.carts" :key="item.id">
@@ -183,21 +182,31 @@
             </tr>
             <tr v-if="cart.final_total !== cart.total">
               <td colspan="3" class="text-right text-success">折扣價</td>
-              <td class="text-right text-success">{{ cart.final_total }}</td>
+              <td class="text-right text-success">
+                {{ cart.final_total | currency }}
+              </td>
             </tr>
           </tfoot>
         </table>
 
         <!-- coupon -->
         <div class="input-group mb-3 input-group-sm">
-          <input type="text" class="form-control" placeholder="請輸入優惠碼" />
+          <input
+            type="text"
+            class="form-control"
+            v-model="coupon_code"
+            placeholder="請輸入優惠碼"
+          />
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button">
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              @click="addCouponCode"
+            >
               套用優惠碼
             </button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -222,7 +231,8 @@ export default {
       status: {
         loadingItem: ""
       },
-      isLoading: false
+      isLoading: false,
+      coupon_code: ""
     };
   },
   computed: {
@@ -291,6 +301,24 @@ export default {
       this.$http.delete(url).then(response => {
         this.$bus.$emit("message:push", response.data.message, "success");
         this.getCart();
+        this.isLoading = false;
+      });
+    },
+    addCouponCode() {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/coupon`;
+      const vm = this;
+      const coupon = {
+        code: vm.coupon_code
+      };
+      this.isLoading = true;
+      this.$http.post(url, { data: coupon }).then(response => {
+        if (response.data.success) {
+          this.$bus.$emit("message:push", response.data.message, "success");
+          this.getCart();
+        } else {
+          this.$bus.$emit("message:push", response.data.message, "danger");
+        }
+
         this.isLoading = false;
       });
     }
