@@ -5,6 +5,8 @@
 import Vue from "vue";
 import axios from "axios";
 import VueAxios from "vue-axios";
+import VeeValidate from 'vee-validate';
+import VeeValidate_local_zhTW from 'vee-validate/dist/locale/zh_TW';
 // Import component
 import Loading from "vue-loading-overlay";
 // Import stylesheet
@@ -21,6 +23,9 @@ import dateFilter from './filters/date';
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
+Vue.use(VeeValidate);
+VeeValidate.Validator.localize('zh_TW', VeeValidate_local_zhTW);
+
 
 Vue.component('Loading', Loading);
 Vue.filter('currency', currencyFilter);

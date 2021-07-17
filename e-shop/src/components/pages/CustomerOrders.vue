@@ -212,19 +212,23 @@
 
     <!-- order -->
     <div class="my-5 row justify-content-center">
-      <form class="col-md-6">
+      <form class="col-md-6" @submit.prevent="createOrder">
         <div class="form-group">
           <label for="useremail">Email</label>
           <input
             type="email"
             class="form-control"
+            :class="{ 'is-invalid': errors.has('email') }"
             name="email"
             id="useremail"
             v-model="form.user.email"
+            v-validate="'required|email'"
             placeholder="請輸入 Email"
-            required
           />
-          <span class="text-danger"></span>
+          <!-- 錯誤訊息使用 vee validate 判斷訊息 -->
+          <span class="text-danger" v-if="errors.has('email')">
+            {{ errors.first("email") }}
+          </span>
         </div>
 
         <div class="form-group">
@@ -232,12 +236,16 @@
           <input
             type="text"
             class="form-control"
+            :class="{ 'is-invalid': errors.has('name') }"
             name="name"
             id="username"
             v-model="form.user.name"
+            v-validate="'required'"
             placeholder="輸入姓名"
           />
-          <span class="text-danger"></span>
+          <span class="text-danger" v-if="errors.has('name')"
+            >姓名必須輸入</span
+          >
         </div>
 
         <div class="form-group">
@@ -245,10 +253,16 @@
           <input
             type="tel"
             class="form-control"
+            :class="{ 'is-invalid': errors.has('phoneNumber') }"
+            name="phoneNumber"
             id="usertel"
             v-model="form.user.tel"
+            v-validate="'required'"
             placeholder="請輸入電話"
           />
+          <span class="text-danger" v-if="errors.has('phoneNumber')"
+            >電話欄位不得留空</span
+          >
         </div>
 
         <div class="form-group">
@@ -256,12 +270,16 @@
           <input
             type="text"
             class="form-control"
+            :class="{ 'is-invalid': errors.has('address') }"
             name="address"
             id="useraddress"
             v-model="form.user.address"
+            v-validate="'required'"
             placeholder="請輸入地址"
           />
-          <span class="text-danger">地址欄位不得留空</span>
+          <span class="text-danger" v-if="errors.has('address')"
+            >地址欄位不得留空</span
+          >
         </div>
 
         <div class="form-group">
@@ -400,6 +418,23 @@ export default {
         }
 
         this.isLoading = false;
+      });
+    },
+    createOrder() {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`;
+      const vm = this;
+      const order = vm.form;
+      // this.isLoading = true;
+      // 表單驗證完成才能往下作
+      this.$validator.validate().then(result => {
+        if (result) {
+          this.$http.post(url, { data: order }).then(response => {
+            console.log("訂單已建立", response);
+            // this.isLoading = false;
+          });
+        } else {
+          console.log("訂單資料不完整");
+        }
       });
     }
   },
