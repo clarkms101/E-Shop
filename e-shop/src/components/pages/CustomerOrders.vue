@@ -63,10 +63,7 @@
     </div>
 
     <!-- 資料清單分頁 -->
-    <Pagination
-      :pagination="pagination"
-      @emitPages="getProducts"
-    ></Pagination>
+    <Pagination :pagination="pagination" @emitPages="getProducts"></Pagination>
 
     <!-- Product Modal (Detail) -->
     <div
@@ -447,17 +444,15 @@ export default {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`;
       const vm = this;
       const order = vm.form;
-      // this.isLoading = true;
-      // 表單驗證完成才能往下作
-      this.$validator.validate().then(result => {
-        if (result) {
-          this.$http.post(url, { data: order }).then(response => {
-            console.log("訂單已建立", response);
-            // this.isLoading = false;
-          });
-        } else {
-          console.log("訂單資料不完整");
+      this.isLoading = true;
+
+      this.$http.post(url, { data: order }).then(response => {
+        console.log("訂單已建立", response);
+        if (response.data.success) {
+          // 轉跳到確認頁面
+          vm.$router.push(`/customer_checkout/${response.data.orderId}`);
         }
+        this.isLoading = false;
       });
     }
   },
