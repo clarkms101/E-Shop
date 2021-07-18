@@ -55,7 +55,7 @@
     <!-- 資料清單分頁 -->
     <Pagination
       :pagination="pagination"
-      @getProducts="getProducts"
+      @emitPages="getProducts"
     ></Pagination>
 
     <!-- Product Modal (Create, Update) -->

@@ -36,6 +36,12 @@
 </template>
 
 <script>
+// 外部使用方式
+// <Pagination
+//   :pagination="{ 頁碼資訊 }"
+//   @emitPages="更新頁面事件"
+// ></Pagination>
+
 export default {
   props: ["pagination"],
   data() {
@@ -43,7 +49,7 @@ export default {
   },
   methods: {
     emitGetProduct(page) {
-      this.$emit("getProducts", page);
+      this.$emit("emitPages", page);
     }
   }
 };
