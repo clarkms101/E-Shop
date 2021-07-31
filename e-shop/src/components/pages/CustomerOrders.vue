@@ -352,11 +352,6 @@ export default {
       coupon_code: ""
     };
   },
-  computed: {
-    totalPrice() {
-      return this.qty * this.product.price;
-    }
-  },
   watch: {
     qty() {
       const qty = this.qty * 1;
@@ -458,6 +453,9 @@ export default {
   computed: {
     isLoading() {
       return this.$store.state.isLoading;
+    },
+    totalPrice() {
+      return this.qty * this.product.price;
     }
   },
   created() {
