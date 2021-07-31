@@ -3,6 +3,7 @@
 
 // NPM下載的套件
 import Vue from "vue";
+import Vuex from "vuex";
 import axios from "axios";
 import VueAxios from "vue-axios";
 import { ValidationObserver, ValidationProvider, extend, localize, configure } from 'vee-validate';
@@ -20,6 +21,7 @@ import router from "./router";
 import './bus';
 import currencyFilter from './filters/currency';
 import dateFilter from './filters/date';
+import store from './store';
 
 // vee-validate 載入判斷規則(全部)
 Object.keys(rules).forEach((rule) => {
@@ -38,7 +40,7 @@ configure({
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
-
+Vue.use(Vuex);
 Vue.component('Loading', Loading);
 Vue.filter('currency', currencyFilter);
 Vue.filter('date', dateFilter);
@@ -47,6 +49,7 @@ Vue.filter('date', dateFilter);
 new Vue({
   el: "#app",
   router,
+  store,
   components: { App },
   template: "<App/>"
 });
