@@ -325,10 +325,10 @@ export default {
       // 將login token放到headers再請求
       this.$http.defaults.headers.common.Authorization = `${token}`;
       // 處理中提示
-      vm.$store.state.isLoading = true;
+      vm.$store.dispatch("updateLoading", true);
       this.$http.get(url).then(response => {
         console.log(response.data);
-        vm.$store.state.isLoading = false;
+        vm.$store.dispatch("updateLoading", false);
         vm.products = response.data.products;
         vm.pagination = response.data.pagination;
       });
@@ -356,7 +356,7 @@ export default {
       this.$http.defaults.headers.common.Authorization = `${token}`;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
       // 處理中提示
-      vm.$store.state.isLoading = true;
+      vm.$store.dispatch("updateLoading", true);
       this.$http.delete(url).then(response => {
         console.log(response.data);
         if (response.data.success) {
@@ -377,7 +377,7 @@ export default {
       );
       this.$http.defaults.headers.common.Authorization = `${token}`;
       // 處理中提示
-      vm.$store.state.isLoading = true;
+      vm.$store.dispatch("updateLoading", true);
 
       // Create
       if (vm.isNew) {
@@ -421,7 +421,7 @@ export default {
       // 將 formData 上傳到後端
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`;
       // 處理中提示
-      vm.$store.state.isLoading = true;
+      vm.$store.dispatch("updateLoading", true);
       this.$http
         .post(url, formData, {
           headers: {
@@ -430,7 +430,7 @@ export default {
         })
         .then(response => {
           console.log(response.data);
-          vm.$store.state.isLoading = false;
+          vm.$store.dispatch("updateLoading", false);
           // 上傳成功取得後端回傳的網址，綁定到ViewModel上面並顯示於頁面
           if (response.data.success) {
             vm.$set(vm.tempProduct, "imageUrl", response.data.imageUrl);

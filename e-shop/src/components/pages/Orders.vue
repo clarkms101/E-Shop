@@ -66,11 +66,11 @@ export default {
       );
       this.$http.defaults.headers.common.Authorization = `${token}`;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/orders?page=${currentPage}`;
-      vm.$store.state.isLoading = true;
+      vm.$store.dispatch("updateLoading", true);
       this.$http.get(url).then(response => {
         vm.orders = response.data.orders;
         vm.pagination = response.data.pagination;
-        vm.$store.state.isLoading = false;
+        vm.$store.dispatch("updateLoading", false);
         console.log(response);
       });
     }

@@ -179,11 +179,11 @@ export default {
     getCoupons() {
       const vm = this;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupons`;
-      vm.$store.state.isLoading = true;
+      vm.$store.dispatch("updateLoading", true);
       this.$http.get(url, vm.tempProduct).then(response => {
         vm.coupons = response.data.coupons;
         console.log(response);
-        vm.$store.state.isLoading = false;
+        vm.$store.dispatch("updateLoading", false);
       });
     },
     updateCoupon() {
