@@ -53,10 +53,7 @@
       </tbody>
     </table>
     <!-- 資料清單分頁 -->
-    <Pagination
-      :pagination="pagination"
-      @emitPages="getProducts"
-    ></Pagination>
+    <Pagination :pagination="pagination" @emitPages="getProducts"></Pagination>
 
     <!-- Product Modal (Create, Update) -->
     <div
@@ -187,9 +184,7 @@
                       placeholder="請輸入庫存"
                     />
                   </div>
-                  <div class="form-group col-md-6">
-
-                  </div>
+                  <div class="form-group col-md-6"></div>
                 </div>
 
                 <hr />
@@ -311,14 +306,13 @@ export default {
       pagination: {},
       tempProduct: {},
       isNew: false,
-      isLoading: false,
       status: {
-        fileUploading: false,
-      },
+        fileUploading: false
+      }
     };
   },
   components: {
-    Pagination,
+    Pagination
   },
   methods: {
     getProducts(page = 1) {
@@ -331,10 +325,10 @@ export default {
       // 將login token放到headers再請求
       this.$http.defaults.headers.common.Authorization = `${token}`;
       // 處理中提示
-      vm.isLoading = true;
-      this.$http.get(url).then((response) => {
+      vm.$store.state.isLoading = true;
+      this.$http.get(url).then(response => {
         console.log(response.data);
-        vm.isLoading = false;
+        vm.$store.state.isLoading = false;
         vm.products = response.data.products;
         vm.pagination = response.data.pagination;
       });
@@ -362,8 +356,8 @@ export default {
       this.$http.defaults.headers.common.Authorization = `${token}`;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
       // 處理中提示
-      vm.isLoading = true;
-      this.$http.delete(url).then((response) => {
+      vm.$store.state.isLoading = true;
+      this.$http.delete(url).then(response => {
         console.log(response.data);
         if (response.data.success) {
           $("#delProductModal").modal("hide");
@@ -383,12 +377,12 @@ export default {
       );
       this.$http.defaults.headers.common.Authorization = `${token}`;
       // 處理中提示
-      vm.isLoading = true;
+      vm.$store.state.isLoading = true;
 
       // Create
       if (vm.isNew) {
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
-        this.$http.post(url, { data: vm.tempProduct }).then((response) => {
+        this.$http.post(url, { data: vm.tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -403,7 +397,7 @@ export default {
       // Update
       else {
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-        this.$http.put(url, { data: vm.tempProduct }).then((response) => {
+        this.$http.put(url, { data: vm.tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -427,16 +421,16 @@ export default {
       // 將 formData 上傳到後端
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`;
       // 處理中提示
-      vm.status.fileUploading = true;
+      vm.$store.state.isLoading = true;
       this.$http
         .post(url, formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
-          },
+            "Content-Type": "multipart/form-data"
+          }
         })
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
-          vm.status.fileUploading = false;
+          vm.$store.state.isLoading = false;
           // 上傳成功取得後端回傳的網址，綁定到ViewModel上面並顯示於頁面
           if (response.data.success) {
             vm.$set(vm.tempProduct, "imageUrl", response.data.imageUrl);
@@ -445,10 +439,15 @@ export default {
             this.$bus.$emit("message:push", response.data.message, "danger");
           }
         });
-    },
+    }
+  },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
+    }
   },
   created() {
     this.getProducts();
-  },
+  }
 };
 </script>

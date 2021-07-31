@@ -142,7 +142,6 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       coupons: {},
       tempCoupon: {
         title: "",
@@ -180,11 +179,11 @@ export default {
     getCoupons() {
       const vm = this;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupons`;
-      vm.isLoading = true;
+      vm.$store.state.isLoading = true;
       this.$http.get(url, vm.tempProduct).then(response => {
         vm.coupons = response.data.coupons;
         console.log(response);
-        vm.isLoading = false;
+        vm.$store.state.isLoading = false;
       });
     },
     updateCoupon() {
@@ -205,6 +204,11 @@ export default {
           this.getCoupons();
         });
       }
+    }
+  },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   created() {

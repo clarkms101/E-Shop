@@ -349,7 +349,6 @@ export default {
         },
         message: ""
       },
-      isLoading: false,
       coupon_code: ""
     };
   },
@@ -368,10 +367,10 @@ export default {
     getProducts(page = 1) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products?page=${page}`;
       const vm = this;
-      vm.isLoading = true;
+      vm.$store.state.isLoading = true;
       this.$http.get(url).then(response => {
         console.log(response.data);
-        vm.isLoading = false;
+        vm.$store.state.isLoading = false;
         vm.products = response.data.products;
         vm.pagination = response.data.pagination;
       });
@@ -406,20 +405,20 @@ export default {
     getCart() {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       const vm = this;
-      vm.isLoading = true;
+      vm.$store.state.isLoading = true;
       this.$http.get(url).then(response => {
         console.log(response.data);
         vm.cart = response.data.data;
-        vm.isLoading = false;
+        vm.$store.state.isLoading = false;
       });
     },
     removeFromCart(id) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${id}`;
-      this.isLoading = true;
+      vm.$store.state.isLoading = true;
       this.$http.delete(url).then(response => {
         this.$bus.$emit("message:push", response.data.message, "success");
         this.getCart();
-        this.isLoading = false;
+        vm.$store.state.isLoading = false;
       });
     },
     addCouponCode() {
@@ -428,7 +427,7 @@ export default {
       const coupon = {
         code: vm.coupon_code
       };
-      this.isLoading = true;
+      vm.$store.state.isLoading = true;
       this.$http.post(url, { data: coupon }).then(response => {
         if (response.data.success) {
           this.$bus.$emit("message:push", response.data.message, "success");
@@ -437,14 +436,14 @@ export default {
           this.$bus.$emit("message:push", response.data.message, "danger");
         }
 
-        this.isLoading = false;
+        vm.$store.state.isLoading = false;
       });
     },
     createOrder() {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`;
       const vm = this;
       const order = vm.form;
-      this.isLoading = true;
+      vm.$store.state.isLoading = true;
 
       this.$http.post(url, { data: order }).then(response => {
         console.log("訂單已建立", response);
@@ -452,8 +451,13 @@ export default {
           // 轉跳到確認頁面
           vm.$router.push(`/customer_checkout/${response.data.orderId}`);
         }
-        this.isLoading = false;
+        vm.$store.state.isLoading = false;
       });
+    }
+  },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   created() {

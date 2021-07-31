@@ -51,8 +51,7 @@ export default {
     return {
       orders: {},
       isNew: false,
-      pagination: {},
-      isLoading: false
+      pagination: {}
     };
   },
   components: {
@@ -67,11 +66,11 @@ export default {
       );
       this.$http.defaults.headers.common.Authorization = `${token}`;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/orders?page=${currentPage}`;
-      vm.isLoading = true;
+      vm.$store.state.isLoading = true;
       this.$http.get(url).then(response => {
         vm.orders = response.data.orders;
         vm.pagination = response.data.pagination;
-        vm.isLoading = false;
+        vm.$store.state.isLoading = false;
         console.log(response);
       });
     }
@@ -88,6 +87,9 @@ export default {
         });
       }
       return newOrder;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   created() {
