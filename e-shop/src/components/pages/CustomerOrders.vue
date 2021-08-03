@@ -328,53 +328,43 @@ import Pagination from "../Pagination.vue";
 export default {
   name: "CustomerOrder",
   components: {
-    Pagination
+    Pagination,
   },
   data() {
     return {
-      products: [],
       cart: {},
       product: {},
-      pagination: {},
       qty: "",
       status: {
-        loadingItem: ""
+        loadingItem: "",
       },
       form: {
         user: {
           name: "",
           email: "",
           tel: "",
-          address: ""
+          address: "",
         },
-        message: ""
+        message: "",
       },
-      coupon_code: ""
+      coupon_code: "",
     };
   },
   watch: {
     qty() {
       const qty = this.qty * 1;
       this.product.num = qty;
-    }
+    },
   },
   methods: {
     getProducts(page = 1) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products?page=${page}`;
-      const vm = this;
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.get(url).then(response => {
-        console.log(response.data);
-        vm.$store.dispatch("updateLoading", false);
-        vm.products = response.data.products;
-        vm.pagination = response.data.pagination;
-      });
+      this.$store.dispatch("getProducts", { page: page });
     },
     getProduct(id) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${id}`;
       const vm = this;
       vm.status.loadingItem = id;
-      this.$http.get(url).then(response => {
+      this.$http.get(url).then((response) => {
         console.log(response.data);
         vm.product = response.data.product;
         vm.qty = "";
@@ -388,9 +378,9 @@ export default {
       vm.status.loadingItem = id;
       const cart = {
         product_id: id,
-        qty: qty
+        qty: qty,
       };
-      this.$http.post(url, { data: cart }).then(response => {
+      this.$http.post(url, { data: cart }).then((response) => {
         console.log(response.data);
         vm.status.loadingItem = "";
         vm.getCart();
@@ -401,7 +391,7 @@ export default {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       const vm = this;
       vm.$store.dispatch("updateLoading", true);
-      this.$http.get(url).then(response => {
+      this.$http.get(url).then((response) => {
         console.log(response.data);
         vm.cart = response.data.data;
         vm.$store.dispatch("updateLoading", false);
@@ -410,7 +400,7 @@ export default {
     removeFromCart(id) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${id}`;
       vm.$store.dispatch("updateLoading", true);
-      this.$http.delete(url).then(response => {
+      this.$http.delete(url).then((response) => {
         this.$bus.$emit("message:push", response.data.message, "success");
         this.getCart();
         vm.$store.dispatch("updateLoading", false);
@@ -420,10 +410,10 @@ export default {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/coupon`;
       const vm = this;
       const coupon = {
-        code: vm.coupon_code
+        code: vm.coupon_code,
       };
       vm.$store.dispatch("updateLoading", true);
-      this.$http.post(url, { data: coupon }).then(response => {
+      this.$http.post(url, { data: coupon }).then((response) => {
         if (response.data.success) {
           this.$bus.$emit("message:push", response.data.message, "success");
           this.getCart();
@@ -440,7 +430,7 @@ export default {
       const order = vm.form;
       vm.$store.dispatch("updateLoading", true);
 
-      this.$http.post(url, { data: order }).then(response => {
+      this.$http.post(url, { data: order }).then((response) => {
         console.log("訂單已建立", response);
         if (response.data.success) {
           // 轉跳到確認頁面
@@ -448,7 +438,7 @@ export default {
         }
         vm.$store.dispatch("updateLoading", false);
       });
-    }
+    },
   },
   computed: {
     isLoading() {
@@ -456,11 +446,17 @@ export default {
     },
     totalPrice() {
       return this.qty * this.product.price;
-    }
+    },
+    products() {
+      return this.$store.state.products;
+    },
+    pagination() {
+      return this.$store.state.pagination;
+    },
   },
   created() {
     this.getProducts();
     this.getCart();
-  }
+  },
 };
 </script>

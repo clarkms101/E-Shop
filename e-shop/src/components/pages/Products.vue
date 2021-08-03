@@ -302,36 +302,19 @@ import Pagination from "../Pagination.vue";
 export default {
   data() {
     return {
-      products: [],
-      pagination: {},
       tempProduct: {},
       isNew: false,
       status: {
-        fileUploading: false
-      }
+        fileUploading: false,
+      },
     };
   },
   components: {
-    Pagination
+    Pagination,
   },
   methods: {
     getProducts(page = 1) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products?page=${page}`;
-      const vm = this;
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
-      // 將login token放到headers再請求
-      this.$http.defaults.headers.common.Authorization = `${token}`;
-      // 處理中提示
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.get(url).then(response => {
-        console.log(response.data);
-        vm.$store.dispatch("updateLoading", false);
-        vm.products = response.data.products;
-        vm.pagination = response.data.pagination;
-      });
+      this.$store.dispatch("getProducts", {"page" : page});
     },
     openModal(isNew, item) {
       if (isNew) {
@@ -357,7 +340,7 @@ export default {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
       // 處理中提示
       vm.$store.dispatch("updateLoading", true);
-      this.$http.delete(url).then(response => {
+      this.$http.delete(url).then((response) => {
         console.log(response.data);
         if (response.data.success) {
           $("#delProductModal").modal("hide");
@@ -382,7 +365,7 @@ export default {
       // Create
       if (vm.isNew) {
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
-        this.$http.post(url, { data: vm.tempProduct }).then(response => {
+        this.$http.post(url, { data: vm.tempProduct }).then((response) => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -397,7 +380,7 @@ export default {
       // Update
       else {
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-        this.$http.put(url, { data: vm.tempProduct }).then(response => {
+        this.$http.put(url, { data: vm.tempProduct }).then((response) => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -425,10 +408,10 @@ export default {
       this.$http
         .post(url, formData, {
           headers: {
-            "Content-Type": "multipart/form-data"
-          }
+            "Content-Type": "multipart/form-data",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
           vm.$store.dispatch("updateLoading", false);
           // 上傳成功取得後端回傳的網址，綁定到ViewModel上面並顯示於頁面
@@ -439,15 +422,21 @@ export default {
             this.$bus.$emit("message:push", response.data.message, "danger");
           }
         });
-    }
+    },
   },
   computed: {
     isLoading() {
       return this.$store.state.isLoading;
-    }
+    },
+    products() {
+      return this.$store.state.products;
+    },
+    pagination() {
+      return this.$store.state.pagination;
+    },
   },
   created() {
     this.getProducts();
-  }
+  },
 };
 </script>
