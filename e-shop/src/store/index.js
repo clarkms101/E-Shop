@@ -10,8 +10,13 @@ export default new Vuex.Store({
   // 資料狀態
   state: {
     isLoading: false,
+    product: {},
     products: [],
-    pagination: {}
+    pagination: {},
+    status: {
+      loadingItem: "",
+    },
+    qty: "", // check
   },
   // 對外開放的動作
   actions: {
@@ -31,8 +36,23 @@ export default new Vuex.Store({
         context.commit("PAGINATION", response.data.pagination);
       });
     },
+    getProduct(context, payload) {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${payload.productId}`;
+      context.commit("STATUS_LOADINGITEM", payload.productId);
+      axios.get(url).then((response) => {
+        context.commit("PRODUCT", response.data.product);
+        context.commit("QTY", "");
+        context.commit("STATUS_LOADINGITEM", "");
+      });
+    },
     updateLoading(context, status) {
       context.commit("LOADING", status);
+    },
+    updateProductNum(context, payload) {
+      context.commit("PRODUCT_NUM", payload.qty);
+    },
+    updateLoadingItem(context, payload){
+      context.commit("STATUS_LOADINGITEM", payload.loadingItem);
     }
   },
   // 操作資料狀態
@@ -40,11 +60,23 @@ export default new Vuex.Store({
     LOADING(state, status) {
       state.isLoading = status;
     },
+    PRODUCT(state, payload) {
+      state.product = payload;
+    },
+    PRODUCT_NUM(state, payload) {
+      state.product.num = payload;
+    },
     PRODUCTS(state, payload) {
       state.products = payload;
     },
     PAGINATION(state, payload){
       state.pagination = payload;
+    },
+    STATUS_LOADINGITEM(state, payload){
+      state.status.loadingItem = payload;
+    },
+    QTY(state, payload){
+      state.status.qty = payload;
     }
   }
 });

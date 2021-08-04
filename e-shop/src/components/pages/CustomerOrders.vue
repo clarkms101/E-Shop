@@ -333,11 +333,11 @@ export default {
   data() {
     return {
       cart: {},
-      product: {},
-      qty: "",
-      status: {
-        loadingItem: "",
-      },
+      // product: {},
+      // qty: "",
+      // status: {
+      //   loadingItem: "",
+      // },
       form: {
         user: {
           name: "",
@@ -350,39 +350,30 @@ export default {
       coupon_code: "",
     };
   },
-  watch: {
-    qty() {
-      const qty = this.qty * 1;
-      this.product.num = qty;
-    },
-  },
+  // watch: {
+  //   qty() {
+  //     this.$store.dispatch("updateProductNum", {qty:});
+  //   },
+  // },
   methods: {
     getProducts(page = 1) {
       this.$store.dispatch("getProducts", { page: page });
     },
     getProduct(id) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${id}`;
-      const vm = this;
-      vm.status.loadingItem = id;
-      this.$http.get(url).then((response) => {
-        console.log(response.data);
-        vm.product = response.data.product;
-        vm.qty = "";
-        $("#productModal").modal("show");
-        vm.status.loadingItem = "";
-      });
+      this.$store.dispatch("getProduct", { productId: id });
+      $("#productModal").modal("show");
     },
     addToCart(id, qty = 1) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       const vm = this;
-      vm.status.loadingItem = id;
+      this.$store.dispatch("updateLoadingItem", { loadingItem: id });
       const cart = {
         product_id: id,
         qty: qty,
       };
       this.$http.post(url, { data: cart }).then((response) => {
         console.log(response.data);
-        vm.status.loadingItem = "";
+        this.$store.dispatch("updateLoadingItem", { loadingItem: "" });
         vm.getCart();
         $("#productModal").modal("hide");
       });
@@ -445,13 +436,22 @@ export default {
       return this.$store.state.isLoading;
     },
     totalPrice() {
-      return this.qty * this.product.price;
+      return this.$store.state.qty * this.$store.state.product.price;
     },
     products() {
       return this.$store.state.products;
     },
     pagination() {
       return this.$store.state.pagination;
+    },
+    status() {
+      return this.$store.state.status;
+    },
+    product() {
+      return this.$store.state.product;
+    },
+    qty() {
+      return this.$store.state.qty;
     },
   },
   created() {
