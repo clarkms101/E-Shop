@@ -305,16 +305,16 @@ export default {
       tempProduct: {},
       isNew: false,
       status: {
-        fileUploading: false,
-      },
+        fileUploading: false
+      }
     };
   },
   components: {
-    Pagination,
+    Pagination
   },
   methods: {
     getProducts(page = 1) {
-      this.$store.dispatch("getProducts", {"page" : page});
+      this.$store.dispatch("getProducts", { page: page });
     },
     openModal(isNew, item) {
       if (isNew) {
@@ -332,25 +332,8 @@ export default {
     },
     deleteProduct() {
       const vm = this;
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
-      this.$http.defaults.headers.common.Authorization = `${token}`;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-      // 處理中提示
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.delete(url).then((response) => {
-        console.log(response.data);
-        if (response.data.success) {
-          $("#delProductModal").modal("hide");
-          vm.getProducts();
-        } else {
-          $("#delProductModal").modal("hide");
-          vm.getProducts();
-          console.log("刪除失敗");
-        }
-      });
+      this.$store.dispatch("deleteProduct", { productId: vm.tempProduct.id });
+      $("#delProductModal").modal("hide");
     },
     updateProduct() {
       const vm = this;
@@ -365,7 +348,7 @@ export default {
       // Create
       if (vm.isNew) {
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
-        this.$http.post(url, { data: vm.tempProduct }).then((response) => {
+        this.$http.post(url, { data: vm.tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -380,7 +363,7 @@ export default {
       // Update
       else {
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-        this.$http.put(url, { data: vm.tempProduct }).then((response) => {
+        this.$http.put(url, { data: vm.tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
             $("#productModal").modal("hide");
@@ -408,10 +391,10 @@ export default {
       this.$http
         .post(url, formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
-          },
+            "Content-Type": "multipart/form-data"
+          }
         })
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
           vm.$store.dispatch("updateLoading", false);
           // 上傳成功取得後端回傳的網址，綁定到ViewModel上面並顯示於頁面
@@ -422,7 +405,7 @@ export default {
             this.$bus.$emit("message:push", response.data.message, "danger");
           }
         });
-    },
+    }
   },
   computed: {
     isLoading() {
@@ -433,10 +416,10 @@ export default {
     },
     pagination() {
       return this.$store.state.pagination;
-    },
+    }
   },
   created() {
     this.getProducts();
-  },
+  }
 };
 </script>

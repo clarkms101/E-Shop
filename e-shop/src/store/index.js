@@ -14,9 +14,9 @@ export default new Vuex.Store({
     products: [],
     pagination: {},
     status: {
-      loadingItem: "",
+      loadingItem: ""
     },
-    qty: "", // check
+    qty: ""
   },
   // 對外開放的動作
   actions: {
@@ -39,19 +39,37 @@ export default new Vuex.Store({
     getProduct(context, payload) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${payload.productId}`;
       context.commit("STATUS_LOADINGITEM", payload.productId);
-      axios.get(url).then((response) => {
+      axios.get(url).then(response => {
         context.commit("PRODUCT", response.data.product);
         context.commit("QTY", "");
         context.commit("STATUS_LOADINGITEM", "");
       });
     },
+    deleteProduct(context, payload) {
+      const token = document.cookie.replace(
+        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      axios.defaults.headers.common.Authorization = `${token}`;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${payload.productId}`;
+      // 處理中提示
+      context.commit("LOADING", true);
+      axios.delete(url).then(response => {
+        if (response.data.success) {
+          context.dispatch("getProducts", { page: 1 });
+        } else {
+          context.dispatch("getProducts", { page: 1 });
+          console.log("刪除失敗");
+        }
+      });
+    },
     updateLoading(context, status) {
       context.commit("LOADING", status);
     },
-    updateQty(context, payload){
+    updateQty(context, payload) {
       context.commit("QTY", payload.qty);
     },
-    updateLoadingItem(context, payload){
+    updateLoadingItem(context, payload) {
       context.commit("STATUS_LOADINGITEM", payload.loadingItem);
     }
   },
@@ -69,13 +87,13 @@ export default new Vuex.Store({
     PRODUCTS(state, payload) {
       state.products = payload;
     },
-    PAGINATION(state, payload){
+    PAGINATION(state, payload) {
       state.pagination = payload;
     },
-    STATUS_LOADINGITEM(state, payload){
+    STATUS_LOADINGITEM(state, payload) {
       state.status.loadingItem = payload;
     },
-    QTY(state, payload){
+    QTY(state, payload) {
       state.qty = payload;
     }
   }
