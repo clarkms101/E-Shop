@@ -123,7 +123,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              @click="addToCart(product.id, product.num)"
+              @click="addToCart(product.id, qty)"
             >
               <i
                 class="fa fa-spinner fa-spin"
@@ -328,33 +328,23 @@ import Pagination from "../Pagination.vue";
 export default {
   name: "CustomerOrder",
   components: {
-    Pagination,
+    Pagination
   },
   data() {
     return {
       cart: {},
-      // product: {},
-      // qty: "",
-      // status: {
-      //   loadingItem: "",
-      // },
       form: {
         user: {
           name: "",
           email: "",
           tel: "",
-          address: "",
+          address: ""
         },
-        message: "",
+        message: ""
       },
-      coupon_code: "",
+      coupon_code: ""
     };
   },
-  // watch: {
-  //   qty() {
-  //     this.$store.dispatch("updateProductNum", {qty:});
-  //   },
-  // },
   methods: {
     getProducts(page = 1) {
       this.$store.dispatch("getProducts", { page: page });
@@ -369,9 +359,9 @@ export default {
       this.$store.dispatch("updateLoadingItem", { loadingItem: id });
       const cart = {
         product_id: id,
-        qty: qty,
+        qty: qty
       };
-      this.$http.post(url, { data: cart }).then((response) => {
+      this.$http.post(url, { data: cart }).then(response => {
         console.log(response.data);
         this.$store.dispatch("updateLoadingItem", { loadingItem: "" });
         vm.getCart();
@@ -382,7 +372,7 @@ export default {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       const vm = this;
       vm.$store.dispatch("updateLoading", true);
-      this.$http.get(url).then((response) => {
+      this.$http.get(url).then(response => {
         console.log(response.data);
         vm.cart = response.data.data;
         vm.$store.dispatch("updateLoading", false);
@@ -390,8 +380,9 @@ export default {
     },
     removeFromCart(id) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${id}`;
+      const vm = this;
       vm.$store.dispatch("updateLoading", true);
-      this.$http.delete(url).then((response) => {
+      this.$http.delete(url).then(response => {
         this.$bus.$emit("message:push", response.data.message, "success");
         this.getCart();
         vm.$store.dispatch("updateLoading", false);
@@ -401,10 +392,10 @@ export default {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/coupon`;
       const vm = this;
       const coupon = {
-        code: vm.coupon_code,
+        code: vm.coupon_code
       };
       vm.$store.dispatch("updateLoading", true);
-      this.$http.post(url, { data: coupon }).then((response) => {
+      this.$http.post(url, { data: coupon }).then(response => {
         if (response.data.success) {
           this.$bus.$emit("message:push", response.data.message, "success");
           this.getCart();
@@ -421,7 +412,7 @@ export default {
       const order = vm.form;
       vm.$store.dispatch("updateLoading", true);
 
-      this.$http.post(url, { data: order }).then((response) => {
+      this.$http.post(url, { data: order }).then(response => {
         console.log("訂單已建立", response);
         if (response.data.success) {
           // 轉跳到確認頁面
@@ -429,7 +420,7 @@ export default {
         }
         vm.$store.dispatch("updateLoading", false);
       });
-    },
+    }
   },
   computed: {
     isLoading() {
@@ -450,13 +441,18 @@ export default {
     product() {
       return this.$store.state.product;
     },
-    qty() {
-      return this.$store.state.qty;
-    },
+    qty: {
+      get() {
+        return this.$store.state.qty;
+      },
+      set(selectQty) {
+        this.$store.dispatch("updateQty", { qty: selectQty });
+      }
+    }
   },
   created() {
     this.getProducts();
     this.getCart();
-  },
+  }
 };
 </script>

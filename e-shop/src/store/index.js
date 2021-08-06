@@ -48,8 +48,8 @@ export default new Vuex.Store({
     updateLoading(context, status) {
       context.commit("LOADING", status);
     },
-    updateProductNum(context, payload) {
-      context.commit("PRODUCT_NUM", payload.qty);
+    updateQty(context, payload){
+      context.commit("QTY", payload.qty);
     },
     updateLoadingItem(context, payload){
       context.commit("STATUS_LOADINGITEM", payload.loadingItem);
@@ -76,7 +76,7 @@ export default new Vuex.Store({
       state.status.loadingItem = payload;
     },
     QTY(state, payload){
-      state.status.qty = payload;
+      state.qty = payload;
     }
   }
 });
