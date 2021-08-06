@@ -13,9 +13,7 @@ export default new Vuex.Store({
     product: {},
     products: [],
     pagination: {},
-    status: {
-      loadingItem: ""
-    },
+    loadingProductId: "",
     qty: ""
   },
   // 對外開放的動作
@@ -38,11 +36,11 @@ export default new Vuex.Store({
     },
     getProduct(context, payload) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${payload.productId}`;
-      context.commit("STATUS_LOADINGITEM", payload.productId);
+      context.commit("LOADING_PRODUCTID", payload.productId);
       axios.get(url).then(response => {
         context.commit("PRODUCT", response.data.product);
         context.commit("QTY", "");
-        context.commit("STATUS_LOADINGITEM", "");
+        context.commit("LOADING_PRODUCTID", "");
       });
     },
     deleteProduct(context, payload) {
@@ -69,8 +67,8 @@ export default new Vuex.Store({
     updateQty(context, payload) {
       context.commit("QTY", payload.qty);
     },
-    updateLoadingItem(context, payload) {
-      context.commit("STATUS_LOADINGITEM", payload.loadingItem);
+    updateLoadingProductId(context, payload) {
+      context.commit("LOADING_PRODUCTID", payload.loadingProductId);
     }
   },
   // 操作資料狀態
@@ -90,8 +88,8 @@ export default new Vuex.Store({
     PAGINATION(state, payload) {
       state.pagination = payload;
     },
-    STATUS_LOADINGITEM(state, payload) {
-      state.status.loadingItem = payload;
+    LOADING_PRODUCTID(state, payload) {
+      state.loadingProductId = payload;
     },
     QTY(state, payload) {
       state.qty = payload;

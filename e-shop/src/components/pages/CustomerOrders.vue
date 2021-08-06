@@ -42,7 +42,7 @@
             >
               <i
                 class="fa fa-spinner fa-spin"
-                v-if="status.loadingItem === item.id"
+                v-if="loadingProductId === item.id"
               ></i>
               查看更多
             </button>
@@ -53,7 +53,7 @@
             >
               <i
                 class="fa fa-spinner fa-spin"
-                v-if="status.loadingItem === item.id"
+                v-if="loadingProductId === item.id"
               ></i>
               加到購物車
             </button>
@@ -127,7 +127,7 @@
             >
               <i
                 class="fa fa-spinner fa-spin"
-                v-if="status.loadingItem === product.id"
+                v-if="loadingProductId === product.id"
               ></i>
               加到購物車
             </button>
@@ -351,19 +351,22 @@ export default {
     },
     getProduct(id) {
       this.$store.dispatch("getProduct", { productId: id });
+      // todo
       $("#productModal").modal("show");
     },
     addToCart(id, qty = 1) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       const vm = this;
-      this.$store.dispatch("updateLoadingItem", { loadingItem: id });
+      this.$store.dispatch("updateLoadingProductId", { loadingProductId: id });
       const cart = {
         product_id: id,
         qty: qty
       };
       this.$http.post(url, { data: cart }).then(response => {
         console.log(response.data);
-        this.$store.dispatch("updateLoadingItem", { loadingItem: "" });
+        this.$store.dispatch("updateLoadingProductId", {
+          loadingProductId: ""
+        });
         vm.getCart();
         $("#productModal").modal("hide");
       });
@@ -435,8 +438,8 @@ export default {
     pagination() {
       return this.$store.state.pagination;
     },
-    status() {
-      return this.$store.state.status;
+    loadingProductId() {
+      return this.$store.state.loadingProductId;
     },
     product() {
       return this.$store.state.product;
