@@ -353,22 +353,9 @@ export default {
       // 待產品資料取完刷新再跳出視窗
       $("#productModal").modal("show");
     },
-    addToCart(id, qty = 1) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
-      const vm = this;
-      this.$store.dispatch("updateLoadingProductId", { loadingProductId: id });
-      const cart = {
-        product_id: id,
-        qty: qty
-      };
-      this.$http.post(url, { data: cart }).then(response => {
-        console.log(response.data);
-        this.$store.dispatch("updateLoadingProductId", {
-          loadingProductId: ""
-        });
-        vm.getCart();
-        $("#productModal").modal("hide");
-      });
+    async addToCart(id, qty = 1) {
+      await this.$store.dispatch("addToCart", { productId: id , productQty: qty});
+      $("#productModal").modal("hide");
     },
     getCart() {
       this.$store.dispatch("getCart");

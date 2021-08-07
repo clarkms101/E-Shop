@@ -79,6 +79,22 @@ export default new Vuex.Store({
         context.commit("CART", response.data.data);
         context.commit("LOADING", false);
       });
+    },
+    async addToCart(context, value) {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      context.dispatch("updateLoadingProductId", {
+        loadingProductId: value.productId
+      });
+      const cart = {
+        product_id: value.productId,
+        qty: value.productQty
+      };
+      await axios.post(url, { data: cart }).then(response => {
+        context.dispatch("updateLoadingProductId", {
+          loadingProductId: ""
+        });
+        context.dispatch("getCart");
+      });
     }
   },
   // 操作資料狀態
