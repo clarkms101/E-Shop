@@ -14,7 +14,8 @@ export default new Vuex.Store({
     products: [],
     pagination: {},
     loadingProductId: "",
-    qty: ""
+    qty: "",
+    cart: {}
   },
   // 對外開放的動作
   actions: {
@@ -69,6 +70,15 @@ export default new Vuex.Store({
     },
     updateLoadingProductId(context, value) {
       context.commit("LOADING_PRODUCTID", value.loadingProductId);
+    },
+    getCart(context) {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      context.commit("LOADING", true);
+      axios.get(url).then(response => {
+        console.log(response.data);
+        context.commit("CART", response.data.data);
+        context.commit("LOADING", false);
+      });
     }
   },
   // 操作資料狀態
@@ -93,6 +103,9 @@ export default new Vuex.Store({
     },
     QTY(state, value) {
       state.qty = value;
+    },
+    CART(state, value) {
+      state.cart = value;
     }
   }
 });

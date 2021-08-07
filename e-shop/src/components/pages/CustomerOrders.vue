@@ -332,7 +332,6 @@ export default {
   },
   data() {
     return {
-      cart: {},
       form: {
         user: {
           name: "",
@@ -372,14 +371,7 @@ export default {
       });
     },
     getCart() {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
-      const vm = this;
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.get(url).then(response => {
-        console.log(response.data);
-        vm.cart = response.data.data;
-        vm.$store.dispatch("updateLoading", false);
-      });
+      this.$store.dispatch("getCart");
     },
     removeFromCart(id) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${id}`;
@@ -451,6 +443,9 @@ export default {
       set(selectQty) {
         this.$store.dispatch("updateQty", { qty: selectQty });
       }
+    },
+    cart() {
+      return this.$store.state.cart;
     }
   },
   created() {
