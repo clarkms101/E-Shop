@@ -18,8 +18,8 @@ export default new Vuex.Store({
   },
   // 對外開放的動作
   actions: {
-    getProducts(context, payload) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products?page=${payload.page}`;
+    getProducts(context, value) {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products?page=${value.page}`;
       const token = document.cookie.replace(
         /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
         "$1"
@@ -34,22 +34,22 @@ export default new Vuex.Store({
         context.commit("PAGINATION", response.data.pagination);
       });
     },
-    async getProduct(context, payload) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${payload.productId}`;
-      context.commit("LOADING_PRODUCTID", payload.productId);
+    async getProduct(context, value) {
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${value.productId}`;
+      context.commit("LOADING_PRODUCTID", value.productId);
       await axios.get(url).then(response => {
         context.commit("PRODUCT", response.data.product);
         context.commit("QTY", "");
         context.commit("LOADING_PRODUCTID", "");
       });
     },
-    deleteProduct(context, payload) {
+    deleteProduct(context, value) {
       const token = document.cookie.replace(
         /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
         "$1"
       );
       axios.defaults.headers.common.Authorization = `${token}`;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${payload.productId}`;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${value.productId}`;
       // 處理中提示
       context.commit("LOADING", true);
       axios.delete(url).then(response => {
@@ -61,38 +61,38 @@ export default new Vuex.Store({
         }
       });
     },
-    updateLoading(context, status) {
-      context.commit("LOADING", status);
+    updateLoading(context, value) {
+      context.commit("LOADING", value);
     },
-    updateQty(context, payload) {
-      context.commit("QTY", payload.qty);
+    updateQty(context, value) {
+      context.commit("QTY", value.qty);
     },
-    updateLoadingProductId(context, payload) {
-      context.commit("LOADING_PRODUCTID", payload.loadingProductId);
+    updateLoadingProductId(context, value) {
+      context.commit("LOADING_PRODUCTID", value.loadingProductId);
     }
   },
   // 操作資料狀態
   mutations: {
-    LOADING(state, status) {
-      state.isLoading = status;
+    LOADING(state, value) {
+      state.isLoading = value;
     },
-    PRODUCT(state, payload) {
-      state.product = payload;
+    PRODUCT(state, value) {
+      state.product = value;
     },
-    PRODUCT_NUM(state, payload) {
-      state.product.num = payload;
+    PRODUCT_NUM(state, value) {
+      state.product.num = value;
     },
-    PRODUCTS(state, payload) {
-      state.products = payload;
+    PRODUCTS(state, value) {
+      state.products = value;
     },
-    PAGINATION(state, payload) {
-      state.pagination = payload;
+    PAGINATION(state, value) {
+      state.pagination = value;
     },
-    LOADING_PRODUCTID(state, payload) {
-      state.loadingProductId = payload;
+    LOADING_PRODUCTID(state, value) {
+      state.loadingProductId = value;
     },
-    QTY(state, payload) {
-      state.qty = payload;
+    QTY(state, value) {
+      state.qty = value;
     }
   }
 });
