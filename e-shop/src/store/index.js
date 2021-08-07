@@ -34,10 +34,10 @@ export default new Vuex.Store({
         context.commit("PAGINATION", response.data.pagination);
       });
     },
-    getProduct(context, payload) {
+    async getProduct(context, payload) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${payload.productId}`;
       context.commit("LOADING_PRODUCTID", payload.productId);
-      axios.get(url).then(response => {
+      await axios.get(url).then(response => {
         context.commit("PRODUCT", response.data.product);
         context.commit("QTY", "");
         context.commit("LOADING_PRODUCTID", "");

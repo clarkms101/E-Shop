@@ -349,9 +349,9 @@ export default {
     getProducts(page = 1) {
       this.$store.dispatch("getProducts", { page: page });
     },
-    getProduct(id) {
-      this.$store.dispatch("getProduct", { productId: id });
-      // todo
+    async getProduct(id) {
+      await this.$store.dispatch("getProduct", { productId: id });
+      // 待產品資料取完刷新再跳出視窗
       $("#productModal").modal("show");
     },
     addToCart(id, qty = 1) {
