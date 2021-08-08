@@ -95,6 +95,22 @@ export default new Vuex.Store({
         });
         context.dispatch("getCart");
       });
+    },
+    removeFromCart(context, value) {
+      return new Promise((resolve, reject) => {
+        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${value.itemId}`;
+        context.commit("LOADING", true);
+        axios.delete(url).then(
+          response => {
+            context.dispatch("getCart");
+            context.commit("LOADING", false);
+            resolve(response);
+          },
+          error => {
+            reject(error);
+          }
+        );
+      });
     }
   },
   // 操作資料狀態

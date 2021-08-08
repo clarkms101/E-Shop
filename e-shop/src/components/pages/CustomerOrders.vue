@@ -354,21 +354,24 @@ export default {
       $("#productModal").modal("show");
     },
     async addToCart(id, qty = 1) {
-      await this.$store.dispatch("addToCart", { productId: id , productQty: qty});
+      await this.$store.dispatch("addToCart", {
+        productId: id,
+        productQty: qty
+      });
       $("#productModal").modal("hide");
     },
     getCart() {
       this.$store.dispatch("getCart");
     },
     removeFromCart(id) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${id}`;
-      const vm = this;
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.delete(url).then(response => {
-        this.$bus.$emit("message:push", response.data.message, "success");
-        this.getCart();
-        vm.$store.dispatch("updateLoading", false);
-      });
+      this.$store.dispatch("removeFromCart", { itemId: id }).then(
+        response => {
+          this.$bus.$emit("message:push", response.data.message, "success");
+        },
+        error => {
+          this.$bus.$emit("message:push", "處理失敗", "danger");
+        }
+      );
     },
     addCouponCode() {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/coupon`;
