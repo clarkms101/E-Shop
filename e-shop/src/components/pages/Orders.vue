@@ -13,7 +13,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="(item, key) in sortOrder"
+          v-for="(item, key) in sortedOrder"
           :key="key"
           v-if="orders.length"
           :class="{ 'text-secondary': !item.is_paid }"
@@ -47,40 +47,20 @@
 import Pagination from "../Pagination.vue";
 
 export default {
-  data() {
-    return {
-      orders: {},
-      isNew: false,
-      pagination: {}
-    };
-  },
   components: {
     Pagination
   },
   methods: {
-    getOrders(currentPage = 1) {
-      const vm = this;
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
-      this.$http.defaults.headers.common.Authorization = `${token}`;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/orders?page=${currentPage}`;
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.get(url).then(response => {
-        vm.orders = response.data.orders;
-        vm.pagination = response.data.pagination;
-        vm.$store.dispatch("updateLoading", false);
-        console.log(response);
-      });
+    getOrders(page = 1) {
+      this.$store.dispatch("getOrders", { page: page });
     }
   },
   computed: {
-    sortOrder() {
-      const vm = this;
+    sortedOrder() {
       let newOrder = [];
-      if (vm.orders.length) {
-        newOrder = vm.orders.sort((a, b) => {
+      var oldOrder = this.$store.state.orders;
+      if (oldOrder.length) {
+        newOrder = oldOrder.sort((a, b) => {
           const aIsPaid = a.is_paid ? 1 : 0;
           const bIsPaid = b.is_paid ? 1 : 0;
           return bIsPaid - aIsPaid;
@@ -90,6 +70,9 @@ export default {
     },
     isLoading() {
       return this.$store.state.isLoading;
+    },
+    pagination() {
+      return this.$store.state.pagination;
     }
   },
   created() {

@@ -6,7 +6,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   // 嚴格模式(state不允許外部直接修改) (正式環境不啟用嚴格模式，避免效能耗損)
-  strict: process.env.NODE_ENV !== 'production',
+  strict: process.env.NODE_ENV !== "production",
   // 資料狀態
   state: {
     isLoading: false,
@@ -25,7 +25,8 @@ export default new Vuex.Store({
         address: ""
       },
       message: ""
-    }
+    },
+    orders: {}
   },
   // 對外開放的動作
   actions: {
@@ -177,6 +178,21 @@ export default new Vuex.Store({
           }
         );
       });
+    },
+    getOrders(context, value) {
+      const token = document.cookie.replace(
+        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      this.$http.defaults.headers.common.Authorization = `${token}`;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/orders?page=${value.page}`;
+      context.commit("LOADING", true);
+      this.$http.get(url).then(response => {
+        context.commit("ORDERS", response.data.orders);
+        context.commit("PAGINATION", response.data.pagination);
+        context.commit("LOADING", false);
+        console.log(response);
+      });
     }
   },
   // 操作資料狀態
@@ -222,6 +238,9 @@ export default new Vuex.Store({
     },
     ORDER_FORM_MESSAGE(state, payload) {
       state.orderForm.message = payload;
+    },
+    ORDERS(state, payload) {
+      state.orders = payload;
     }
   }
 });
