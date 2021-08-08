@@ -201,7 +201,7 @@
             <button
               class="btn btn-outline-secondary"
               type="button"
-              @click="addCouponCode"
+              @click="addCouponCode(coupon_code)"
             >
               套用優惠碼
             </button>
@@ -340,8 +340,7 @@ export default {
           address: ""
         },
         message: ""
-      },
-      coupon_code: ""
+      }
     };
   },
   methods: {
@@ -373,23 +372,19 @@ export default {
         }
       );
     },
-    addCouponCode() {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/coupon`;
-      const vm = this;
-      const coupon = {
-        code: vm.coupon_code
-      };
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.post(url, { data: coupon }).then(response => {
-        if (response.data.success) {
-          this.$bus.$emit("message:push", response.data.message, "success");
-          this.getCart();
-        } else {
-          this.$bus.$emit("message:push", response.data.message, "danger");
+    addCouponCode(coupon_code) {
+      this.$store.dispatch("addCouponCode", { coupon_code: coupon_code }).then(
+        response => {
+          if (response.data.success) {
+            this.$bus.$emit("message:push", response.data.message, "success");
+          } else {
+            this.$bus.$emit("message:push", response.data.message, "danger");
+          }
+        },
+        error => {
+          this.$bus.$emit("message:push", "處理失敗", "danger");
         }
-
-        vm.$store.dispatch("updateLoading", false);
-      });
+      );
     },
     createOrder() {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`;
@@ -436,6 +431,14 @@ export default {
     },
     cart() {
       return this.$store.state.cart;
+    },
+    coupon_code: {
+      get() {
+        return this.$store.state.coupon_code;
+      },
+      set(coupon_code) {
+        this.$store.dispatch("updateCouponCode", { coupon_code: coupon_code });
+      }
     }
   },
   created() {

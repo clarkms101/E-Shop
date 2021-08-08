@@ -15,7 +15,8 @@ export default new Vuex.Store({
     pagination: {},
     loadingProductId: "",
     qty: "",
-    cart: {}
+    cart: {},
+    coupon_code: ""
   },
   // 對外開放的動作
   actions: {
@@ -71,6 +72,9 @@ export default new Vuex.Store({
     updateLoadingProductId(context, value) {
       context.commit("LOADING_PRODUCTID", value.loadingProductId);
     },
+    updateCouponCode(context, value) {
+      context.commit("COUPON_CODE", value.coupon_code);
+    },
     getCart(context) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       context.commit("LOADING", true);
@@ -111,6 +115,27 @@ export default new Vuex.Store({
           }
         );
       });
+    },
+    addCouponCode(context, value) {
+      return new Promise((resolve, reject) => {
+        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/coupon`;
+        const coupon = {
+          code: value.coupon_code
+        };
+        context.commit("LOADING", true);
+        axios.post(url, { data: coupon }).then(
+          response => {
+            if (response.data.success) {
+              context.dispatch("getCart");
+            }
+            context.commit("LOADING", false);
+            resolve(response);
+          },
+          error => {
+            reject(error);
+          }
+        );
+      });
     }
   },
   // 操作資料狀態
@@ -138,6 +163,9 @@ export default new Vuex.Store({
     },
     CART(state, value) {
       state.cart = value;
+    },
+    COUPON_CODE(state, value) {
+      state.coupon_code = value;
     }
   }
 });
