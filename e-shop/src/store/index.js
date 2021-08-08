@@ -76,13 +76,13 @@ export default new Vuex.Store({
       context.commit("LOADING", value);
     },
     updateQty(context, value) {
-      context.commit("QTY", value.qty);
+      context.commit("QTY", value);
     },
     updateLoadingProductId(context, value) {
       context.commit("LOADING_PRODUCTID", value.loadingProductId);
     },
     updateCouponCode(context, value) {
-      context.commit("COUPON_CODE", value.coupon_code);
+      context.commit("COUPON_CODE", value);
     },
     updateOrderFormUserName(context, value) {
       context.commit("ORDER_FORM_USER_NAME", value);
@@ -181,47 +181,47 @@ export default new Vuex.Store({
   },
   // 操作資料狀態
   mutations: {
-    LOADING(state, value) {
-      state.isLoading = value;
+    LOADING(state, payload) {
+      state.isLoading = payload;
     },
-    PRODUCT(state, value) {
-      state.product = value;
+    PRODUCT(state, payload) {
+      state.product = payload;
     },
-    PRODUCT_NUM(state, value) {
-      state.product.num = value;
+    PRODUCT_NUM(state, payload) {
+      state.product.num = payload;
     },
-    PRODUCTS(state, value) {
-      state.products = value;
+    PRODUCTS(state, payload) {
+      state.products = payload;
     },
-    PAGINATION(state, value) {
-      state.pagination = value;
+    PAGINATION(state, payload) {
+      state.pagination = payload;
     },
-    LOADING_PRODUCTID(state, value) {
-      state.loadingProductId = value;
+    LOADING_PRODUCTID(state, payload) {
+      state.loadingProductId = payload;
     },
-    QTY(state, value) {
-      state.qty = value;
+    QTY(state, payload) {
+      state.qty = payload;
     },
-    CART(state, value) {
-      state.cart = value;
+    CART(state, payload) {
+      state.cart = payload;
     },
-    COUPON_CODE(state, value) {
-      state.coupon_code = value;
+    COUPON_CODE(state, payload) {
+      state.coupon_code = payload;
     },
-    ORDER_FORM_USER_NAME(state, value) {
-      state.orderForm.user.name = value;
+    ORDER_FORM_USER_NAME(state, payload) {
+      state.orderForm.user.name = payload;
     },
-    ORDER_FORM_USER_EMAIL(state, value) {
-      state.orderForm.user.email = value;
+    ORDER_FORM_USER_EMAIL(state, payload) {
+      state.orderForm.user.email = payload;
     },
-    ORDER_FORM_USER_TEL(state, value) {
-      state.orderForm.user.tel = value;
+    ORDER_FORM_USER_TEL(state, payload) {
+      state.orderForm.user.tel = payload;
     },
-    ORDER_FORM_USER_ADDRESS(state, value) {
-      state.orderForm.user.address = value;
+    ORDER_FORM_USER_ADDRESS(state, payload) {
+      state.orderForm.user.address = payload;
     },
-    ORDER_FORM_MESSAGE(state, value) {
-      state.orderForm.message = value;
+    ORDER_FORM_MESSAGE(state, payload) {
+      state.orderForm.message = payload;
     }
   }
 });

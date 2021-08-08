@@ -415,8 +415,8 @@ export default {
       get() {
         return this.$store.state.qty;
       },
-      set(selectQty) {
-        this.$store.dispatch("updateQty", { qty: selectQty });
+      set(value) {
+        this.$store.dispatch("updateQty", value);
       }
     },
     cart() {
@@ -426,8 +426,8 @@ export default {
       get() {
         return this.$store.state.coupon_code;
       },
-      set(coupon_code) {
-        this.$store.dispatch("updateCouponCode", { coupon_code: coupon_code });
+      set(value) {
+        this.$store.dispatch("updateCouponCode", value);
       }
     },
     orderForm_user_name: {
