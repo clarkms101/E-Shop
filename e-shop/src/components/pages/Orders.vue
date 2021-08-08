@@ -13,7 +13,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="(item, key) in sortedOrder"
+          v-for="(item, key) in orders"
           :key="key"
           v-if="orders.length"
           :class="{ 'text-secondary': !item.is_paid }"
@@ -56,17 +56,8 @@ export default {
     }
   },
   computed: {
-    sortedOrder() {
-      let newOrder = [];
-      var oldOrder = this.$store.state.orders;
-      if (oldOrder.length) {
-        newOrder = oldOrder.sort((a, b) => {
-          const aIsPaid = a.is_paid ? 1 : 0;
-          const bIsPaid = b.is_paid ? 1 : 0;
-          return bIsPaid - aIsPaid;
-        });
-      }
-      return newOrder;
+    orders() {
+      return this.$store.state.orders;
     },
     isLoading() {
       return this.$store.state.isLoading;

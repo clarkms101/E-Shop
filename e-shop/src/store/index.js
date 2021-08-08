@@ -184,11 +184,20 @@ export default new Vuex.Store({
         /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
         "$1"
       );
-      this.$http.defaults.headers.common.Authorization = `${token}`;
+      axios.defaults.headers.common.Authorization = `${token}`;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/orders?page=${value.page}`;
       context.commit("LOADING", true);
-      this.$http.get(url).then(response => {
-        context.commit("ORDERS", response.data.orders);
+      axios.get(url).then(response => {
+        let newOrders = [];
+        var oldOrders = response.data.orders;
+        if (oldOrders.length) {
+          newOrders = oldOrders.sort((a, b) => {
+            const aIsPaid = a.is_paid ? 1 : 0;
+            const bIsPaid = b.is_paid ? 1 : 0;
+            return bIsPaid - aIsPaid;
+          });
+        }
+        context.commit("ORDERS", newOrders);
         context.commit("PAGINATION", response.data.pagination);
         context.commit("LOADING", false);
         console.log(response);
