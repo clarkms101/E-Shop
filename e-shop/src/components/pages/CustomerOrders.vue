@@ -225,7 +225,7 @@
                 id="email"
                 type="email"
                 name="email"
-                v-model="form.user.email"
+                v-model="orderForm_user_email"
                 class="form-control"
                 :class="classes"
                 placeholder="輸入Email"
@@ -245,7 +245,7 @@
                 id="username"
                 type="text"
                 name="收件人姓名"
-                v-model="form.user.name"
+                v-model="orderForm_user_name"
                 class="form-control"
                 :class="classes"
                 placeholder="輸入姓名"
@@ -265,7 +265,7 @@
                 id="usertel"
                 type="tel"
                 name="收件人電話"
-                v-model="form.user.tel"
+                v-model="orderForm_user_tel"
                 class="form-control"
                 :class="classes"
                 placeholder="請輸入電話"
@@ -285,7 +285,7 @@
                 id="address"
                 type="text"
                 name="收件人地址"
-                v-model="form.user.address"
+                v-model="orderForm_user_address"
                 class="form-control"
                 :class="classes"
                 placeholder="請輸入地址"
@@ -305,7 +305,7 @@
                 rows="10"
                 class="form-control"
                 :class="classes"
-                v-model="form.message"
+                v-model="orderForm_message"
               ></textarea>
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </div>
@@ -329,19 +329,6 @@ export default {
   name: "CustomerOrder",
   components: {
     Pagination
-  },
-  data() {
-    return {
-      form: {
-        user: {
-          name: "",
-          email: "",
-          tel: "",
-          address: ""
-        },
-        message: ""
-      }
-    };
   },
   methods: {
     getProducts(page = 1) {
@@ -368,6 +355,7 @@ export default {
           this.$bus.$emit("message:push", response.data.message, "success");
         },
         error => {
+          console.log(error);
           this.$bus.$emit("message:push", "處理失敗", "danger");
         }
       );
@@ -382,24 +370,26 @@ export default {
           }
         },
         error => {
+          console.log(error);
           this.$bus.$emit("message:push", "處理失敗", "danger");
         }
       );
     },
     createOrder() {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`;
-      const vm = this;
-      const order = vm.form;
-      vm.$store.dispatch("updateLoading", true);
-
-      this.$http.post(url, { data: order }).then(response => {
-        console.log("訂單已建立", response);
-        if (response.data.success) {
-          // 轉跳到確認頁面
-          vm.$router.push(`/customer_checkout/${response.data.orderId}`);
+      this.$store.dispatch("createOrder").then(
+        response => {
+          if (response.data.success) {
+            // 轉跳到確認頁面
+            this.$router.push(`/customer_checkout/${response.data.orderId}`);
+          } else {
+            this.$bus.$emit("message:push", response.data.message, "danger");
+          }
+        },
+        error => {
+          console.log(error);
+          this.$bus.$emit("message:push", "處理失敗", "danger");
         }
-        vm.$store.dispatch("updateLoading", false);
-      });
+      );
     }
   },
   computed: {
@@ -438,6 +428,46 @@ export default {
       },
       set(coupon_code) {
         this.$store.dispatch("updateCouponCode", { coupon_code: coupon_code });
+      }
+    },
+    orderForm_user_name: {
+      get() {
+        return this.$store.state.orderForm.user.name;
+      },
+      set(value) {
+        this.$store.dispatch("updateOrderFormUserName", value);
+      }
+    },
+    orderForm_user_email: {
+      get() {
+        return this.$store.state.orderForm.user.email;
+      },
+      set(value) {
+        this.$store.dispatch("updateOrderFormUserEmail", value);
+      }
+    },
+    orderForm_user_tel: {
+      get() {
+        return this.$store.state.orderForm.user.tel;
+      },
+      set(value) {
+        this.$store.dispatch("updateOrderFormUserTel", value);
+      }
+    },
+    orderForm_user_address: {
+      get() {
+        return this.$store.state.orderForm.user.address;
+      },
+      set(value) {
+        this.$store.dispatch("updateOrderFormUserAddress", value);
+      }
+    },
+    orderForm_message: {
+      get() {
+        return this.$store.state.orderForm.message;
+      },
+      set(value) {
+        this.$store.dispatch("updateOrderFormMessage", value);
       }
     }
   },

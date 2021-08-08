@@ -16,7 +16,16 @@ export default new Vuex.Store({
     loadingProductId: "",
     qty: "",
     cart: {},
-    coupon_code: ""
+    coupon_code: "",
+    orderForm: {
+      user: {
+        name: "",
+        email: "",
+        tel: "",
+        address: ""
+      },
+      message: ""
+    }
   },
   // 對外開放的動作
   actions: {
@@ -74,6 +83,21 @@ export default new Vuex.Store({
     },
     updateCouponCode(context, value) {
       context.commit("COUPON_CODE", value.coupon_code);
+    },
+    updateOrderFormUserName(context, value) {
+      context.commit("ORDER_FORM_USER_NAME", value);
+    },
+    updateOrderFormUserEmail(context, value) {
+      context.commit("ORDER_FORM_USER_EMAIL", value);
+    },
+    updateOrderFormUserTel(context, value) {
+      context.commit("ORDER_FORM_USER_TEL", value);
+    },
+    updateOrderFormUserAddress(context, value) {
+      context.commit("ORDER_FORM_USER_ADDRESS", value);
+    },
+    updateOrderFormMessage(context, value) {
+      context.commit("ORDER_FORM_MESSAGE", value);
     },
     getCart(context) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
@@ -136,6 +160,23 @@ export default new Vuex.Store({
           }
         );
       });
+    },
+    createOrder(context) {
+      return new Promise((resolve, reject) => {
+        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`;
+        const order = context.state.orderForm;
+        context.commit("LOADING", true);
+        axios.post(url, { data: order }).then(
+          response => {
+            console.log("訂單已建立", response);
+            context.commit("LOADING", false);
+            resolve(response);
+          },
+          error => {
+            reject(error);
+          }
+        );
+      });
     }
   },
   // 操作資料狀態
@@ -166,6 +207,21 @@ export default new Vuex.Store({
     },
     COUPON_CODE(state, value) {
       state.coupon_code = value;
+    },
+    ORDER_FORM_USER_NAME(state, value) {
+      state.orderForm.user.name = value;
+    },
+    ORDER_FORM_USER_EMAIL(state, value) {
+      state.orderForm.user.email = value;
+    },
+    ORDER_FORM_USER_TEL(state, value) {
+      state.orderForm.user.tel = value;
+    },
+    ORDER_FORM_USER_ADDRESS(state, value) {
+      state.orderForm.user.address = value;
+    },
+    ORDER_FORM_MESSAGE(state, value) {
+      state.orderForm.message = value;
     }
   }
 });
