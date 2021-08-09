@@ -22,6 +22,7 @@
           <td>{{ item.title }}</td>
           <td>{{ item.code }}</td>
           <td>{{ item.percent }}%</td>
+          <!-- filter : timestamp to date -->
           <td>{{ item.due_date | date }}</td>
           <td>
             <span v-if="item.is_enabled === 1" class="text-success">啟用</span>
@@ -49,7 +50,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLabel">優惠券</h5>
             <button
               type="button"
               class="close"
@@ -66,7 +67,7 @@
                 type="text"
                 class="form-control"
                 id="title"
-                v-model="tempCoupon.title"
+                v-model="tempCoupon_title"
                 placeholder="請輸入標題"
               />
             </div>
@@ -76,17 +77,18 @@
                 type="text"
                 class="form-control"
                 id="coupon_code"
-                v-model="tempCoupon.code"
+                v-model="tempCoupon_code"
                 placeholder="請輸入優惠碼"
               />
             </div>
             <div class="form-group">
               <label for="due_date">到期日</label>
+              <!-- watch : timestamp to date -->
               <input
                 type="date"
                 class="form-control"
                 id="due_date"
-                v-model="due_date"
+                v-model="display_due_date"
               />
             </div>
             <div class="form-group">
@@ -95,7 +97,7 @@
                 type="number"
                 class="form-control"
                 id="price"
-                v-model="tempCoupon.percent"
+                v-model="tempCoupon_percent"
                 placeholder="請輸入折扣百分比"
               />
             </div>
@@ -106,7 +108,7 @@
                   type="checkbox"
                   :true-value="1"
                   :false-value="0"
-                  v-model="tempCoupon.is_enabled"
+                  v-model="tempCoupon_isEnabled"
                   id="is_enabled"
                 />
                 <label class="form-check-label" for="is_enabled">
@@ -121,7 +123,7 @@
               class="btn btn-secondary"
               data-dismiss="modal"
             >
-              Close
+              關閉
             </button>
             <button type="button" class="btn btn-primary" @click="updateCoupon">
               更新優惠券
@@ -142,73 +144,85 @@ export default {
   },
   data() {
     return {
-      coupons: {},
-      tempCoupon: {
-        title: "",
-        is_enabled: 0,
-        percent: 100,
-        due_date: 0,
-        code: ""
-      },
-      due_date: new Date(),
-      isNew: false
+      display_due_date: new Date()
     };
   },
   watch: {
-    due_date() {
+    display_due_date() {
       const vm = this;
-      const timestamp = Math.floor(new Date(vm.due_date) / 1000);
-      vm.tempCoupon.due_date = timestamp;
+      const timestamp = Math.floor(new Date(vm.display_due_date) / 1000);
+      this.$store.dispatch("updateTempCouponDueDate", timestamp);
     }
   },
   methods: {
     openCouponModal(isNew, item) {
       const vm = this;
       $("#couponModal").modal("show");
-      vm.isNew = isNew;
-      if (vm.isNew) {
-        vm.tempCoupon = {};
+      this.$store.dispatch("updateIsNewCoupon", isNew);
+      if (isNew) {
+        this.$store.dispatch("updateTempCoupon", {});
       } else {
-        vm.tempCoupon = Object.assign({}, item);
-        const dateAndTime = new Date(vm.tempCoupon.due_date * 1000)
+        this.$store.dispatch("updateTempCoupon", Object.assign({}, item));
+        const dateAndTime = new Date(item.due_date * 1000)
           .toISOString()
           .split("T");
-        vm.due_date = dateAndTime[0];
+        vm.display_due_date = dateAndTime[0];
       }
     },
     getCoupons() {
-      const vm = this;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupons`;
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.get(url, vm.tempProduct).then(response => {
-        vm.coupons = response.data.coupons;
-        console.log(response);
-        vm.$store.dispatch("updateLoading", false);
-      });
+      this.$store.dispatch("getCoupons");
     },
     updateCoupon() {
-      const vm = this;
-      if (vm.isNew) {
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupon`;
-        this.$http.post(url, { data: vm.tempCoupon }).then(response => {
-          console.log(response, vm.tempCoupon);
-          $("#couponModal").modal("hide");
-          this.getCoupons();
-        });
-      } else {
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupon/${vm.tempCoupon.id}`;
-        vm.due_date = new Date(vm.tempCoupon.due_date * 1000);
-        this.$http.put(url, { data: vm.tempCoupon }).then(response => {
-          console.log(response);
-          $("#couponModal").modal("hide");
-          this.getCoupons();
-        });
-      }
+      this.$store.dispatch("updateCoupon");
+      $("#couponModal").modal("hide");
     }
   },
   computed: {
     isLoading() {
       return this.$store.state.isLoading;
+    },
+    tempCoupon_title: {
+      get() {
+        return this.$store.state.tempCoupon.title;
+      },
+      set(value) {
+        this.$store.dispatch("updateTempCouponTitle", value);
+      }
+    },
+    tempCoupon_isEnabled: {
+      get() {
+        return this.$store.state.tempCoupon.is_enabled;
+      },
+      set(value) {
+        this.$store.dispatch("updateTempCouponIsEnabled", value);
+      }
+    },
+    tempCoupon_percent: {
+      get() {
+        return this.$store.state.tempCoupon.percent;
+      },
+      set(value) {
+        this.$store.dispatch("updateTempCouponPercent", value);
+      }
+    },
+    tempCoupon_dueDate: {
+      get() {
+        return this.$store.state.tempCoupon.due_date;
+      },
+      set(value) {
+        this.$store.dispatch("updateTempCouponDueDate", value);
+      }
+    },
+    tempCoupon_code: {
+      get() {
+        return this.$store.state.tempCoupon.code;
+      },
+      set(value) {
+        this.$store.dispatch("updateTempCouponCode", value);
+      }
+    },
+    coupons() {
+      return this.$store.state.coupons;
     }
   },
   created() {
