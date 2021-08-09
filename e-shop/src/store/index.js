@@ -26,7 +26,11 @@ export default new Vuex.Store({
       },
       message: ""
     },
-    orders: {}
+    orders: {},
+    orderId: "",
+    order: {
+      user: {}
+    }
   },
   // 對外開放的動作
   actions: {
@@ -99,6 +103,9 @@ export default new Vuex.Store({
     },
     updateOrderFormMessage(context, value) {
       context.commit("ORDER_FORM_MESSAGE", value);
+    },
+    updateOrderId(context, value) {
+      context.commit("ORDER_ID", value);
     },
     getCart(context) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
@@ -202,6 +209,26 @@ export default new Vuex.Store({
         context.commit("LOADING", false);
         console.log(response);
       });
+    },
+    getOrder(context) {
+      let orderId = context.state.orderId;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order/${orderId}`;
+      context.commit("LOADING", true);
+      axios.get(url).then(response => {
+        context.commit("ORDER", response.data.order);
+        context.commit("LOADING", false);
+      });
+    },
+    payOrder(context) {
+      let orderId = context.state.orderId;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/pay/${orderId}`;
+      context.commit("LOADING", true);
+      axios.post(url).then(response => {
+        if (response.data.success) {
+          context.dispatch("getOrder");
+        }
+        context.commit("LOADING", false);
+      });
     }
   },
   // 操作資料狀態
@@ -250,6 +277,12 @@ export default new Vuex.Store({
     },
     ORDERS(state, payload) {
       state.orders = payload;
+    },
+    ORDER(state, payload) {
+      state.order = payload;
+    },
+    ORDER_ID(state, payload) {
+      state.orderId = payload;
     }
   }
 });

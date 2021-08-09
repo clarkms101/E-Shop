@@ -64,46 +64,24 @@
 
 <script>
 export default {
-  data() {
-    return {
-      orderId: "",
-      order: {
-        user: {}
-      }
-    };
-  },
   methods: {
     getOrder() {
-      const vm = this;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order/${vm.orderId}`;
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.get(url).then(response => {
-        vm.order = response.data.order;
-        console.log(response.data);
-        vm.$store.dispatch("updateLoading", false);
-      });
+      this.$store.dispatch("getOrder");
     },
     payOrder() {
-      const vm = this;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/pay/${vm.orderId}`;
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.post(url).then(response => {
-        console.log(response.data);
-        if (response.data.success) {
-          vm.getOrder();
-        }
-        vm.$store.dispatch("updateLoading", false);
-      });
+      this.$store.dispatch("payOrder");
     }
   },
   computed: {
     isLoading() {
       return this.$store.state.isLoading;
+    },
+    order() {
+      return this.$store.state.order;
     }
   },
   created() {
-    this.orderId = this.$route.params.orderId;
-    console.log(this.orderId);
+    this.$store.dispatch("updateOrderId", this.$route.params.orderId);
     this.getOrder();
   }
 };
