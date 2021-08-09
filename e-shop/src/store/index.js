@@ -30,6 +30,10 @@ export default new Vuex.Store({
     orderId: "",
     order: {
       user: {}
+    },
+    user: {
+      username: "",
+      password: ""
     }
   },
   // 對外開放的動作
@@ -106,6 +110,12 @@ export default new Vuex.Store({
     },
     updateOrderId(context, value) {
       context.commit("ORDER_ID", value);
+    },
+    updateUserName(context, value) {
+      context.commit("USER_NAME", value);
+    },
+    updateUserPassword(context, value) {
+      context.commit("USER_PASSWORD", value);
     },
     getCart(context) {
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
@@ -229,6 +239,21 @@ export default new Vuex.Store({
         }
         context.commit("LOADING", false);
       });
+    },
+    signin(context) {
+      return new Promise((resolve, reject) => {
+        const url = `${process.env.APIPATH}/admin/signin`;
+        let user = context.state.user;
+        axios.post(url, user).then(
+          response => {
+            console.log("login msg", response.data);
+            resolve(response);
+          },
+          error => {
+            reject(error);
+          }
+        );
+      });
     }
   },
   // 操作資料狀態
@@ -283,6 +308,12 @@ export default new Vuex.Store({
     },
     ORDER_ID(state, payload) {
       state.orderId = payload;
+    },
+    USER_NAME(state, payload) {
+      state.user.username = payload;
+    },
+    USER_PASSWORD(state, payload) {
+      state.user.password = payload;
     }
   }
 });

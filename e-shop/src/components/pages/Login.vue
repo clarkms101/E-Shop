@@ -11,7 +11,7 @@
             class="form-control"
             id="floatingInput"
             placeholder="name@example.com"
-            v-model="user.username"
+            v-model="user_name"
           />
           <label for="floatingInput">Email address</label>
         </div>
@@ -21,7 +21,7 @@
             class="form-control"
             id="floatingPassword"
             placeholder="Password"
-            v-model="user.password"
+            v-model="user_password"
           />
           <label for="floatingPassword">Password</label>
         </div>
@@ -46,37 +46,52 @@ import Alert from "../AlertMessage.vue";
 export default {
   name: "Login",
   components: {
-    Alert,
-  },
-  data() {
-    return {
-      user: {
-        username: "",
-        password: "",
-      },
-    };
+    Alert
   },
   methods: {
     signin() {
-      const api = `${process.env.APIPATH}/admin/signin`;
-      const vm = this;
-      this.$http.post(api, vm.user).then((response) => {
-        console.log("login msg", response.data);
-        // 登入成功導到首頁
-        if (response.data.success) {
-          // 將後端回傳的 token 存入cookie
-          const token = response.data.token;
-          const expired = response.data.expired;
-          // console.log("login token", token, expired);
-          document.cookie = `hexToken = ${token};expires=${new Date(expired)}`;
-          vm.$router.push("/admin/products");
-        } else {
-          // 顯示錯誤訊息
-          this.$bus.$emit("message:push", response.data.message, "danger");
+      this.$store.dispatch("signin").then(
+        response => {
+          if (response.data.success) {
+            // 將後端回傳的 token 存入cookie
+            const token = response.data.token;
+            const expired = response.data.expired;
+            // console.log("login token", token, expired);
+            document.cookie = `hexToken = ${token};expires=${new Date(
+              expired
+            )}`;
+            // 登入後先到產品清單頁面
+            this.$router.push("/admin/products");
+          } else {
+            // 顯示錯誤訊息
+            this.$bus.$emit("message:push", response.data.message, "danger");
+          }
+        },
+        error => {
+          console.log(error);
+          this.$bus.$emit("message:push", "處理失敗", "danger");
         }
-      });
-    },
+      );
+    }
   },
+  computed: {
+    user_name: {
+      get() {
+        return this.$store.state.user.username;
+      },
+      set(value) {
+        this.$store.dispatch("updateUserName", value);
+      }
+    },
+    user_password: {
+      get() {
+        return this.$store.state.user.password;
+      },
+      set(value) {
+        this.$store.dispatch("updateUserPassword", value);
+      }
+    }
+  }
 };
 </script>
 
