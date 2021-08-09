@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import loginModules from "./login";
+import ordersModules from "./orders";
 
 Vue.use(Vuex);
 
@@ -27,7 +28,6 @@ export default new Vuex.Store({
       },
       message: ""
     },
-    orders: {},
     orderId: "",
     order: {
       user: {}
@@ -217,30 +217,6 @@ export default new Vuex.Store({
         );
       });
     },
-    getOrders(context, value) {
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
-      axios.defaults.headers.common.Authorization = `${token}`;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/orders?page=${value.page}`;
-      context.commit("LOADING", true);
-      axios.get(url).then(response => {
-        let newOrders = [];
-        var oldOrders = response.data.orders;
-        if (oldOrders.length) {
-          newOrders = oldOrders.sort((a, b) => {
-            const aIsPaid = a.is_paid ? 1 : 0;
-            const bIsPaid = b.is_paid ? 1 : 0;
-            return bIsPaid - aIsPaid;
-          });
-        }
-        context.commit("ORDERS", newOrders);
-        context.commit("PAGINATION", response.data.pagination);
-        context.commit("LOADING", false);
-        console.log(response);
-      });
-    },
     getOrder(context) {
       let orderId = context.state.orderId;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order/${orderId}`;
@@ -333,9 +309,6 @@ export default new Vuex.Store({
     ORDER_FORM_MESSAGE(state, payload) {
       state.orderForm.message = payload;
     },
-    ORDERS(state, payload) {
-      state.orders = payload;
-    },
     ORDER(state, payload) {
       state.order = payload;
     },
@@ -369,6 +342,7 @@ export default new Vuex.Store({
   },
   // 載入Vuex獨立模組
   modules: {
-    loginModules
+    loginModules,
+    ordersModules
   }
 });

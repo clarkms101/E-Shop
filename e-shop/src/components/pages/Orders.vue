@@ -52,12 +52,12 @@ export default {
   },
   methods: {
     getOrders(page = 1) {
-      this.$store.dispatch("getOrders", { page: page });
+      this.$store.dispatch("ordersModules/getOrders", { page: page });
     }
   },
   computed: {
     orders() {
-      return this.$store.state.orders;
+      return this.$store.getters["ordersModules/orders"];
     },
     isLoading() {
       return this.$store.state.isLoading;
