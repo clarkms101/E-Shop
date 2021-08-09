@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import loginModules from "./login";
 
 Vue.use(Vuex);
 
@@ -30,10 +31,6 @@ export default new Vuex.Store({
     orderId: "",
     order: {
       user: {}
-    },
-    user: {
-      username: "",
-      password: ""
     },
     coupons: {},
     tempCoupon: {
@@ -119,12 +116,6 @@ export default new Vuex.Store({
     },
     updateOrderId(context, value) {
       context.commit("ORDER_ID", value);
-    },
-    updateUserName(context, value) {
-      context.commit("USER_NAME", value);
-    },
-    updateUserPassword(context, value) {
-      context.commit("USER_PASSWORD", value);
     },
     updateTempCouponTitle(context, value) {
       context.commit("TEMPCOUPON_TITLE", value);
@@ -270,21 +261,6 @@ export default new Vuex.Store({
         context.commit("LOADING", false);
       });
     },
-    signin(context) {
-      return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/admin/signin`;
-        let user = context.state.user;
-        axios.post(url, user).then(
-          response => {
-            console.log("login msg", response.data);
-            resolve(response);
-          },
-          error => {
-            reject(error);
-          }
-        );
-      });
-    },
     updateCoupon(context) {
       // create
       if (context.state.isNewCoupon) {
@@ -366,12 +342,6 @@ export default new Vuex.Store({
     ORDER_ID(state, payload) {
       state.orderId = payload;
     },
-    USER_NAME(state, payload) {
-      state.user.username = payload;
-    },
-    USER_PASSWORD(state, payload) {
-      state.user.password = payload;
-    },
     TEMPCOUPON(state, payload) {
       state.tempCoupon = payload;
     },
@@ -396,5 +366,9 @@ export default new Vuex.Store({
     COUPONS(state, payload) {
       state.coupons = payload;
     }
+  },
+  // 載入Vuex獨立模組
+  modules: {
+    loginModules
   }
 });

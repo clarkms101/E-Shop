@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     signin() {
-      this.$store.dispatch("signin").then(
+      this.$store.dispatch("loginModules/signin").then(
         response => {
           if (response.data.success) {
             // 將後端回傳的 token 存入cookie
@@ -77,18 +77,18 @@ export default {
   computed: {
     user_name: {
       get() {
-        return this.$store.state.user.username;
+        return this.$store.getters["loginModules/user_name"];
       },
       set(value) {
-        this.$store.dispatch("updateUserName", value);
+        this.$store.dispatch("loginModules/updateUserName", value);
       }
     },
     user_password: {
       get() {
-        return this.$store.state.user.password;
+        return this.$store.getters["loginModules/user_password"];
       },
       set(value) {
-        this.$store.dispatch("updateUserPassword", value);
+        this.$store.dispatch("loginModules/updateUserPassword", value);
       }
     }
   }
