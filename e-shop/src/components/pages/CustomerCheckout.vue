@@ -66,10 +66,10 @@
 export default {
   methods: {
     getOrder() {
-      this.$store.dispatch("getOrder");
+      this.$store.dispatch("orderCheckoutModules/getOrder");
     },
     payOrder() {
-      this.$store.dispatch("payOrder");
+      this.$store.dispatch("orderCheckoutModules/payOrder");
     }
   },
   computed: {
@@ -77,11 +77,14 @@ export default {
       return this.$store.state.isLoading;
     },
     order() {
-      return this.$store.state.order;
+      return this.$store.getters["orderCheckoutModules/order"];
     }
   },
   created() {
-    this.$store.dispatch("updateOrderId", this.$route.params.orderId);
+    this.$store.dispatch(
+      "orderCheckoutModules/updateOrderId",
+      this.$route.params.orderId
+    );
     this.getOrder();
   }
 };

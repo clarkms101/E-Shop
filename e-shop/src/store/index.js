@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import axios from "axios";
 import loginModules from "./login";
 import ordersModules from "./orders";
+import orderCheckoutModules from "./orderCheckout";
 
 Vue.use(Vuex);
 
@@ -27,10 +28,6 @@ export default new Vuex.Store({
         address: ""
       },
       message: ""
-    },
-    orderId: "",
-    order: {
-      user: {}
     },
     coupons: {},
     tempCoupon: {
@@ -113,9 +110,6 @@ export default new Vuex.Store({
     },
     updateOrderFormMessage(context, value) {
       context.commit("ORDER_FORM_MESSAGE", value);
-    },
-    updateOrderId(context, value) {
-      context.commit("ORDER_ID", value);
     },
     updateTempCouponTitle(context, value) {
       context.commit("TEMPCOUPON_TITLE", value);
@@ -217,26 +211,6 @@ export default new Vuex.Store({
         );
       });
     },
-    getOrder(context) {
-      let orderId = context.state.orderId;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order/${orderId}`;
-      context.commit("LOADING", true);
-      axios.get(url).then(response => {
-        context.commit("ORDER", response.data.order);
-        context.commit("LOADING", false);
-      });
-    },
-    payOrder(context) {
-      let orderId = context.state.orderId;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/pay/${orderId}`;
-      context.commit("LOADING", true);
-      axios.post(url).then(response => {
-        if (response.data.success) {
-          context.dispatch("getOrder");
-        }
-        context.commit("LOADING", false);
-      });
-    },
     updateCoupon(context) {
       // create
       if (context.state.isNewCoupon) {
@@ -309,12 +283,6 @@ export default new Vuex.Store({
     ORDER_FORM_MESSAGE(state, payload) {
       state.orderForm.message = payload;
     },
-    ORDER(state, payload) {
-      state.order = payload;
-    },
-    ORDER_ID(state, payload) {
-      state.orderId = payload;
-    },
     TEMPCOUPON(state, payload) {
       state.tempCoupon = payload;
     },
@@ -343,6 +311,7 @@ export default new Vuex.Store({
   // 載入Vuex獨立模組
   modules: {
     loginModules,
-    ordersModules
+    ordersModules,
+    orderCheckoutModules
   }
 });
