@@ -151,18 +151,22 @@ export default {
     display_due_date() {
       const vm = this;
       const timestamp = Math.floor(new Date(vm.display_due_date) / 1000);
-      this.$store.dispatch("updateTempCouponDueDate", timestamp);
+      this.$store.dispatch("couponsModules/updateTempCouponDueDate", timestamp);
     }
   },
   methods: {
     openCouponModal(isNew, item) {
       const vm = this;
       $("#couponModal").modal("show");
-      this.$store.dispatch("updateIsNewCoupon", isNew);
+      this.$store.dispatch("couponsModules/updateIsNewCoupon", isNew);
       if (isNew) {
-        this.$store.dispatch("updateTempCoupon", {});
+        this.$store.dispatch("couponsModules/updateTempCoupon", {});
       } else {
-        this.$store.dispatch("updateTempCoupon", Object.assign({}, item));
+        this.$store.dispatch(
+          "couponsModules/updateTempCoupon",
+          Object.assign({}, item)
+        );
+        console.log(item);
         const dateAndTime = new Date(item.due_date * 1000)
           .toISOString()
           .split("T");
@@ -170,10 +174,10 @@ export default {
       }
     },
     getCoupons() {
-      this.$store.dispatch("getCoupons");
+      this.$store.dispatch("couponsModules/getCoupons");
     },
     updateCoupon() {
-      this.$store.dispatch("updateCoupon");
+      this.$store.dispatch("couponsModules/updateCoupon");
       $("#couponModal").modal("hide");
     }
   },
@@ -183,46 +187,46 @@ export default {
     },
     tempCoupon_title: {
       get() {
-        return this.$store.state.tempCoupon.title;
+        return this.$store.getters["couponsModules/tempCoupon_title"];
       },
       set(value) {
-        this.$store.dispatch("updateTempCouponTitle", value);
+        this.$store.dispatch("couponsModules/updateTempCouponTitle", value);
       }
     },
     tempCoupon_isEnabled: {
       get() {
-        return this.$store.state.tempCoupon.is_enabled;
+        return this.$store.getters["couponsModules/tempCoupon_isEnabled"];
       },
       set(value) {
-        this.$store.dispatch("updateTempCouponIsEnabled", value);
+        this.$store.dispatch("couponsModules/updateTempCouponIsEnabled", value);
       }
     },
     tempCoupon_percent: {
       get() {
-        return this.$store.state.tempCoupon.percent;
+        return this.$store.getters["couponsModules/tempCoupon_percent"];
       },
       set(value) {
-        this.$store.dispatch("updateTempCouponPercent", value);
+        this.$store.dispatch("couponsModules/updateTempCouponPercent", value);
       }
     },
     tempCoupon_dueDate: {
       get() {
-        return this.$store.state.tempCoupon.due_date;
+        return this.$store.getters["couponsModules/tempCoupon_dueDate"];
       },
       set(value) {
-        this.$store.dispatch("updateTempCouponDueDate", value);
+        this.$store.dispatch("couponsModules/updateTempCouponDueDate", value);
       }
     },
     tempCoupon_code: {
       get() {
-        return this.$store.state.tempCoupon.code;
+        return this.$store.getters["couponsModules/tempCoupon_code"];
       },
       set(value) {
-        this.$store.dispatch("updateTempCouponCode", value);
+        this.$store.dispatch("couponsModules/updateTempCouponCode", value);
       }
     },
     coupons() {
-      return this.$store.state.coupons;
+      return this.$store.getters["couponsModules/coupons"];
     }
   },
   created() {
