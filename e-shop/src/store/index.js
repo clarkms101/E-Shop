@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import axios from "axios";
 import loginModules from "./login";
 import ordersModules from "./orders";
-import orderCheckoutModules from "./orderCheckout";
+import customerOrderCheckoutModules from "./customerOrderCheckout";
 import couponsModules from "./coupons";
 
 Vue.use(Vuex);
@@ -232,7 +232,7 @@ export default new Vuex.Store({
   modules: {
     loginModules,
     ordersModules,
-    orderCheckoutModules,
+    customerOrderCheckoutModules,
     couponsModules
   }
 });

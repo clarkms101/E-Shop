@@ -380,7 +380,7 @@ export default {
         response => {
           if (response.data.success) {
             // 轉跳到確認頁面
-            this.$router.push(`/customer_checkout/${response.data.orderId}`);
+            this.$router.push(`/customer_order_checkout/${response.data.orderId}`);
           } else {
             this.$bus.$emit("message:push", response.data.message, "danger");
           }
