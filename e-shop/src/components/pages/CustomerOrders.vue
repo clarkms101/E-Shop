@@ -332,55 +332,65 @@ export default {
   },
   methods: {
     getProducts(page = 1) {
-      this.$store.dispatch("getProducts", { page: page });
+      this.$store.dispatch("customerOrdersModules/getProducts", { page: page });
     },
     async getProduct(id) {
-      await this.$store.dispatch("getProduct", { productId: id });
+      await this.$store.dispatch("customerOrdersModules/getProduct", {
+        productId: id
+      });
       // 待產品資料取完刷新再跳出視窗
       $("#productModal").modal("show");
     },
     async addToCart(id, qty = 1) {
-      await this.$store.dispatch("addToCart", {
+      await this.$store.dispatch("customerOrdersModules/addToCart", {
         productId: id,
         productQty: qty
       });
       $("#productModal").modal("hide");
     },
     getCart() {
-      this.$store.dispatch("getCart");
+      this.$store.dispatch("customerOrdersModules/getCart");
     },
     removeFromCart(id) {
-      this.$store.dispatch("removeFromCart", { itemId: id }).then(
-        response => {
-          this.$bus.$emit("message:push", response.data.message, "success");
-        },
-        error => {
-          console.log(error);
-          this.$bus.$emit("message:push", "處理失敗", "danger");
-        }
-      );
+      this.$store
+        .dispatch("customerOrdersModules/removeFromCart", { itemId: id })
+        .then(
+          response => {
+            this.$bus.$emit("message:push", response.data.message, "success");
+          },
+          error => {
+            console.log(error);
+            this.$bus.$emit("message:push", "處理失敗", "danger");
+          }
+        );
     },
     addCouponCode(coupon_code) {
-      this.$store.dispatch("addCouponCode", { coupon_code: coupon_code }).then(
-        response => {
-          if (response.data.success) {
-            this.$bus.$emit("message:push", response.data.message, "success");
-          } else {
-            this.$bus.$emit("message:push", response.data.message, "danger");
+      this.$store
+        .dispatch("customerOrdersModules/addCouponCode", {
+          coupon_code: coupon_code
+        })
+        .then(
+          response => {
+            if (response.data.success) {
+              this.$bus.$emit("message:push", response.data.message, "success");
+            } else {
+              this.$bus.$emit("message:push", response.data.message, "danger");
+            }
+          },
+          error => {
+            console.log(error);
+            this.$bus.$emit("message:push", "處理失敗", "danger");
           }
-        },
-        error => {
-          console.log(error);
-          this.$bus.$emit("message:push", "處理失敗", "danger");
-        }
-      );
+        );
     },
     createOrder() {
-      this.$store.dispatch("createOrder").then(
+      this.$store.dispatch("customerOrdersModules/createOrder").then(
         response => {
           if (response.data.success) {
             // 轉跳到確認頁面
-            this.$router.push(`/customer_order_checkout/${response.data.orderId}`);
+            this.$router.push(
+              `/customer_order_checkout/${response.data.orderId}`
+            );
           } else {
             this.$bus.$emit("message:push", response.data.message, "danger");
           }
@@ -396,78 +406,97 @@ export default {
     isLoading() {
       return this.$store.state.isLoading;
     },
-    totalPrice() {
-      return this.$store.state.qty * this.$store.state.product.price;
-    },
-    products() {
-      return this.$store.state.products;
-    },
     pagination() {
       return this.$store.state.pagination;
     },
+    totalPrice() {
+      return this.$store.getters["customerOrdersModules/totalPrice"];
+    },
+    products() {
+      return this.$store.getters["customerOrdersModules/products"];
+    },
     loadingProductId() {
-      return this.$store.state.loadingProductId;
+      return this.$store.getters["customerOrdersModules/loadingProductId"];
     },
     product() {
-      return this.$store.state.product;
+      return this.$store.getters["customerOrdersModules/product"];
+    },
+    cart() {
+      return this.$store.getters["customerOrdersModules/cart"];
     },
     qty: {
       get() {
-        return this.$store.state.qty;
+        return this.$store.getters["customerOrdersModules/qty"];
       },
       set(value) {
-        this.$store.dispatch("updateQty", value);
+        this.$store.dispatch("customerOrdersModules/updateQty", value);
       }
-    },
-    cart() {
-      return this.$store.state.cart;
     },
     coupon_code: {
       get() {
-        return this.$store.state.coupon_code;
+        return this.$store.getters["customerOrdersModules/coupon_code"];
       },
       set(value) {
-        this.$store.dispatch("updateCouponCode", value);
+        this.$store.dispatch("customerOrdersModules/updateCouponCode", value);
       }
     },
     orderForm_user_name: {
       get() {
-        return this.$store.state.orderForm.user.name;
+        return this.$store.getters["customerOrdersModules/orderForm_user_name"];
       },
       set(value) {
-        this.$store.dispatch("updateOrderFormUserName", value);
+        this.$store.dispatch(
+          "customerOrdersModules/updateOrderFormUserName",
+          value
+        );
       }
     },
     orderForm_user_email: {
       get() {
-        return this.$store.state.orderForm.user.email;
+        return this.$store.getters[
+          "customerOrdersModules/orderForm_user_email"
+        ];
       },
       set(value) {
-        this.$store.dispatch("updateOrderFormUserEmail", value);
+        this.$store.dispatch(
+          "customerOrdersModules/updateOrderFormUserEmail",
+          value
+        );
       }
     },
     orderForm_user_tel: {
       get() {
-        return this.$store.state.orderForm.user.tel;
+        return this.$store.getters["customerOrdersModules/orderForm_user_tel"];
       },
       set(value) {
-        this.$store.dispatch("updateOrderFormUserTel", value);
+        this.$store.dispatch(
+          "customerOrdersModules/updateOrderFormUserTel",
+          value
+        );
       }
     },
     orderForm_user_address: {
       get() {
-        return this.$store.state.orderForm.user.address;
+        return this.$store.getters[
+          "customerOrdersModules/orderForm_user_address"
+        ];
       },
       set(value) {
-        this.$store.dispatch("updateOrderFormUserAddress", value);
+        this.$store.dispatch(
+          "customerOrdersModules/updateOrderFormUserAddress",
+          value
+        );
       }
     },
     orderForm_message: {
       get() {
-        return this.$store.state.orderForm.message;
+        return this.$store.getters["customerOrdersModules/orderForm_message"];
       },
       set(value) {
-        this.$store.dispatch("updateOrderFormMessage", value);
+        this.$store.dispatch(
+          "customerOrdersModules/updateOrderFormMessage",
+          value
+        );
       }
     }
   },

@@ -314,7 +314,7 @@ export default {
   },
   methods: {
     getProducts(page = 1) {
-      this.$store.dispatch("getProducts", { page: page });
+      this.$store.dispatch("productsModules/getProducts", { page: page });
     },
     openModal(isNew, item) {
       if (isNew) {
@@ -332,7 +332,9 @@ export default {
     },
     deleteProduct() {
       const vm = this;
-      this.$store.dispatch("deleteProduct", { productId: vm.tempProduct.id });
+      this.$store.dispatch("productsModules/deleteProduct", {
+        productId: vm.tempProduct.id
+      });
       $("#delProductModal").modal("hide");
     },
     updateProduct() {
@@ -412,7 +414,7 @@ export default {
       return this.$store.state.isLoading;
     },
     products() {
-      return this.$store.state.products;
+      return this.$store.getters["productsModules/products"];
     },
     pagination() {
       return this.$store.state.pagination;
