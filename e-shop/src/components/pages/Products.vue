@@ -342,9 +342,7 @@ export default {
         })
         .then(
           response => {
-            if (response.data.success) {
-              this.$bus.$emit("message:push", response.data.message, "success");
-            } else {
+            if (response.data.success == false) {
               this.$bus.$emit("message:push", response.data.message, "danger");
             }
           },

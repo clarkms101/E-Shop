@@ -1,3 +1,4 @@
+import Vue from "vue";
 import axios from "axios";
 
 export default {
@@ -206,7 +207,7 @@ export default {
       state.tempProduct.is_enabled = payload;
     },
     TEMPPRODUCT_IMAGEURL(state, payload) {
-      state.tempProduct.imageUrl = payload;
+      Vue.set(state.tempProduct, "imageUrl", payload);
     },
     STATUS_FILEUPLOADING(state, payload) {
       state.status.fileUploading = payload;
