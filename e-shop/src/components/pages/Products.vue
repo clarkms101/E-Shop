@@ -88,7 +88,7 @@
                     type="text"
                     class="form-control"
                     id="image"
-                    v-model="tempProduct.imageUrl"
+                    v-model="tempProduct_imageUrl"
                     placeholder="請輸入圖片連結"
                   />
                 </div>
@@ -97,7 +97,7 @@
                     >或 上傳圖片
                     <i
                       class="fa fa-refresh fa-spin"
-                      v-if="status.fileUploading"
+                      v-if="status_fileUploading"
                     ></i>
                   </label>
                   <input
@@ -111,7 +111,7 @@
                 <img
                   img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
                   class="img-fluid"
-                  :src="tempProduct.imageUrl"
+                  :src="tempProduct_imageUrl"
                   alt=""
                 />
               </div>
@@ -122,7 +122,7 @@
                     type="text"
                     class="form-control"
                     id="title"
-                    v-model="tempProduct.title"
+                    v-model="tempProduct_title"
                     placeholder="請輸入標題"
                   />
                 </div>
@@ -134,7 +134,7 @@
                       type="text"
                       class="form-control"
                       id="category"
-                      v-model="tempProduct.category"
+                      v-model="tempProduct_category"
                       placeholder="請輸入分類"
                     />
                   </div>
@@ -144,7 +144,7 @@
                       type="unit"
                       class="form-control"
                       id="unit"
-                      v-model="tempProduct.unit"
+                      v-model="tempProduct_unit"
                       placeholder="請輸入單位"
                     />
                   </div>
@@ -157,7 +157,7 @@
                       type="number"
                       class="form-control"
                       id="origin_price"
-                      v-model="tempProduct.origin_price"
+                      v-model="tempProduct_origin_price"
                       placeholder="請輸入原價"
                     />
                   </div>
@@ -167,7 +167,7 @@
                       type="number"
                       class="form-control"
                       id="price"
-                      v-model="tempProduct.price"
+                      v-model="tempProduct_price"
                       placeholder="請輸入售價"
                     />
                   </div>
@@ -180,7 +180,7 @@
                       type="number"
                       class="form-control"
                       id="num"
-                      v-model="tempProduct.num"
+                      v-model="tempProduct_num"
                       placeholder="請輸入庫存"
                     />
                   </div>
@@ -195,7 +195,7 @@
                     type="text"
                     class="form-control"
                     id="description"
-                    v-model="tempProduct.description"
+                    v-model="tempProduct_description"
                     placeholder="請輸入產品描述"
                   ></textarea>
                 </div>
@@ -205,7 +205,7 @@
                     type="text"
                     class="form-control"
                     id="content"
-                    v-model="tempProduct.content"
+                    v-model="tempProduct_content"
                     placeholder="請輸入產品說明內容"
                   ></textarea>
                 </div>
@@ -215,7 +215,7 @@
                       class="form-check-input"
                       type="checkbox"
                       id="is_enabled"
-                      v-model="tempProduct.is_enabled"
+                      v-model="tempProduct_is_enabled"
                       :true-value="1"
                       :false-value="0"
                     />
@@ -273,7 +273,7 @@
           </div>
           <div class="modal-body">
             是否刪除
-            <strong class="text-danger">{{ tempProduct.title }}</strong>
+            <strong class="text-danger">{{ tempProduct_title }}</strong>
             商品(刪除後將無法恢復)。
           </div>
           <div class="modal-footer">
@@ -301,13 +301,7 @@ import Pagination from "../Pagination.vue";
 
 export default {
   data() {
-    return {
-      tempProduct: {},
-      isNew: false,
-      status: {
-        fileUploading: false
-      }
-    };
+    return {};
   },
   components: {
     Pagination
@@ -316,108 +310,164 @@ export default {
     getProducts(page = 1) {
       this.$store.dispatch("productsModules/getProducts", { page: page });
     },
-    openModal(isNew, item) {
-      if (isNew) {
-        this.tempProduct = {};
-        this.isNew = true;
+    openModal(isNewProduct, item) {
+      console.log(item);
+      if (isNewProduct) {
+        this.$store.dispatch("productsModules/updateTempProduct", {});
+        this.$store.dispatch("productsModules/updateIsNewProduct", true);
       } else {
-        this.tempProduct = Object.assign({}, item);
-        this.isNew = false;
+        this.$store.dispatch("productsModules/updateTempProduct", item);
+        this.$store.dispatch("productsModules/updateIsNewProduct", false);
       }
       $("#productModal").modal("show");
     },
     openDelModal(item) {
-      this.tempProduct = Object.assign({}, item);
+      this.$store.dispatch("productsModules/updateTempProduct", item);
       $("#delProductModal").modal("show");
     },
     deleteProduct() {
-      const vm = this;
-      this.$store.dispatch("productsModules/deleteProduct", {
-        productId: vm.tempProduct.id
-      });
+      this.$store.dispatch("productsModules/deleteProduct");
       $("#delProductModal").modal("hide");
     },
     updateProduct() {
-      const vm = this;
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
-      this.$http.defaults.headers.common.Authorization = `${token}`;
-      // 處理中提示
-      vm.$store.dispatch("updateLoading", true);
-
-      // Create
-      if (vm.isNew) {
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
-        this.$http.post(url, { data: vm.tempProduct }).then(response => {
-          console.log(response.data);
-          if (response.data.success) {
-            $("#productModal").modal("hide");
-            vm.getProducts();
-          } else {
-            $("#productModal").modal("hide");
-            vm.getProducts();
-            console.log("新增失敗");
-          }
-        });
-      }
-      // Update
-      else {
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-        this.$http.put(url, { data: vm.tempProduct }).then(response => {
-          console.log(response.data);
-          if (response.data.success) {
-            $("#productModal").modal("hide");
-            vm.getProducts();
-          } else {
-            $("#productModal").modal("hide");
-            vm.getProducts();
-            console.log("更新失敗");
-          }
-        });
-      }
+      this.$store.dispatch("productsModules/updateProduct");
+      $("#productModal").modal("hide");
     },
     uploadFile() {
-      console.log(this);
       // 取得 input file 的上傳檔案
       const uploadFile = this.$refs.files.files[0];
-      const vm = this;
-      // 將 file 放到 formData裡面
-      const formData = new FormData();
-      formData.append("file-to-upload", uploadFile);
-      // 將 formData 上傳到後端
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`;
-      // 處理中提示
-      vm.$store.dispatch("updateLoading", true);
-      this.$http
-        .post(url, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
+      this.$store
+        .dispatch("productsModules/uploadFile", {
+          uploadFile: uploadFile
         })
-        .then(response => {
-          console.log(response.data);
-          vm.$store.dispatch("updateLoading", false);
-          // 上傳成功取得後端回傳的網址，綁定到ViewModel上面並顯示於頁面
-          if (response.data.success) {
-            vm.$set(vm.tempProduct, "imageUrl", response.data.imageUrl);
-          } else {
-            // 顯示錯誤訊息
-            this.$bus.$emit("message:push", response.data.message, "danger");
+        .then(
+          response => {
+            if (response.data.success) {
+              this.$bus.$emit("message:push", response.data.message, "success");
+            } else {
+              this.$bus.$emit("message:push", response.data.message, "danger");
+            }
+          },
+          error => {
+            console.log(error);
+            this.$bus.$emit("message:push", "處理失敗", "danger");
           }
-        });
+        );
     }
   },
   computed: {
     isLoading() {
       return this.$store.state.isLoading;
     },
+    pagination() {
+      return this.$store.state.pagination;
+    },
     products() {
       return this.$store.getters["productsModules/products"];
     },
-    pagination() {
-      return this.$store.state.pagination;
+    isNewProduct() {
+      return this.$store.getters["productsModules/isNewProduct"];
+    },
+    status_fileUploading() {
+      return this.$store.getters["productsModules/status_fileUploading"];
+    },
+    tempProduct() {
+      return this.$store.getters["productsModules/tempProduct"];
+    },
+    tempProduct_title: {
+      get() {
+        return this.$store.getters["productsModules/tempProduct_title"];
+      },
+      set(value) {
+        this.$store.dispatch("productsModules/updateTempProductTitle", value);
+      }
+    },
+    tempProduct_category: {
+      get() {
+        return this.$store.getters["productsModules/tempProduct_category"];
+      },
+      set(value) {
+        this.$store.dispatch(
+          "productsModules/updateTempProductCategory",
+          value
+        );
+      }
+    },
+    tempProduct_unit: {
+      get() {
+        return this.$store.getters["productsModules/tempProduct_unit"];
+      },
+      set(value) {
+        this.$store.dispatch("productsModules/updateTempProductUnit", value);
+      }
+    },
+    tempProduct_origin_price: {
+      get() {
+        return this.$store.getters["productsModules/tempProduct_origin_price"];
+      },
+      set(value) {
+        this.$store.dispatch(
+          "productsModules/updateTempProductOriginPrice",
+          value
+        );
+      }
+    },
+    tempProduct_price: {
+      get() {
+        return this.$store.getters["productsModules/tempProduct_price"];
+      },
+      set(value) {
+        this.$store.dispatch("productsModules/updateTempProductPrice", value);
+      }
+    },
+    tempProduct_num: {
+      get() {
+        return this.$store.getters["productsModules/tempProduct_num"];
+      },
+      set(value) {
+        this.$store.dispatch("productsModules/updateTempProductNum", value);
+      }
+    },
+    tempProduct_description: {
+      get() {
+        return this.$store.getters["productsModules/tempProduct_description"];
+      },
+      set(value) {
+        this.$store.dispatch(
+          "productsModules/updateTempProductDescription",
+          value
+        );
+      }
+    },
+    tempProduct_content: {
+      get() {
+        return this.$store.getters["productsModules/tempProduct_content"];
+      },
+      set(value) {
+        this.$store.dispatch("productsModules/updateTempProductContent", value);
+      }
+    },
+    tempProduct_is_enabled: {
+      get() {
+        return this.$store.getters["productsModules/tempProduct_is_enabled"];
+      },
+      set(value) {
+        this.$store.dispatch(
+          "productsModules/updateTempProductIsEnabled",
+          value
+        );
+      }
+    },
+    tempProduct_imageUrl: {
+      get() {
+        return this.$store.getters["productsModules/tempProduct_imageUrl"];
+      },
+      set(value) {
+        this.$store.dispatch(
+          "productsModules/updateTempProductImageUrl",
+          value
+        );
+      }
     }
   },
   created() {
