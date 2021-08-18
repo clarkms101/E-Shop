@@ -4,19 +4,20 @@ export default {
   // 加上 namespaced: true 可以把 actions, mutations, getters 變成區域變數
   namespaced: true,
   state: {
-    user: {
-      username: "",
+    admin: {
+      account: "",
       password: ""
     }
   },
   actions: {
     signin(context) {
       return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/admin/signin`;
-        let user = context.state.user;
-        axios.post(url, user).then(
+        const url = `${process.env.APIPATH}/api/Admin/Login`;
+        let admin = context.state.admin;
+        axios.post(url, admin).then(
           response => {
             console.log("login msg", response.data);
+
             resolve(response);
           },
           error => {
@@ -25,27 +26,27 @@ export default {
         );
       });
     },
-    updateUserName(context, value) {
-      context.commit("USER_NAME", value);
+    updateAdminAccount(context, value) {
+      context.commit("ADMIN_ACCOUNT", value);
     },
-    updateUserPassword(context, value) {
-      context.commit("USER_PASSWORD", value);
+    updateAdminPassword(context, value) {
+      context.commit("ADMIN_PASSWORD", value);
     }
   },
   mutations: {
-    USER_NAME(state, payload) {
-      state.user.username = payload;
+    ADMIN_ACCOUNT(state, payload) {
+      state.admin.account = payload;
     },
-    USER_PASSWORD(state, payload) {
-      state.user.password = payload;
+    ADMIN_PASSWORD(state, payload) {
+      state.admin.password = payload;
     }
   },
   getters: {
-    user_name(state) {
-      return state.user.username;
+    admin_account(state) {
+      return state.admin.account;
     },
-    user_password(state) {
-      return state.user.password;
+    admin_password(state) {
+      return state.admin.password;
     }
   }
 };

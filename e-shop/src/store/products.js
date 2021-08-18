@@ -25,16 +25,15 @@ export default {
   },
   actions: {
     getProducts(context, value) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products?page=${value.page}`;
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
-      // 將login token放到headers再請求
+      const url = `${process.env.APIPATH}/api/Products?page=${value.page}`;
+      let token = JSON.parse(localStorage.getItem('adminJWT'));
+      console.log(token);
+      // 將login JWT放到headers再請求
       axios.defaults.headers.common.Authorization = `${token}`;
       // 處理中提示
       context.commit("LOADING", true, { root: true });
       axios.get(url).then(response => {
+        console.log(response.data);
         context.commit("LOADING", false, { root: true });
         context.commit("PRODUCTS", response.data.products);
         context.commit("PAGINATION", response.data.pagination, { root: true });

@@ -7,13 +7,13 @@
 
         <div class="form-floating">
           <input
-            type="email"
+            type="text"
             class="form-control"
             id="floatingInput"
-            placeholder="name@example.com"
-            v-model="user_name"
+            placeholder="Account"
+            v-model="admin_account"
           />
-          <label for="floatingInput">Email address</label>
+          <label for="floatingInput">Account</label>
         </div>
         <div class="form-floating">
           <input
@@ -21,7 +21,7 @@
             class="form-control"
             id="floatingPassword"
             placeholder="Password"
-            v-model="user_password"
+            v-model="admin_password"
           />
           <label for="floatingPassword">Password</label>
         </div>
@@ -53,13 +53,8 @@ export default {
       this.$store.dispatch("loginModules/signin").then(
         response => {
           if (response.data.success) {
-            // 將後端回傳的 token 存入cookie
-            const token = response.data.token;
-            const expired = response.data.expired;
-            // console.log("login token", token, expired);
-            document.cookie = `hexToken = ${token};expires=${new Date(
-              expired
-            )}`;
+            // 將後端回傳的 JWT 存入 localStorage
+            localStorage.setItem("adminJWT", response.data.token);
             // 登入後先到產品清單頁面
             this.$router.push("/admin/products");
           } else {
@@ -75,20 +70,20 @@ export default {
     }
   },
   computed: {
-    user_name: {
+    admin_account: {
       get() {
-        return this.$store.getters["loginModules/user_name"];
+        return this.$store.getters["loginModules/admin_account"];
       },
       set(value) {
-        this.$store.dispatch("loginModules/updateUserName", value);
+        this.$store.dispatch("loginModules/updateAdminAccount", value);
       }
     },
-    user_password: {
+    admin_password: {
       get() {
-        return this.$store.getters["loginModules/user_password"];
+        return this.$store.getters["loginModules/admin_password"];
       },
       set(value) {
-        this.$store.dispatch("loginModules/updateUserPassword", value);
+        this.$store.dispatch("loginModules/updateAdminPassword", value);
       }
     }
   }
