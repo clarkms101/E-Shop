@@ -6,10 +6,10 @@ export default {
     coupons: {},
     tempCoupon: {
       title: "",
-      is_enabled: 0,
+      isEnabled: false,
       percent: 100,
-      due_date: 0,
-      code: ""
+      dueDateTimeStamp: 0,
+      couponCode: ""
     },
     isNewCoupon: false
   },
@@ -32,8 +32,8 @@ export default {
         });
       }
     },
-    getCoupons(context) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupons`;
+    getCoupons(context, value) {
+      const url = `${process.env.APIPATH}/api/Coupons?page=${value.page}`;
       context.commit("LOADING", true, { root: true });
       axios.get(url).then(response => {
         console.log(response);
@@ -71,16 +71,16 @@ export default {
       state.tempCoupon.title = payload;
     },
     TEMPCOUPON_IS_ENABLED(state, payload) {
-      state.tempCoupon.is_enabled = payload;
+      state.tempCoupon.isEnabled = payload;
     },
     TEMPCOUPON_PERCENT(state, payload) {
       state.tempCoupon.percent = payload;
     },
     TEMPCOUPON_DUE_DATE(state, payload) {
-      state.tempCoupon.due_date = payload;
+      state.tempCoupon.dueDateTimeStamp = payload;
     },
     TEMPCOUPON_CODE(state, payload) {
-      state.tempCoupon.code = payload;
+      state.tempCoupon.couponCode = payload;
     },
     IS_NEW_COUPON(state, payload) {
       state.isNewCoupon = payload;
@@ -94,16 +94,16 @@ export default {
       return state.tempCoupon.title;
     },
     tempCoupon_isEnabled(state) {
-      return state.tempCoupon.is_enabled;
+      return state.tempCoupon.isEnabled;
     },
     tempCoupon_percent(state) {
       return state.tempCoupon.percent;
     },
     tempCoupon_dueDate(state) {
-      return state.tempCoupon.due_date;
+      return state.tempCoupon.dueDateTimeStamp;
     },
     tempCoupon_code(state) {
-      return state.tempCoupon.title;
+      return state.tempCoupon.couponCode;
     },
     coupons(state) {
       return state.coupons;

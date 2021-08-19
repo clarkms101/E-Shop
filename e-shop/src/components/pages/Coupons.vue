@@ -20,12 +20,12 @@
       <tbody>
         <tr v-for="(item, key) in coupons" :key="key">
           <td>{{ item.title }}</td>
-          <td>{{ item.code }}</td>
+          <td>{{ item.couponCode }}</td>
           <td>{{ item.percent }}%</td>
           <!-- filter : timestamp to date -->
-          <td>{{ item.due_date | date }}</td>
+          <td>{{ item.dueDateTimeStamp | date }}</td>
           <td>
-            <span v-if="item.is_enabled === 1" class="text-success">啟用</span>
+            <span v-if="item.isEnabled === true" class="text-success">啟用</span>
             <span v-else class="text-muted">未起用</span>
           </td>
           <td>
@@ -173,8 +173,8 @@ export default {
         vm.display_due_date = dateAndTime[0];
       }
     },
-    getCoupons() {
-      this.$store.dispatch("couponsModules/getCoupons");
+    getCoupons(page = 1) {
+      this.$store.dispatch("couponsModules/getCoupons", { page: page });
     },
     updateCoupon() {
       this.$store.dispatch("couponsModules/updateCoupon");
