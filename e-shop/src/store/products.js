@@ -6,16 +6,16 @@ export default {
   state: {
     isNewProduct: false,
     tempProduct: {
-      id: "",
+      productId: 0,
       title: "",
       category: "",
       unit: 0,
-      origin_price: 0,
+      originPrice: 0,
       price: 0,
       num: 0,
       description: "",
       content: "",
-      is_enabled: false,
+      isEnabled: false,
       imageUrl: ""
     },
     products: [],
@@ -26,10 +26,6 @@ export default {
   actions: {
     getProducts(context, value) {
       const url = `${process.env.APIPATH}/api/Products?page=${value.page}`;
-      let token = JSON.parse(localStorage.getItem('adminJWT'));
-      console.log(token);
-      // 將login JWT放到headers再請求
-      axios.defaults.headers.common.Authorization = `${token}`;
       // 處理中提示
       context.commit("LOADING", true, { root: true });
       axios.get(url).then(response => {
@@ -40,13 +36,10 @@ export default {
       });
     },
     deleteProduct(context) {
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
+      let token = localStorage.getItem("adminJWT");
       axios.defaults.headers.common.Authorization = `${token}`;
-      var productId = context.state.tempProduct.id;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${productId}`;
+      var productId = context.state.tempProduct.productId;
+      const url = `${process.env.APIPATH}/api/product/${productId}`;
       // 處理中提示
       context.commit("LOADING", true, { root: true });
       axios.delete(url).then(response => {
@@ -59,19 +52,16 @@ export default {
       });
     },
     updateProduct(context) {
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
+      let token = localStorage.getItem("adminJWT");
       axios.defaults.headers.common.Authorization = `${token}`;
+      const url = `${process.env.APIPATH}/api/product`;
       // 處理中提示
       context.commit("LOADING", true, { root: true });
       // Create
       if (context.state.isNewProduct) {
         let tempProduct = context.state.tempProduct;
         console.log(tempProduct);
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`;
-        axios.post(url, { data: tempProduct }).then(response => {
+        axios.post(url, { Product: tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
             context.dispatch("getProducts", { page: 1 });
@@ -85,8 +75,7 @@ export default {
       else {
         let tempProduct = context.state.tempProduct;
         console.log(tempProduct);
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${tempProduct.id}`;
-        axios.put(url, { data: tempProduct }).then(response => {
+        axios.put(url, { Product: tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
             context.dispatch("getProducts", { page: 1 });
@@ -188,13 +177,13 @@ export default {
       state.tempProduct.unit = payload;
     },
     TEMPPRODUCT_ORIGIN_PRICE(state, payload) {
-      state.tempProduct.origin_price = payload;
+      state.tempProduct.originPrice = parseFloat(payload);
     },
     TEMPPRODUCT_PRICE(state, payload) {
-      state.tempProduct.price = payload;
+      state.tempProduct.price = parseFloat(payload);
     },
     TEMPPRODUCT_NUM(state, payload) {
-      state.tempProduct.num = payload;
+      state.tempProduct.num = parseInt(payload, 10);
     },
     TEMPPRODUCT_DESCRIPION(state, payload) {
       state.tempProduct.description = payload;
@@ -203,7 +192,7 @@ export default {
       state.tempProduct.content = payload;
     },
     TEMPPRODUCT_IS_ENABLED(state, payload) {
-      state.tempProduct.is_enabled = payload;
+      state.tempProduct.isEnabled = payload;
     },
     TEMPPRODUCT_IMAGEURL(state, payload) {
       Vue.set(state.tempProduct, "imageUrl", payload);
@@ -232,7 +221,7 @@ export default {
       return state.tempProduct.unit;
     },
     tempProduct_origin_price(state) {
-      return state.tempProduct.origin_price;
+      return state.tempProduct.originPrice;
     },
     tempProduct_price(state) {
       return state.tempProduct.price;
@@ -247,7 +236,7 @@ export default {
       return state.tempProduct.content;
     },
     tempProduct_is_enabled(state) {
-      return state.tempProduct.is_enabled;
+      return state.tempProduct.isEnabled;
     },
     tempProduct_imageUrl(state) {
       return state.tempProduct.imageUrl;

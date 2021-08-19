@@ -26,13 +26,13 @@
           <td>{{ item.category }}</td>
           <td>{{ item.title }}</td>
           <td class="text-right">
-            {{ item.origin_price | currency }}
+            {{ item.originPrice | currency }}
           </td>
           <td class="text-right">
             {{ item.price | currency }}
           </td>
           <td>
-            <span v-if="item.is_enabled" class="text-success">啟用</span>
+            <span v-if="item.isEnabled" class="text-success">啟用</span>
             <span v-else>未啟用</span>
           </td>
           <td>
@@ -216,8 +216,8 @@
                       type="checkbox"
                       id="is_enabled"
                       v-model="tempProduct_is_enabled"
-                      :true-value="1"
-                      :false-value="0"
+                      :true-value="true"
+                      :false-value="false"
                     />
                     <label class="form-check-label" for="is_enabled">
                       是否啟用
