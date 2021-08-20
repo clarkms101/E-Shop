@@ -22,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in products" :key="item.id">
+        <tr v-for="item in products" :key="item.productId">
           <td>{{ item.category }}</td>
           <td>{{ item.title }}</td>
           <td class="text-right">

@@ -4,7 +4,11 @@
 
     <!-- Products -->
     <div class="row mt-4">
-      <div class="col-md-4 mb-4" v-for="item in products" :key="item.id">
+      <div
+        class="col-md-4 mb-4"
+        v-for="productItem in products"
+        :key="productItem.productId"
+      >
         <div class="card border-0 shadow-sm">
           <div
             style="
@@ -12,25 +16,25 @@
               background-size: cover;
               background-position: center;
             "
-            :style="{ backgroundImage: `url(${item.imageUrl})` }"
+            :style="{ backgroundImage: `url(${productItem.imageUrl})` }"
           ></div>
           <div class="card-body">
             <span class="badge badge-secondary float-right ml-2">{{
-              item.category
+              productItem.category
             }}</span>
             <h5 class="card-title">
-              <a href="#" class="text-dark">{{ item.title }}</a>
+              <a href="#" class="text-dark">{{ productItem.title }}</a>
             </h5>
-            <p class="card-text">{{ item.content }}</p>
+            <p class="card-text">{{ productItem.content }}</p>
             <div class="d-flex justify-content-between align-items-baseline">
-              <div class="h5" v-if="!item.price">
-                原價 {{ item.origin_price }} 元
+              <div class="h5" v-if="!productItem.price">
+                原價 {{ productItem.originPrice }} 元
               </div>
-              <del class="h6" v-if="item.price"
-                >原價 {{ item.origin_price }} 元</del
+              <del class="h6" v-if="productItem.price"
+                >原價 {{ productItem.originPrice }} 元</del
               >
-              <div class="h5" v-if="item.price">
-                現在只要 {{ item.price }} 元
+              <div class="h5" v-if="productItem.price">
+                現在只要 {{ productItem.price }} 元
               </div>
             </div>
           </div>
@@ -38,22 +42,22 @@
             <button
               type="button"
               class="btn btn-outline-secondary btn-sm"
-              @click="getProduct(item.id)"
+              @click="getProduct(productItem.productId)"
             >
               <i
                 class="fa fa-spinner fa-spin"
-                v-if="loadingProductId === item.id"
+                v-if="loadingProductId === productItem.productId"
               ></i>
               查看更多
             </button>
             <button
               type="button"
               class="btn btn-outline-danger btn-sm ml-auto"
-              @click="addToCart(item.id)"
+              @click="addToCart(productItem.productId)"
             >
               <i
                 class="fa fa-spinner fa-spin"
-                v-if="loadingProductId === item.id"
+                v-if="loadingProductId === productItem.productId"
               ></i>
               加到購物車
             </button>
@@ -99,7 +103,7 @@
             </blockquote>
             <div class="d-flex justify-content-between align-items-baseline">
               <div class="h4" v-if="!product.price">
-                原價 {{ product.origin_price }} 元
+                原價 {{ product.originPrice }} 元
               </div>
               <del class="h6" v-if="product.price"
                 >原價 {{ product.origin_price }} 元</del
@@ -123,11 +127,11 @@
             <button
               type="button"
               class="btn btn-primary"
-              @click="addToCart(product.id, qty)"
+              @click="addToCart(product.productId, qty)"
             >
               <i
                 class="fa fa-spinner fa-spin"
-                v-if="loadingProductId === product.id"
+                v-if="loadingProductId === product.productId"
               ></i>
               加到購物車
             </button>
@@ -148,25 +152,27 @@
             <th>單價</th>
           </thead>
           <tbody v-if="cart.carts">
-            <tr v-for="item in cart.carts" :key="item.id">
+            <tr v-for="cartItem in cart.carts" :key="cartItem.cartDetailId">
               <td class="align-middle">
                 <button
                   type="button"
                   class="btn btn-outline-danger btn-sm"
-                  @click="removeFromCart(item.id)"
+                  @click="removeFromCart(cartItem.cartDetailId)"
                 >
                   <i class="fa fa-trash-o"></i>
                 </button>
               </td>
               <td class="align-middle">
-                {{ item.product.title }}
-                <div v-if="item.coupon" class="text-success">已套用優惠券</div>
+                {{ cartItem.product.title }}
+                <div v-if="cartItem.coupon" class="text-success">
+                  已套用優惠券
+                </div>
               </td>
               <td class="align-middle">
-                {{ item.qty }} {{ item.product.unit }}
+                {{ cartItem.qty }} {{ cartItem.product.unit }}
               </td>
               <td class="align-middle text-right">
-                {{ item.final_total | currency }}
+                {{ cartItem.product.price | currency }}
               </td>
             </tr>
           </tbody>
@@ -178,12 +184,12 @@
           <tfoot>
             <tr>
               <td colspan="3" class="text-right">總計</td>
-              <td class="text-right">{{ cart.total | currency }}</td>
+              <td class="text-right">{{ cart.totalAmount | currency }}</td>
             </tr>
-            <tr v-if="cart.final_total !== cart.total">
+            <tr v-if="cart.finalTotalAmount !== cart.totalAmount">
               <td colspan="3" class="text-right text-success">折扣價</td>
               <td class="text-right text-success">
-                {{ cart.final_total | currency }}
+                {{ cart.finalTotalAmount | currency }}
               </td>
             </tr>
           </tfoot>
@@ -351,9 +357,11 @@ export default {
     getCart() {
       this.$store.dispatch("customerOrdersModules/getCart");
     },
-    removeFromCart(id) {
+    removeFromCart(cartDetailId) {
       this.$store
-        .dispatch("customerOrdersModules/removeFromCart", { itemId: id })
+        .dispatch("customerOrdersModules/removeFromCart", {
+          cartDetailId: cartDetailId
+        })
         .then(
           response => {
             this.$bus.$emit("message:push", response.data.message, "success");

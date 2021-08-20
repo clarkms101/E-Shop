@@ -21,14 +21,7 @@ export default {
   },
   actions: {
     getProducts(context, value) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products?page=${value.page}`;
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
-      // 將login token放到headers再請求
-      axios.defaults.headers.common.Authorization = `${token}`;
-      // 處理中提示
+      const url = `${process.env.APIPATH}/api/Products?page=${value.page}`;
       context.commit("LOADING", true, { root: true });
       axios.get(url).then(response => {
         context.commit("LOADING", false, { root: true });
@@ -37,7 +30,7 @@ export default {
       });
     },
     async getProduct(context, value) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${value.productId}`;
+      const url = `${process.env.APIPATH}/api/product/${value.productId}`;
       context.commit("LOADING_PRODUCTID", value.productId);
       await axios.get(url).then(response => {
         context.commit("PRODUCT", response.data.product);
@@ -46,24 +39,24 @@ export default {
       });
     },
     getCart(context) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      const url = `${process.env.APIPATH}/api/cart`;
       context.commit("LOADING", true, { root: true });
       axios.get(url).then(response => {
-        console.log(response.data);
-        context.commit("CART", response.data.data);
+        console.log(`getCart: ${response.data}`);
+        context.commit("CART", response.data);
         context.commit("LOADING", false, { root: true });
       });
     },
     async addToCart(context, value) {
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      const url = `${process.env.APIPATH}/api/cart`;
       context.dispatch("updateLoadingProductId", {
         loadingProductId: value.productId
       });
-      const cart = {
-        product_id: value.productId,
+      const cartDetail = {
+        productId: value.productId,
         qty: value.productQty
       };
-      await axios.post(url, { data: cart }).then(response => {
+      await axios.post(url, { CartDetail: cartDetail }).then(response => {
         context.dispatch("updateLoadingProductId", {
           loadingProductId: ""
         });
@@ -72,7 +65,7 @@ export default {
     },
     removeFromCart(context, value) {
       return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${value.itemId}`;
+        const url = `${process.env.APIPATH}/api/cart/${value.cartDetailId}`;
         context.commit("LOADING", true, { root: true });
         axios.delete(url).then(
           response => {
