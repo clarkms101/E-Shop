@@ -15,20 +15,22 @@ export default {
   },
   actions: {
     updateCoupon(context) {
+      let token = localStorage.getItem("adminJWT");
+      axios.defaults.headers.common.Authorization = `${token}`;
+      const url = `${process.env.APIPATH}/api/coupon`;
+
       // create
       if (context.state.isNewCoupon) {
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupon`;
         let newCoupon = context.state.tempCoupon;
-        axios.post(url, { data: newCoupon }).then(response => {
-          context.dispatch("getCoupons");
+        axios.post(url, { Coupon: newCoupon }).then(response => {
+          context.dispatch("getCoupons", { page: 1 });
         });
       }
       // update
       else {
         let oldCoupon = context.state.tempCoupon;
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupon/${oldCoupon.id}`;
-        axios.put(url, { data: oldCoupon }).then(response => {
-          context.dispatch("getCoupons");
+        axios.put(url, { Coupon: oldCoupon }).then(response => {
+          context.dispatch("getCoupons", { page: 1 });
         });
       }
     },
@@ -74,7 +76,7 @@ export default {
       state.tempCoupon.isEnabled = payload;
     },
     TEMPCOUPON_PERCENT(state, payload) {
-      state.tempCoupon.percent = payload;
+      state.tempCoupon.percent = parseInt(payload, 10);
     },
     TEMPCOUPON_DUE_DATE(state, payload) {
       state.tempCoupon.dueDateTimeStamp = payload;

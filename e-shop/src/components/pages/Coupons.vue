@@ -25,7 +25,9 @@
           <!-- filter : timestamp to date -->
           <td>{{ item.dueDateTimeStamp | date }}</td>
           <td>
-            <span v-if="item.isEnabled === true" class="text-success">啟用</span>
+            <span v-if="item.isEnabled === true" class="text-success"
+              >啟用</span
+            >
             <span v-else class="text-muted">未起用</span>
           </td>
           <td>
@@ -106,8 +108,8 @@
                 <input
                   class="form-check-input"
                   type="checkbox"
-                  :true-value="1"
-                  :false-value="0"
+                  :true-value="true"
+                  :false-value="false"
                   v-model="tempCoupon_isEnabled"
                   id="is_enabled"
                 />
@@ -161,13 +163,14 @@ export default {
       this.$store.dispatch("couponsModules/updateIsNewCoupon", isNew);
       if (isNew) {
         this.$store.dispatch("couponsModules/updateTempCoupon", {});
+        vm.display_due_date = new Date();
       } else {
         this.$store.dispatch(
           "couponsModules/updateTempCoupon",
           Object.assign({}, item)
         );
         console.log(item);
-        const dateAndTime = new Date(item.due_date * 1000)
+        const dateAndTime = new Date(item.dueDateTimeStamp * 1000)
           .toISOString()
           .split("T");
         vm.display_due_date = dateAndTime[0];
