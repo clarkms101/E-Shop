@@ -14,16 +14,16 @@ export default {
     },
     getOrder(context) {
       let orderId = context.state.orderId;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order/${orderId}`;
+      const url = `${process.env.APIPATH}/api/order/${orderId}`;
       context.commit("LOADING", true, { root: true });
       axios.get(url).then(response => {
-        context.commit("ORDER", response.data.order);
+        context.commit("ORDER", response.data.orderInfo);
         context.commit("LOADING", false, { root: true });
       });
     },
     payOrder(context) {
       let orderId = context.state.orderId;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/pay/${orderId}`;
+      const url = `${process.env.APIPATH}/api/Shopping/CreditCardPay/${orderId}`;
       context.commit("LOADING", true, { root: true });
       axios.post(url).then(response => {
         if (response.data.success) {

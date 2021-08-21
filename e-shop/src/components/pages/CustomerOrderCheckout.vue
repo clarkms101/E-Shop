@@ -11,18 +11,18 @@
             <th>單價</th>
           </thead>
           <tbody>
-            <tr v-for="item in order.products" :key="item.id">
-              <td class="align-middle">{{ item.product.title }}</td>
+            <tr v-for="item in order.orderDetailInfos" :key="item.id">
+              <td class="align-middle">{{ item.productTitle }}</td>
               <td class="align-middle">
-                {{ item.qty }}/{{ item.product.unit }}
+                {{ item.qty }}/{{ item.productUnit }}
               </td>
-              <td class="align-middle text-right">{{ item.final_total }}</td>
+              <td class="align-middle text-right">{{ item.productPrice }}</td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <td colspan="2" class="text-right">總計</td>
-              <td class="text-right">{{ order.total }}</td>
+              <td class="text-right">{{ order.totalAmount }}</td>
             </tr>
           </tfoot>
         </table>
@@ -31,31 +31,31 @@
           <tbody>
             <tr>
               <th width="100">Email</th>
-              <td>{{ order.user.email }}</td>
+              <td>{{ order.email }}</td>
             </tr>
             <tr>
               <th>姓名</th>
-              <td>{{ order.user.name }}</td>
+              <td>{{ order.userName }}</td>
             </tr>
             <tr>
               <th>收件人電話</th>
-              <td>{{ order.user.tel }}</td>
+              <td>{{ order.tel }}</td>
             </tr>
             <tr>
               <th>收件人地址</th>
-              <td>{{ order.user.address }}</td>
+              <td>{{ order.address }}</td>
             </tr>
             <tr>
               <th>付款狀態</th>
               <td>
-                <span v-if="!order.is_paid">尚未付款</span>
+                <span v-if="!order.isPaid">尚未付款</span>
                 <span v-else class="text-success">付款完成</span>
               </td>
             </tr>
           </tbody>
         </table>
-        <div class="text-right" v-if="order.is_paid === false">
-          <button class="btn btn-danger">確認付款去</button>
+        <div class="text-right" v-if="order.isPaid === false">
+          <button class="btn btn-danger">信用卡付款</button>
         </div>
       </form>
     </div>
