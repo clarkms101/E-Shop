@@ -4,12 +4,10 @@ export default {
   namespaced: true,
   state: {
     orderForm: {
-      user: {
-        name: "",
-        email: "",
-        tel: "",
-        address: ""
-      },
+      userName: "",
+      email: "",
+      tel: "",
+      address: "",
       message: ""
     },
     coupon_code: "",
@@ -81,12 +79,12 @@ export default {
     },
     addCouponCode(context, value) {
       return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/coupon`;
+        const url = `${process.env.APIPATH}/api/Shopping/UseCoupon`;
         const coupon = {
-          code: value.coupon_code
+          CouponCode: value.coupon_code
         };
         context.commit("LOADING", true, { root: true });
-        axios.post(url, { data: coupon }).then(
+        axios.post(url, { Coupon: coupon }).then(
           response => {
             if (response.data.success) {
               context.dispatch("getCart");
@@ -102,10 +100,10 @@ export default {
     },
     createOrder(context) {
       return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`;
+        const url = `${process.env.APIPATH}/api/order`;
         const order = context.state.orderForm;
         context.commit("LOADING", true, { root: true });
-        axios.post(url, { data: order }).then(
+        axios.post(url, { orderForm: order }).then(
           response => {
             console.log("訂單已建立", response);
             context.commit("LOADING", false, { root: true });
@@ -156,16 +154,16 @@ export default {
       state.coupon_code = payload;
     },
     ORDER_FORM_USER_NAME(state, payload) {
-      state.orderForm.user.name = payload;
+      state.orderForm.userName = payload;
     },
     ORDER_FORM_USER_EMAIL(state, payload) {
-      state.orderForm.user.email = payload;
+      state.orderForm.email = payload;
     },
     ORDER_FORM_USER_TEL(state, payload) {
-      state.orderForm.user.tel = payload;
+      state.orderForm.tel = payload;
     },
     ORDER_FORM_USER_ADDRESS(state, payload) {
-      state.orderForm.user.address = payload;
+      state.orderForm.address = payload;
     },
     ORDER_FORM_MESSAGE(state, payload) {
       state.orderForm.message = payload;
@@ -200,16 +198,16 @@ export default {
       return state.coupon_code;
     },
     orderForm_user_name(state) {
-      return state.orderForm.user.name;
+      return state.orderForm.userName;
     },
     orderForm_user_email(state) {
-      return state.orderForm.user.email;
+      return state.orderForm.email;
     },
     orderForm_user_tel(state) {
-      return state.orderForm.user.tel;
+      return state.orderForm.tel;
     },
     orderForm_user_address(state) {
-      return state.orderForm.user.address;
+      return state.orderForm.address;
     },
     orderForm_message(state) {
       return state.orderForm.message;
