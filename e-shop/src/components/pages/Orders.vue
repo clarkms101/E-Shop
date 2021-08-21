@@ -16,22 +16,22 @@
           v-for="(item, key) in orders"
           :key="key"
           v-if="orders.length"
-          :class="{ 'text-secondary': !item.is_paid }"
+          :class="{ 'text-secondary': !item.isPaid }"
         >
-          <td>{{ item.create_at | date }}</td>
-          <td><span v-text="item.user.email" v-if="item.user"></span></td>
+          <td>{{ item.createDateTime | date }}</td>
+          <td><span v-text="item.email" v-if="item.email"></span></td>
           <td>
             <!-- 購買清單 -->
             <ul class="list-unstyled">
-              <li v-for="(product, i) in item.products" :key="i">
-                {{ product.product.title }} 數量：{{ product.qty }}
-                {{ product.product.unit }}
+              <li v-for="(orderDetail, i) in item.orderDetailInfos" :key="i">
+                {{ orderDetail.productTitle }} 數量：{{ orderDetail.qty }}
+                {{ orderDetail.productUnit }}
               </li>
             </ul>
           </td>
-          <td class="text-right">{{ item.total | currency }}</td>
+          <td class="text-right">{{ item.totalAmount | currency }}</td>
           <td>
-            <strong v-if="item.is_paid" class="text-success">已付款</strong>
+            <strong v-if="item.isPaid" class="text-success">已付款</strong>
             <span v-else class="text-muted">尚未付款</span>
           </td>
         </tr>

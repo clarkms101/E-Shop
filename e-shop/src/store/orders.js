@@ -7,17 +7,15 @@ export default {
   },
   actions: {
     getOrders(context, value) {
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
+      let token = localStorage.getItem("adminJWT");
       axios.defaults.headers.common.Authorization = `${token}`;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/orders?page=${value.page}`;
+      const url = `${process.env.APIPATH}/api/orders?page=${value.page}`;
       // { root: true } => 表示為根節點的mutations
       context.commit("LOADING", true, { root: true });
       axios.get(url).then(response => {
         let newOrders = [];
-        var oldOrders = response.data.orders;
+        var oldOrders = response.data.orderInfos;
+        // 已付款排前面
         if (oldOrders.length) {
           newOrders = oldOrders.sort((a, b) => {
             const aIsPaid = a.is_paid ? 1 : 0;
