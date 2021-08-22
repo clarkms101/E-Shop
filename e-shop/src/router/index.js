@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+// Admin
 import Dashboard from "@/components/pages/Dashboard";
 import Login from "@/components/pages/Login";
 import Products from "@/components/pages/Products";
@@ -7,23 +8,32 @@ import Coupons from "@/components/pages/Coupons";
 import CustomerOrders from "@/components/pages/CustomerOrders";
 import Orders from "@/components/pages/Orders";
 import CustomerOrderCheckout from "@/components/pages/CustomerOrderCheckout";
+// Portal
+import PortalIndex from "@/components/pages/Portal/Index";
 
 Vue.use(Router);
 
 export default new Router({
   routes: [
+    // 不存在的路由，都導向指定的頁面
     {
       path: "*",
-      redirect: "login" // 不存在的路由，都導向login頁面
+      redirect: "portal_index"
     },
+    // 入口頁面
     {
       path: "/",
-      redirect: "login"
+      redirect: "portal_index"
     },
     {
       path: "/login",
       name: "Login",
       component: Login
+    },
+    {
+      path: "/portal_index",
+      name: "PortalIndex",
+      component: PortalIndex
     },
     {
       path: "/admin",
@@ -65,7 +75,7 @@ export default new Router({
           path: "customer_order_checkout/:orderId",
           name: "CustomerOrderCheckout",
           component: CustomerOrderCheckout
-        },
+        }
       ]
     }
   ]
