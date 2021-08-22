@@ -106,7 +106,7 @@
                 原價 {{ product.originPrice }} 元
               </div>
               <del class="h6" v-if="product.price"
-                >原價 {{ product.origin_price }} 元</del
+                >原價 {{ product.originPrice }} 元</del
               >
               <div class="h4" v-if="product.price">
                 現在只要 {{ product.price }} 元

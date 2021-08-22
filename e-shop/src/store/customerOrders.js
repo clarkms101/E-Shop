@@ -107,6 +107,13 @@ export default {
           response => {
             console.log("訂單已建立", response);
             context.commit("LOADING", false, { root: true });
+            // 清空訂單表單上的資料
+            context.commit("ORDER_FORM_USER_NAME", "");
+            context.commit("ORDER_FORM_USER_EMAIL", "");
+            context.commit("ORDER_FORM_USER_TEL", "");
+            context.commit("ORDER_FORM_USER_ADDRESS", "");
+            context.commit("ORDER_FORM_MESSAGE", "");
+
             resolve(response);
           },
           error => {

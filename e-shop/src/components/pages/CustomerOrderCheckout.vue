@@ -22,7 +22,7 @@
           <tfoot>
             <tr>
               <td colspan="2" class="text-right">總計</td>
-              <td class="text-right">{{ order.totalAmount }}</td>
+              <td class="text-right">{{ order.totalAmount | currency }}</td>
             </tr>
           </tfoot>
         </table>

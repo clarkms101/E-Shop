@@ -131,9 +131,9 @@
           </div>
           <!-- 主要商品列表 (Card) -->
           <div class="tab-content">
+            <!-- 金牌 -->
             <div class="tab-pane active" id="list-gold">
               <div class="row">
-                <!-- 金牌 -->
                 <div class="col-md-4 mb-4">
                   <div class="card border-0 box-shadow text-center h-100">
                     <img
@@ -321,9 +321,9 @@
               </nav>
             </div>
 
+            <!-- 禮品 -->
             <div class="tab-pane" id="list-gift">
               <div class="row align-items-stretch">
-                <!-- 禮品 -->
                 <div class="col-md-4 mb-4">
                   <div class="card border-0 box-shadow text-center h-100">
                     <img
@@ -424,12 +424,24 @@
 
 <script>
 import $ from "jquery";
+import axios from "axios";
 
 export default {
   data() {
-    return {};
+    return {
+      products: []
+    };
   },
+  components: {},
   methods: {
+    getProducts(page = 1) {
+      const url = `${process.env.APIPATH}/api/Products?page=${page}`;
+      axios.get(url).then(response => {
+        // todo
+        // console.log(response.data);
+        // context.commit("PRODUCTS", response.data.products);
+      });
+    },
     removeCart() {
       $("#removeModal").on("show.bs.modal", function(event) {
         var button = $(event.relatedTarget); // 選則當初觸發事件的按鈕
@@ -440,6 +452,8 @@ export default {
       });
     }
   },
-  created() {}
+  created() {
+    this.getProducts();
+  }
 };
 </script>
