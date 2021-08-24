@@ -297,7 +297,7 @@
 <script>
 // 使用JQuery
 import $ from "jquery";
-import Pagination from "../Pagination.vue";
+import Pagination from "../../Pagination.vue";
 
 export default {
   data() {

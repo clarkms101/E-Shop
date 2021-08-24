@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import parseJwt from "../_helpers/parseJwt";
+import parseJwt from "../../../../_helpers/parseJwt";
 
 export default {
   methods: {

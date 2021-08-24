@@ -1,13 +1,13 @@
 import Vue from "vue";
 import Router from "vue-router";
 // Admin
-import Dashboard from "@/components/pages/Dashboard";
-import Login from "@/components/pages/Login";
-import Products from "@/components/pages/Products";
-import Coupons from "@/components/pages/Coupons";
-import CustomerOrders from "@/components/pages/CustomerOrders";
-import Orders from "@/components/pages/Orders";
-import CustomerOrderCheckout from "@/components/pages/CustomerOrderCheckout";
+import Dashboard from "@/components/pages/Admin/Dashboard";
+import Login from "@/components/pages/Admin/Login";
+import Products from "@/components/pages/Admin/Products";
+import Coupons from "@/components/pages/Admin/Coupons";
+import CustomerOrders from "@/components/pages/Admin/CustomerOrders";
+import Orders from "@/components/pages/Admin/Orders";
+import CustomerOrderCheckout from "@/components/pages/Admin/CustomerOrderCheckout";
 // Portal
 import PortalIndex from "@/components/pages/Portal/Index";
 

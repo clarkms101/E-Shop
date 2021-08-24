@@ -329,7 +329,7 @@
 
 <script>
 import $ from "jquery";
-import Pagination from "../Pagination.vue";
+import Pagination from "../../Pagination.vue";
 
 export default {
   name: "CustomerOrder",

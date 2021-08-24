@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import Alert from "../AlertMessage.vue";
+import Alert from "../../AlertMessage.vue";
 
 export default {
   name: "Login",
