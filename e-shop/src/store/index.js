@@ -1,11 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import loginModules from "./login";
-import ordersModules from "./orders";
-import customerOrderCheckoutModules from "./customerOrderCheckout";
-import couponsModules from "./coupons";
-import customerOrdersModules from "./customerOrders";
-import productsModules from "./products";
+import loginModules from "./admin/login.module";
+import ordersModules from "./admin/orders.module";
+import customerOrderCheckoutModules from "./admin/customerOrderCheckout.module";
+import couponsModules from "./admin/coupons.module";
+import customerOrdersModules from "./admin/customerOrders.module";
+import productsModules from "./admin/products.module";
 
 Vue.use(Vuex);
 
