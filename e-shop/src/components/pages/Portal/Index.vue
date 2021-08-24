@@ -1,5 +1,7 @@
 <template>
   <div>
+    <loading :active.sync="isLoading"></loading>
+
     <!-- headers -->
     <nav class="navbar navbar-light">
       <a class="navbar" href="shoppingCart.html" style="font-size:20px">
@@ -82,8 +84,8 @@
 
     <div class="container main-contant mb-1">
       <div class="row">
+        <!-- 左側選單 (List group) -->
         <div class="col-md-3">
-          <!-- 左側選單 (List group) -->
           <div class="list-group sticky-top">
             <a
               class="list-group-item list-group-item-action active"
@@ -110,6 +112,8 @@
             >
           </div>
         </div>
+
+        <!-- 右側商品清單 -->
         <div class="col-md-9">
           <div class="d-flex mb-4">
             <!-- Search bar -->
@@ -133,106 +137,23 @@
           <div class="tab-content">
             <!-- 金牌 -->
             <div class="tab-pane active" id="list-gold">
+              <!-- 該分類的商品清單 -->
               <div class="row">
-                <div class="col-md-4 mb-4">
+                <div
+                  class="col-md-4 mb-4"
+                  v-for="productItem in products"
+                  :key="productItem.productId"
+                >
                   <div class="card border-0 box-shadow text-center h-100">
                     <img
                       class="card-img-top"
-                      src="https://images.unsplash.com/photo-1494281258937-45f28753affd?w=1350"
+                      :src="productItem.imageUrl"
                       alt="Card image cap"
                     />
                     <div class="card-body">
-                      <h4 class="card-title">金牌西裝</h4>
-                      <p class="card-text">
-                        This is a longer card with supporting text below as a
-                        natural lead-in to additional content. This content is a
-                        little bit longer.
-                      </p>
-                      <p class="card-text">
-                        This is a longer card with supporting text below as a
-                        natural lead-in to additional content. This content is a
-                        little bit longer.
-                      </p>
-                    </div>
-                    <div class="card-footer border-top-0 bg-white">
-                      <div class="btn-group btn-group-sm">
-                        <a
-                          href="shoppingCart-product.html"
-                          class="btn btn-outline-secondary"
-                        >
-                          SM
-                        </a>
-                        <a
-                          href="shoppingCart-product.html"
-                          class="btn btn-outline-secondary"
-                        >
-                          M
-                        </a>
-                        <a
-                          href="shoppingCart-product.html"
-                          class="btn btn-outline-secondary disabled"
-                        >
-                          L
-                        </a>
-                        <a
-                          href="shoppingCart-product.html"
-                          class="btn btn-outline-secondary"
-                        >
-                          XL
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                  <div class="card border-0 box-shadow text-center h-100">
-                    <img
-                      class="card-img-top"
-                      src="https://images.unsplash.com/photo-1481399124169-87493351c8a1?w=1349"
-                      alt="Card image cap"
-                    />
-                    <div class="card-body">
-                      <h4 class="card-title">金牌女裝</h4>
-                      <p class="card-text">
-                        This is a longer card with supporting text below as a
-                        natural lead-in to additional content. This content is a
-                        little bit longer.
-                      </p>
-                    </div>
-                    <div class="card-footer border-top-0 bg-white">
-                      <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-outline-secondary">
-                          SM
-                        </a>
-                        <a href="#" class="btn btn-outline-secondary">
-                          M
-                        </a>
-                        <a href="#" class="btn btn-outline-secondary">
-                          L
-                        </a>
-                        <a href="#" class="btn btn-outline-secondary">
-                          XL
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                  <div class="card border-0 box-shadow text-center h-100">
-                    <img
-                      class="card-img-top"
-                      src="https://images.unsplash.com/photo-1486250944723-86bca2b15b06?w=1351"
-                      alt="Card image cap"
-                    />
-                    <div class="card-body">
-                      <h4 class="card-title">特工眼鏡</h4>
-                      <p class="card-text">
-                        This is a longer card with supporting text below as a
-                        natural lead-in to additional content. This content is a
-                        little bit longer.
-                      </p>
+                      <h4 class="card-title">{{ productItem.title }}</h4>
+                      <p class="card-text">{{ productItem.description }}</p>
+                      <p class="card-text">{{ productItem.content }}</p>
                     </div>
                     <div class="card-footer border-top-0 bg-white">
                       <a
@@ -241,84 +162,17 @@
                       >
                         <i class="fa fa-cart-plus" aria-hidden="true"></i>
                         搶購去
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                  <div class="card border-0 box-shadow text-center h-100">
-                    <img
-                      class="card-img-top"
-                      src="https://images.unsplash.com/photo-1497339100210-9e87df79c218?w=1350"
-                      alt="Card image cap"
-                    />
-                    <div class="card-body">
-                      <h4 class="card-title">特工西裝</h4>
-                      <p class="card-text">
-                        This is a longer card with supporting text below as a
-                        natural lead-in to additional content. This content is a
-                        little bit longer.
-                      </p>
-                    </div>
-                    <div class="card-footer border-top-0 bg-white">
-                      <a
-                        href="#"
-                        class="btn btn-outline-secondary btn-block btn-sm"
-                      >
-                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                        搶購去
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                  <div class="card border-0 box-shadow text-center h-100">
-                    <img
-                      class="card-img-top"
-                      src="https://images.unsplash.com/photo-1485373650022-3ed53f62b8f3?w=634"
-                      alt="Card image cap"
-                    />
-                    <div class="card-body">
-                      <h4 class="card-title">變聲領帶</h4>
-                      <p class="card-text">
-                        This is a longer card with supporting text below as a
-                        natural lead-in to additional content. This content is a
-                        little bit longer.
-                      </p>
-                    </div>
-                    <div class="card-footer border-top-0 bg-white">
-                      <a
-                        href="#"
-                        class="btn btn-outline-secondary btn-block btn-sm disabled"
-                      >
-                        缺貨中
                       </a>
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- pagination -->
-              <nav aria-label="Page navigation" class="my-5">
-                <ul class="pagination justify-content-center">
-                  <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">1</a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">2</a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">3</a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                  </li>
-                </ul>
-              </nav>
+
+              <!-- 資料清單分頁 -->
+              <Pagination
+                :pagination="pagination"
+                @emitPages="getProducts"
+              ></Pagination>
             </div>
 
             <!-- 禮品 -->
@@ -424,23 +278,18 @@
 
 <script>
 import $ from "jquery";
-import axios from "axios";
+import Pagination from "../../Pagination.vue";
 
 export default {
   data() {
-    return {
-      products: []
-    };
+    return {};
   },
-  components: {},
+  components: {
+    Pagination
+  },
   methods: {
     getProducts(page = 1) {
-      const url = `${process.env.APIPATH}/api/Products?page=${page}`;
-      axios.get(url).then(response => {
-        // todo
-        // console.log(response.data);
-        // context.commit("PRODUCTS", response.data.products);
-      });
+      this.$store.dispatch("indexModules/getProducts", { page: page });
     },
     removeCart() {
       $("#removeModal").on("show.bs.modal", function(event) {
@@ -450,6 +299,17 @@ export default {
         var modal = $(this);
         modal.find(".modal-title").text("確認" + title); // 寫入資料
       });
+    }
+  },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
+    },
+    pagination() {
+      return this.$store.state.pagination;
+    },
+    products() {
+      return this.$store.getters["indexModules/products"];
     }
   },
   created() {

@@ -6,6 +6,7 @@ import customerOrderCheckoutModules from "./admin/customerOrderCheckout.module";
 import couponsModules from "./admin/coupons.module";
 import customerOrdersModules from "./admin/customerOrders.module";
 import productsModules from "./admin/products.module";
+import indexModules from "./portal/index.module";
 
 Vue.use(Vuex);
 
@@ -39,6 +40,7 @@ export default new Vuex.Store({
     customerOrderCheckoutModules,
     couponsModules,
     customerOrdersModules,
-    productsModules
+    productsModules,
+    indexModules
   }
 });
