@@ -3,12 +3,21 @@ import axios from "axios";
 export default {
   namespaced: true,
   state: {
+    category: "",
     products: []
   },
   actions: {
+    updateCategory(context, value) {
+      console.log(`update category ${value}`);
+      context.commit("CATEGORY", value);
+    },
     getProducts(context, value) {
-      // todo 加上 category過濾
-      const url = `${process.env.APIPATH}/api/Products?page=${value.page}`;
+      let category = context.state.category;
+      if (category === "default") {
+        category = "金牌";
+      }
+      console.log(`query products category ${category}`);
+      const url = `${process.env.APIPATH}/api/Products?page=${value.page}&category=${category}`;
       context.commit("LOADING", true, { root: true });
       axios.get(url).then(response => {
         context.commit("LOADING", false, { root: true });
@@ -20,6 +29,9 @@ export default {
   mutations: {
     PRODUCTS(state, payload) {
       state.products = payload;
+    },
+    CATEGORY(state, payload) {
+      state.category = payload;
     }
   },
   getters: {

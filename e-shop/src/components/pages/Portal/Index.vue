@@ -24,7 +24,7 @@
         <Sidebar />
 
         <!-- 右側商品清單 -->
-        <Products />
+        <router-view :key="$route.path"></router-view>
       </div>
     </div>
 
@@ -99,7 +99,6 @@
 import $ from "jquery";
 import Sidebar from "./Partial/Sidebar.vue";
 import Navbar from "./Partial/Navbar.vue";
-import Products from "./Partial/Products.vue";
 import Alert from "../../AlertMessage.vue";
 
 export default {
@@ -109,7 +108,6 @@ export default {
   components: {
     Sidebar,
     Navbar,
-    Products,
     Alert
   },
   methods: {

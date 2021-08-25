@@ -10,6 +10,7 @@ import Orders from "@/components/pages/Admin/Orders";
 import CustomerOrderCheckout from "@/components/pages/Admin/CustomerOrderCheckout";
 // Portal
 import PortalIndex from "@/components/pages/Portal/Index";
+import PortalProducts from "@/components/pages/Portal/Products";
 
 Vue.use(Router);
 
@@ -18,12 +19,12 @@ export default new Router({
     // 不存在的路由，都導向指定的頁面
     {
       path: "*",
-      redirect: "portal_index"
+      redirect: "portal_index/products/default"
     },
     // 入口頁面
     {
       path: "/",
-      redirect: "portal_index"
+      redirect: "portal_index/products/default"
     },
     {
       path: "/login",
@@ -33,7 +34,14 @@ export default new Router({
     {
       path: "/portal_index",
       name: "PortalIndex",
-      component: PortalIndex
+      component: PortalIndex,
+      children: [
+        {
+          path: "products/:category",
+          name: "Products",
+          component: PortalProducts
+        }
+      ]
     },
     {
       path: "/admin",
