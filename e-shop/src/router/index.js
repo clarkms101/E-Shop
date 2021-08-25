@@ -11,6 +11,7 @@ import CustomerOrderCheckout from "@/components/pages/Admin/CustomerOrderCheckou
 // Portal
 import PortalIndex from "@/components/pages/Portal/Index";
 import PortalProducts from "@/components/pages/Portal/Products";
+import PortalProduct from "@/components/pages/Portal/Product";
 
 Vue.use(Router);
 
@@ -42,6 +43,11 @@ export default new Router({
           component: PortalProducts
         }
       ]
+    },
+    {
+      path: "/portal_product",
+      name: "Product",
+      component: PortalProduct
     },
     {
       path: "/admin",

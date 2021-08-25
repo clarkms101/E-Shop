@@ -40,9 +40,21 @@
                 <p class="card-text">{{ productItem.content }}</p>
               </div>
               <div class="card-footer border-top-0 bg-white">
-                <a href="#" class="btn btn-outline-secondary btn-block btn-sm">
+                <a
+                  href="#/portal_product"
+                  class="btn btn-outline-secondary btn-block btn-sm"
+                  v-if="productItem.isEnabled"
+                >
                   <i class="fa fa-cart-plus" aria-hidden="true"></i>
                   搶購去
+                </a>
+                <a
+                  href=""
+                  class="btn btn-secondary btn-user btn-block disabled"
+                  v-else
+                >
+                  <i class="fa fa-truck"></i>
+                  即將到貨
                 </a>
               </div>
             </div>

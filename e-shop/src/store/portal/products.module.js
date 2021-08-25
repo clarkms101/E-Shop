@@ -13,9 +13,6 @@ export default {
     },
     getProducts(context, value) {
       let category = context.state.category;
-      if (category === "default") {
-        category = "金牌";
-      }
       console.log(`query products category ${category}`);
       const url = `${process.env.APIPATH}/api/Products?page=${value.page}&category=${category}`;
       context.commit("LOADING", true, { root: true });

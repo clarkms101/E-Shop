@@ -1,6 +1,6 @@
 <template>
-  <nav class="navbar navbar-light">
-    <a class="navbar" href="shoppingCart.html" style="font-size:20px">
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar" href="#/" style="font-size:20px">
       <!-- <i class="fa fa-heart text-info" aria-hidden="true"></i> -->
       E-Shop
     </a>
@@ -60,6 +60,9 @@
         </a>
       </div>
     </div>
+    <a class="btn btn-sm btn-cart bg-light" :href="'#/login'">
+      <i class="fa fa-gear text-dark fa-2x" aria-hidden="true"></i>
+    </a>
   </nav>
 </template>
 
