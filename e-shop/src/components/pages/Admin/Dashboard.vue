@@ -15,7 +15,7 @@
 
 <script>
 import Sidebar from "./Partial/Sidebar.vue";
-import Navbar from "./Partial/Narbar.vue";
+import Navbar from "./Partial/Navbar.vue";
 import Alert from "../../AlertMessage.vue";
 
 export default {

@@ -6,8 +6,8 @@ export default {
     products: []
   },
   actions: {
-    // todo filter product category
     getProducts(context, value) {
+      // todo 加上 category過濾
       const url = `${process.env.APIPATH}/api/Products?page=${value.page}`;
       context.commit("LOADING", true, { root: true });
       axios.get(url).then(response => {
