@@ -80,17 +80,22 @@
         </div>
       </div>
     </div>
+
+    <!-- 底層資訊區 -->
+    <Footer />
   </div>
 </template>
 
 <script>
 import Navbar from "./Partial/Navbar.vue";
+import Footer from "./Partial/Footer.vue";
 export default {
   data() {
     return {};
   },
   components: {
-    Navbar
+    Navbar,
+    Footer
   },
   computed: {
     isLoading() {

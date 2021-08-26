@@ -26,29 +26,8 @@
     </div>
 
     <!-- 底層資訊區 -->
-    <footer class="bg-light text-muted py-5">
-      <div class="container">
-        <ul class="list-inline text-center">
-          <li class="list-inline-item">© Copright 2021 e-shop</li>
-          <li class="list-inline-item">
-            <a class="text-info" href="#">
-              <i class="fa fa-instagram" aria-hidden="true"></i> Instagrame</a
-            >
-          </li>
-          <li class="list-inline-item">
-            <a class="text-info" href="#">
-              <i class="fa fa-facebook-square" aria-hidden="true"></i>
-              Facebook</a
-            >
-          </li>
-          <li class="list-inline-item">
-            <a class="text-info" href="#">About</a>
-          </li>
-        </ul>
-        <p class="text-center">Made with Bootstrap4</p>
-      </div>
-    </footer>
-
+    <Footer />
+    
     <!-- 購物車刪除確認視窗 -->
     <div
       class="modal fade"
@@ -96,6 +75,7 @@
 import $ from "jquery";
 import Sidebar from "./Partial/Sidebar.vue";
 import Navbar from "./Partial/Navbar.vue";
+import Footer from "./Partial/Footer.vue";
 import Alert from "../../AlertMessage.vue";
 
 export default {
@@ -105,6 +85,7 @@ export default {
   components: {
     Sidebar,
     Navbar,
+    Footer,
     Alert
   },
   methods: {
