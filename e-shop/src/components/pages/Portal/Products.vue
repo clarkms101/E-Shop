@@ -40,14 +40,26 @@
                 <p class="card-text">{{ productItem.content }}</p>
               </div>
               <div class="card-footer border-top-0 bg-white">
-                <a
+                <!-- <a
                   href="#/portal_product"
                   class="btn btn-outline-secondary btn-block btn-sm"
                   v-if="productItem.isEnabled"
                 >
                   <i class="fa fa-cart-plus" aria-hidden="true"></i>
                   搶購去
-                </a>
+                </a> -->
+                <router-link
+                  :to="{
+                    name: 'PortalProduct',
+                    params: { productId: productItem.productId }
+                  }"
+                  class="btn btn-outline-secondary btn-block btn-sm"
+                  v-if="productItem.isEnabled"
+                >
+                  <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                  搶購去
+                </router-link>
+
                 <a
                   href=""
                   class="btn btn-secondary btn-user btn-block disabled"

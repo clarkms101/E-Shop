@@ -41,24 +41,24 @@ export default new Router({
       children: [
         {
           path: "products/:category",
-          name: "Products",
+          name: "PortalProducts",
           component: PortalProducts
         }
       ]
     },
     {
-      path: "/portal_product",
-      name: "Product",
+      path: "/portal_product/:productId",
+      name: "PortalProduct",
       component: PortalProduct
     },
     {
       path: "/portal_order",
-      name: "Order",
+      name: "PortalOrder",
       component: PortalOrder
     },
     {
       path: "/portal_order_checkout",
-      name: "OrderCheckout",
+      name: "PortalOrderCheckout",
       component: PortalOrderCheckout
     },
     {

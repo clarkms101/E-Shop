@@ -1,12 +1,15 @@
 import Vue from "vue";
 import Vuex from "vuex";
+// admin
 import loginModules from "./admin/login.module";
 import ordersModules from "./admin/orders.module";
 import customerOrderCheckoutModules from "./admin/customerOrderCheckout.module";
 import couponsModules from "./admin/coupons.module";
 import customerOrdersModules from "./admin/customerOrders.module";
 import productsModules from "./admin/products.module";
+// portal
 import portalProductsModules from "./portal/products.module";
+import portalProductModules from "./portal/product.module";
 
 Vue.use(Vuex);
 
@@ -41,6 +44,7 @@ export default new Vuex.Store({
     couponsModules,
     customerOrdersModules,
     productsModules,
-    portalProductsModules
+    portalProductsModules,
+    portalProductModules
   }
 });
