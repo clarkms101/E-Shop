@@ -12,6 +12,8 @@ import CustomerOrderCheckout from "@/components/pages/Admin/CustomerOrderCheckou
 import PortalIndex from "@/components/pages/Portal/Index";
 import PortalProducts from "@/components/pages/Portal/Products";
 import PortalProduct from "@/components/pages/Portal/Product";
+import PortalOrder from "@/components/pages/Portal/Order";
+import PortalOrderCheckout from "@/components/pages/Portal/OrderCheckout";
 
 Vue.use(Router);
 
@@ -48,6 +50,16 @@ export default new Router({
       path: "/portal_product",
       name: "Product",
       component: PortalProduct
+    },
+    {
+      path: "/portal_order",
+      name: "Order",
+      component: PortalOrder
+    },
+    {
+      path: "/portal_order_checkout",
+      name: "OrderCheckout",
+      component: PortalOrderCheckout
     },
     {
       path: "/admin",

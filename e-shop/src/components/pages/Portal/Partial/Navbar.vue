@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-light bg-light">
-    <a class="navbar" href="#/" style="font-size:20px">
-      <!-- <i class="fa fa-heart text-info" aria-hidden="true"></i> -->
+    <a class="nav-link" href="#/" style="font-size:20px">
+      <i class="fa fa-heart text-info" aria-hidden="true"></i>
       E-Shop
     </a>
     <!-- 購物車內的數量 (Button 內包含 icon, 數量 badge) -->
@@ -55,12 +55,12 @@
             </tr>
           </tbody>
         </table>
-        <a href="shoppingCart-checkout.html" class="btn btn-primary btn-block">
+        <a href="#/portal_order" class="btn btn-primary btn-block">
           <i class="fa fa-cart-plus" aria-hidden="true"></i> 結帳去
         </a>
       </div>
     </div>
-    <a class="btn btn-sm btn-cart bg-light" :href="'#/login'">
+    <a class="btn btn-sm bg-light" :href="'#/login'">
       <i class="fa fa-gear text-dark fa-2x" aria-hidden="true"></i>
     </a>
   </nav>
