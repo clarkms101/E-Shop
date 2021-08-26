@@ -113,6 +113,7 @@ export default {
             context.commit("ORDER_FORM_USER_TEL", "");
             context.commit("ORDER_FORM_USER_ADDRESS", "");
             context.commit("ORDER_FORM_MESSAGE", "");
+            context.commit("COUPON_CODE", "");
 
             resolve(response);
           },
