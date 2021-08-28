@@ -2,6 +2,9 @@
   <div>
     <loading :active.sync="isLoading"></loading>
 
+    <!-- 訊息通知 -->
+    <Alert />
+
     <!-- 上層導覽列 (headers) -->
     <Navbar />
 
@@ -27,7 +30,7 @@
 
     <!-- 底層資訊區 -->
     <Footer />
-    
+
     <!-- 購物車刪除確認視窗 -->
     <div
       class="modal fade"

@@ -88,6 +88,7 @@ export default {
           response => {
             if (response.data.success) {
               context.dispatch("getCart");
+              context.commit("COUPON_CODE", "");
             }
             context.commit("LOADING", false, { root: true });
             resolve(response);

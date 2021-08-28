@@ -2,6 +2,9 @@
   <div>
     <loading :active.sync="isLoading"></loading>
 
+    <!-- 訊息通知 -->
+    <Alert />
+
     <!-- 上層導覽列 (headers) -->
     <Navbar />
 
@@ -30,14 +33,14 @@
               <small class="text-muted"></small>
             </h1>
             <div class="d-flex my-3 align-items-end justify-content-end">
-              <del class="text-muted">售價 {{ product.originPrice }}</del>
+              <del class="text-muted">售價 NT$ {{ product.originPrice }}</del>
               <div class="h3 mb-0 ml-auto text-danger">
                 <small>網路價 NT$</small>
                 <strong>{{ product.price }}</strong>
               </div>
             </div>
             <hr />
-            尺寸:
+            <!-- 尺寸:
             <div
               class="btn-group btn-group-sm btn-group-toggle"
               data-toggle="buttons"
@@ -54,18 +57,28 @@
               <label class="btn btn-outline-secondary">
                 <input type="radio" name="size" /> XL
               </label>
-            </div>
+            </div> -->
 
             <!-- todo -->
             <div class="input-group mt-3">
-              <select name="" class="form-control mr-1" id="">
-                <option value="1">1 件</option>
-                <option value="2">2 件</option>
-                <option value="3">3 件</option>
+              <select name="" class="form-control mr-1" id="" v-model="qty">
+                <option value="" disabled>-- 請選擇數量 --</option>
+                <option v-for="num in 10" :key="num" :value="num">
+                  {{ num }} {{ product.unit }}
+                </option>
               </select>
-              <a href="" class="btn btn-primary">
-                <i class="fa fa-cart-plus" aria-hidden="true"></i> 加入購物車
-              </a>
+              <button
+                type="button"
+                class="btn btn-primary"
+                @click="addToCart(product.productId, qty)"
+              >
+                <i
+                  v-if="loadingProductId === product.productId"
+                  class="fa fa-spinner fa-spin"
+                ></i>
+                <i v-else class="fa fa-cart-plus" aria-hidden="true"></i>
+                加到購物車
+              </button>
             </div>
 
             <div class="mt-2 text-right text-muted">
@@ -118,11 +131,14 @@
 <script>
 import Navbar from "./Partial/Navbar.vue";
 import Footer from "./Partial/Footer.vue";
+import Alert from "../../AlertMessage.vue";
+
 export default {
   data() {
     return {};
   },
   components: {
+    Alert,
     Navbar,
     Footer
   },
@@ -131,6 +147,26 @@ export default {
       this.$store.dispatch("portalProductModules/getProduct", {
         productId: id
       });
+    },
+    addToCart(id, qty = 1) {
+      if (qty === "") {
+        this.$bus.$emit("message:push", "請選擇數量!", "danger");
+      } else {
+        this.$store
+          .dispatch("portalProductModules/addToCart", {
+            productId: id,
+            productQty: qty
+          })
+          .then(
+            response => {
+              this.$bus.$emit("message:push", response.data.message, "success");
+            },
+            error => {
+              console.log(error);
+              this.$bus.$emit("message:push", "處理失敗", "danger");
+            }
+          );
+      }
     }
   },
   computed: {
@@ -139,6 +175,17 @@ export default {
     },
     product() {
       return this.$store.getters["portalProductModules/product"];
+    },
+    loadingProductId() {
+      return this.$store.getters["portalProductModules/loadingProductId"];
+    },
+    qty: {
+      get() {
+        return this.$store.getters["portalProductModules/qty"];
+      },
+      set(value) {
+        this.$store.dispatch("portalProductModules/updateQty", value);
+      }
     }
   },
   created() {
