@@ -4,8 +4,8 @@ export default {
     messages: []
   },
   actions: {
-    // 給外部元件傳入訊息用的 (context, style)
-    updateMessage(context, value) {
+    // 給外部元件傳入訊息用的 (content, style)
+    addMessage(context, value) {
       const timestamp = Math.floor(new Date() / 1000);
 
       let message = new Object();
@@ -17,20 +17,19 @@ export default {
       message.timestamp = timestamp;
 
       context.commit("ADD_MESSAGE", message);
-      context.dispatch("removeMessageByTime", { timestamp: timestamp });
-    },
-    // alert元件點擊關閉訊息用的
-    removeMessage(context, value) {
-      context.commit("REMOVE_MESSAGE", { num: value.num });
-    },
-    removeMessageByTime(context, value) {
+
+      // 自動移除
       setTimeout(() => {
         context.state.messages.forEach((item, i) => {
-          if (item.timestamp === value.timestamp) {
+          if (item.timestamp === timestamp) {
             context.commit("REMOVE_MESSAGE", { num: i });
           }
         });
       }, 5000);
+    },
+    // alert元件點擊關閉訊息用的
+    removeMessage(context, value) {
+      context.commit("REMOVE_MESSAGE", { num: value.num });
     }
   },
   mutations: {

@@ -150,7 +150,7 @@ export default {
     },
     addToCart(id, qty = 1) {
       if (qty === "") {
-        this.$store.dispatch("alertMoules/updateMessage", {
+        this.$store.dispatch("alertMoules/addMessage", {
           content: "請選擇數量!",
           style: "danger"
         });
@@ -162,7 +162,7 @@ export default {
           })
           .then(
             response => {
-              this.$store.dispatch("alertMoules/updateMessage", {
+              this.$store.dispatch("alertMoules/addMessage", {
                 content: response.data.message,
                 style: "success"
               });
@@ -170,7 +170,7 @@ export default {
             error => {
               console.log(error);
 
-              this.$store.dispatch("alertMoules/updateMessage", {
+              this.$store.dispatch("alertMoules/addMessage", {
                 content: "處理失敗",
                 style: "danger"
               });

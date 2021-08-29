@@ -59,7 +59,7 @@ export default {
         context.commit("LOADING", false, { root: true });
         if (response.data.success) {
           context.dispatch(
-            "alertMoules/updateMessage",
+            "alertMoules/addMessage",
             {
               content: response.data.message,
               style: "success"
@@ -70,7 +70,7 @@ export default {
           );
         } else {
           context.dispatch(
-            "alertMoules/updateMessage",
+            "alertMoules/addMessage",
             {
               content: "處理失敗",
               style: "danger"
@@ -97,7 +97,7 @@ export default {
 
         if (response.data.success) {
           context.dispatch(
-            "alertMoules/updateMessage",
+            "alertMoules/addMessage",
             {
               content: response.data.message,
               style: "success"
@@ -108,7 +108,7 @@ export default {
           );
         } else {
           context.dispatch(
-            "alertMoules/updateMessage",
+            "alertMoules/addMessage",
             {
               content: response.data.message,
               style: "danger"

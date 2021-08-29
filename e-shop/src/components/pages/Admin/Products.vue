@@ -346,7 +346,7 @@ export default {
         .then(
           response => {
             if (response.data.success == false) {
-              this.$store.dispatch("alertMoules/updateMessage", {
+              this.$store.dispatch("alertMoules/addMessage", {
                 content: response.data.message,
                 style: "danger"
               });
@@ -354,7 +354,7 @@ export default {
           },
           error => {
             console.log(error);
-            this.$store.dispatch("alertMoules/updateMessage", {
+            this.$store.dispatch("alertMoules/addMessage", {
               content: "處理失敗",
               style: "danger"
             });

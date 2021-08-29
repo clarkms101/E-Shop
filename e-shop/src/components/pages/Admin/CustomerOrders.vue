@@ -379,7 +379,7 @@ export default {
               `/customer_order_checkout/${response.data.orderId}`
             );
           } else {
-            this.$store.dispatch("alertMoules/updateMessage", {
+            this.$store.dispatch("alertMoules/addMessage", {
               content: response.data.message,
               style: "danger"
             });
@@ -387,7 +387,7 @@ export default {
         },
         error => {
           console.log(error);
-          this.$store.dispatch("alertMoules/updateMessage", {
+          this.$store.dispatch("alertMoules/addMessage", {
             content: "處理失敗",
             style: "danger"
           });
