@@ -53,7 +53,7 @@
       </tbody>
     </table>
     <!-- 資料清單分頁 -->
-    <Pagination :pagination="pagination" @emitPages="getProducts"></Pagination>
+    <Pagination />
 
     <!-- Product Modal (Create, Update) -->
     <div
@@ -307,8 +307,11 @@ export default {
     Pagination
   },
   methods: {
-    getProducts(page = 1) {
-      this.$store.dispatch("productsModules/getProducts", { page: page });
+    updateQueryProductCategory(category) {
+      this.$store.dispatch("updateProductCategory", category);
+    },
+    getProducts(page) {
+      this.$store.dispatch("getProducts", { page: page });
     },
     openModal(isNewProduct, item) {
       console.log(item);
@@ -361,7 +364,7 @@ export default {
       return this.$store.state.pagination;
     },
     products() {
-      return this.$store.getters["productsModules/products"];
+      return this.$store.getters["products"];
     },
     isNewProduct() {
       return this.$store.getters["productsModules/isNewProduct"];
@@ -469,7 +472,8 @@ export default {
     }
   },
   created() {
-    this.getProducts();
+    this.updateQueryProductCategory("");
+    this.getProducts(1);
   }
 };
 </script>

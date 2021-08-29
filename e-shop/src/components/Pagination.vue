@@ -6,7 +6,7 @@
           class="page-link"
           href="#"
           aria-label="Previous"
-          @click.prevent="emitGetProduct(pagination.currentPage - 1)"
+          @click.prevent="getProducts(pagination.currentPage - 1)"
         >
           <span aria-hidden="true">&laquo;</span>
         </a>
@@ -17,7 +17,7 @@
         :key="page"
         :class="{ active: pagination.currentPage === page }"
       >
-        <a class="page-link" href="#" @click.prevent="emitGetProduct(page)">{{
+        <a class="page-link" href="#" @click.prevent="getProducts(page)">{{
           page
         }}</a>
       </li>
@@ -26,7 +26,7 @@
           class="page-link"
           href="#"
           aria-label="Next"
-          @click.prevent="emitGetProduct(pagination.currentPage + 1)"
+          @click.prevent="getProducts(pagination.currentPage + 1)"
         >
           <span aria-hidden="true">&raquo;</span>
         </a>
@@ -36,20 +36,15 @@
 </template>
 
 <script>
-// 外部使用方式
-// <Pagination
-//   :pagination="{ 頁碼資訊 }"
-//   @emitPages="更新頁面事件"
-// ></Pagination>
-
 export default {
-  props: ["pagination"],
-  data() {
-    return {};
-  },
   methods: {
-    emitGetProduct(page) {
-      this.$emit("emitPages", page);
+    getProducts(page) {
+      this.$store.dispatch("getProducts", { page: page });
+    }
+  },
+  computed: {
+    pagination() {
+      return this.$store.getters["pagination"];
     }
   }
 };

@@ -18,23 +18,11 @@ export default {
       isEnabled: false,
       imageUrl: ""
     },
-    products: [],
     status: {
       fileUploading: false
     }
   },
   actions: {
-    getProducts(context, value) {
-      const url = `${process.env.APIPATH}/api/Products?page=${value.page}`;
-      // 處理中提示
-      context.commit("LOADING", true, { root: true });
-      axios.get(url).then(response => {
-        console.log(response.data);
-        context.commit("LOADING", false, { root: true });
-        context.commit("PRODUCTS", response.data.products);
-        context.commit("PAGINATION", response.data.pagination, { root: true });
-      });
-    },
     deleteProduct(context) {
       let token = localStorage.getItem("adminJWT");
       axios.defaults.headers.common.Authorization = `${token}`;
@@ -44,9 +32,9 @@ export default {
       context.commit("LOADING", true, { root: true });
       axios.delete(url).then(response => {
         if (response.data.success) {
-          context.dispatch("getProducts", { page: 1 });
+          context.dispatch("getProducts", { page: 1 }, { root: true });
         } else {
-          context.dispatch("getProducts", { page: 1 });
+          context.dispatch("getProducts", { page: 1 }, { root: true });
           console.log(response.data.message);
         }
       });
@@ -64,9 +52,9 @@ export default {
         axios.post(url, { Product: tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
-            context.dispatch("getProducts", { page: 1 });
+            context.dispatch("getProducts", { page: 1 }, { root: true });
           } else {
-            context.dispatch("getProducts", { page: 1 });
+            context.dispatch("getProducts", { page: 1 }, { root: true });
             console.log("新增失敗");
           }
         });
@@ -78,9 +66,9 @@ export default {
         axios.put(url, { Product: tempProduct }).then(response => {
           console.log(response.data);
           if (response.data.success) {
-            context.dispatch("getProducts", { page: 1 });
+            context.dispatch("getProducts", { page: 1 }, { root: true });
           } else {
-            context.dispatch("getProducts", { page: 1 });
+            context.dispatch("getProducts", { page: 1 }, { root: true });
             console.log("更新失敗");
           }
         });
@@ -158,9 +146,6 @@ export default {
     }
   },
   mutations: {
-    PRODUCTS(state, payload) {
-      state.products = payload;
-    },
     IS_NEW_PRODUCT(state, payload) {
       state.isNewProduct = payload;
     },
@@ -202,9 +187,6 @@ export default {
     }
   },
   getters: {
-    products(state) {
-      return state.products;
-    },
     isNewProduct(state) {
       return state.isNewProduct;
     },

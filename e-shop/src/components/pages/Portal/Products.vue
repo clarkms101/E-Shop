@@ -74,10 +74,7 @@
         </div>
 
         <!-- 資料清單分頁 -->
-        <Pagination
-          :pagination="pagination"
-          @emitPages="getProducts"
-        ></Pagination>
+        <Pagination />
       </div>
     </div>
   </div>
@@ -91,10 +88,11 @@ export default {
     Pagination
   },
   methods: {
-    getProducts(page = 1) {
-      this.$store.dispatch("portalProductsModules/getProducts", {
-        page: page
-      });
+    updateQueryProductCategory(category) {
+      this.$store.dispatch("updateProductCategory", category);
+    },
+    getProducts(page) {
+      this.$store.dispatch("getProducts", { page: page });
     }
   },
   computed: {
@@ -102,16 +100,12 @@ export default {
       return this.$store.state.pagination;
     },
     products() {
-      return this.$store.getters["portalProductsModules/products"];
+      return this.$store.state.products;
     }
   },
   created() {
-    console.log("portal porducts created!");
-    this.$store.dispatch(
-      "portalProductsModules/updateCategory",
-      this.$route.params.category
-    );
-    this.getProducts();
+    this.updateQueryProductCategory(this.$route.params.category);
+    this.getProducts(1);
   }
 };
 </script>

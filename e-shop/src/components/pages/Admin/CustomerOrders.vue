@@ -67,7 +67,7 @@
     </div>
 
     <!-- 資料清單分頁 -->
-    <Pagination :pagination="pagination" @emitPages="getProducts"></Pagination>
+    <Pagination />
 
     <!-- Product Modal (Detail) -->
     <div
@@ -337,8 +337,11 @@ export default {
     Pagination
   },
   methods: {
-    getProducts(page = 1) {
-      this.$store.dispatch("customerOrdersModules/getProducts", { page: page });
+    updateQueryProductCategory(category) {
+      this.$store.dispatch("updateProductCategory", category);
+    },
+    getProducts(page) {
+      this.$store.dispatch("getProducts", { page: page });
     },
     async getProduct(id) {
       await this.$store.dispatch("customerOrdersModules/getProduct", {
@@ -421,7 +424,7 @@ export default {
       return this.$store.getters["customerOrdersModules/totalPrice"];
     },
     products() {
-      return this.$store.getters["customerOrdersModules/products"];
+      return this.$store.getters["products"];
     },
     loadingProductId() {
       return this.$store.getters["customerOrdersModules/loadingProductId"];
@@ -509,7 +512,8 @@ export default {
     }
   },
   created() {
-    this.getProducts();
+    this.updateQueryProductCategory("");
+    this.getProducts(1);
     this.getCart();
   }
 };

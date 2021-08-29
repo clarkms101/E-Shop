@@ -14,19 +14,9 @@ export default {
     cart: {},
     qty: "",
     loadingProductId: "",
-    products: [],
     product: {}
   },
   actions: {
-    getProducts(context, value) {
-      const url = `${process.env.APIPATH}/api/Products?page=${value.page}`;
-      context.commit("LOADING", true, { root: true });
-      axios.get(url).then(response => {
-        context.commit("LOADING", false, { root: true });
-        context.commit("PRODUCTS", response.data.products);
-        context.commit("PAGINATION", response.data.pagination, { root: true });
-      });
-    },
     async getProduct(context, value) {
       const url = `${process.env.APIPATH}/api/product/${value.productId}`;
       context.commit("LOADING_PRODUCTID", value.productId);
@@ -177,9 +167,6 @@ export default {
     ORDER_FORM_MESSAGE(state, payload) {
       state.orderForm.message = payload;
     },
-    PRODUCTS(state, payload) {
-      state.products = payload;
-    },
     PRODUCT(state, payload) {
       state.product = payload;
     }
@@ -187,9 +174,6 @@ export default {
   getters: {
     totalPrice(state) {
       return state.qty * state.product.price;
-    },
-    products(state) {
-      return state.products;
     },
     loadingProductId(state) {
       return state.loadingProductId;
