@@ -24,7 +24,6 @@ import "bootstrap";
 // 自行定義的
 import App from "./App";
 import router from "./router";
-import "./bus";
 import currencyFilter from "./filters/currency";
 import dateFilter from "./filters/date";
 import store from "./store";

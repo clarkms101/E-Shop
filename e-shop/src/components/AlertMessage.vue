@@ -2,11 +2,11 @@
   <div class="message-alert">
     <div
       class="alert alert-dismissible"
-      :class="'alert-' + item.status"
+      :class="'alert-' + item.style"
       v-for="(item, i) in messages"
       :key="i"
     >
-      {{ item.message }}
+      {{ item.content }}
       <button
         type="button"
         class="close"
@@ -22,49 +22,19 @@
 <script>
 export default {
   name: "Navbar",
-  data() {
-    return {
-      messages: []
-    };
-  },
   methods: {
-    updateMessage(message, status) {
-      const timestamp = Math.floor(new Date() / 1000);
-      this.messages.push({
-        // 內容
-        message,
-        // 樣式(boot strap)
-        status,
-        // 時間
-        timestamp
-      });
-      this.removeMessageWithTiming(timestamp);
-    },
     removeMessage(num) {
-      this.messages.splice(num, 1);
-    },
-    removeMessageWithTiming(timestamp) {
-      const vm = this;
-      setTimeout(() => {
-        vm.messages.forEach((item, i) => {
-          if (item.timestamp === timestamp) {
-            vm.messages.splice(i, 1);
-          }
-        });
-      }, 5000);
+      this.$store.dispatch("alertMoules/removeMessage", {
+        num: num
+      });
     }
   },
-  created() {
-    const vm = this;
-
-    // 自定義名稱 'messsage:push'
-    // message: 傳入參數
-    // status: 樣式，預設值為 warning
-    vm.$bus.$on("message:push", (message, status = "warning") => {
-      vm.updateMessage(message, status);
-    });
-    // vm.$bus.$emit('message:push');
-  }
+  computed: {
+    messages() {
+      return this.$store.getters["alertMoules/messages"];
+    }
+  },
+  created() {}
 };
 </script>
 

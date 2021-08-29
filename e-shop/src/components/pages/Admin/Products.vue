@@ -346,12 +346,18 @@ export default {
         .then(
           response => {
             if (response.data.success == false) {
-              this.$bus.$emit("message:push", response.data.message, "danger");
+              this.$store.dispatch("alertMoules/updateMessage", {
+                content: response.data.message,
+                style: "danger"
+              });
             }
           },
           error => {
             console.log(error);
-            this.$bus.$emit("message:push", "處理失敗", "danger");
+            this.$store.dispatch("alertMoules/updateMessage", {
+              content: "處理失敗",
+              style: "danger"
+            });
           }
         );
     }

@@ -361,38 +361,14 @@ export default {
       this.$store.dispatch("customerOrdersModules/getCart");
     },
     removeFromCart(cartDetailId) {
-      this.$store
-        .dispatch("customerOrdersModules/removeFromCart", {
-          cartDetailId: cartDetailId
-        })
-        .then(
-          response => {
-            this.$bus.$emit("message:push", response.data.message, "success");
-          },
-          error => {
-            console.log(error);
-            this.$bus.$emit("message:push", "處理失敗", "danger");
-          }
-        );
+      this.$store.dispatch("customerOrdersModules/removeFromCart", {
+        cartDetailId: cartDetailId
+      });
     },
     addCouponCode(coupon_code) {
-      this.$store
-        .dispatch("customerOrdersModules/addCouponCode", {
-          coupon_code: coupon_code
-        })
-        .then(
-          response => {
-            if (response.data.success) {
-              this.$bus.$emit("message:push", response.data.message, "success");
-            } else {
-              this.$bus.$emit("message:push", response.data.message, "danger");
-            }
-          },
-          error => {
-            console.log(error);
-            this.$bus.$emit("message:push", "處理失敗", "danger");
-          }
-        );
+      this.$store.dispatch("customerOrdersModules/addCouponCode", {
+        coupon_code: coupon_code
+      });
     },
     createOrder() {
       this.$store.dispatch("customerOrdersModules/createOrder").then(
@@ -403,12 +379,18 @@ export default {
               `/customer_order_checkout/${response.data.orderId}`
             );
           } else {
-            this.$bus.$emit("message:push", response.data.message, "danger");
+            this.$store.dispatch("alertMoules/updateMessage", {
+              content: response.data.message,
+              style: "danger"
+            });
           }
         },
         error => {
           console.log(error);
-          this.$bus.$emit("message:push", "處理失敗", "danger");
+          this.$store.dispatch("alertMoules/updateMessage", {
+            content: "處理失敗",
+            style: "danger"
+          });
         }
       );
     }

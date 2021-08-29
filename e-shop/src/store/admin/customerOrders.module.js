@@ -52,41 +52,72 @@ export default {
       });
     },
     removeFromCart(context, value) {
-      return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/api/cart/${value.cartDetailId}`;
-        context.commit("LOADING", true, { root: true });
-        axios.delete(url).then(
-          response => {
-            context.dispatch("getCart");
-            context.commit("LOADING", false, { root: true });
-            resolve(response);
-          },
-          error => {
-            reject(error);
-          }
-        );
+      const url = `${process.env.APIPATH}/api/cart/${value.cartDetailId}`;
+      context.commit("LOADING", true, { root: true });
+      axios.delete(url).then(response => {
+        context.dispatch("getCart");
+        context.commit("LOADING", false, { root: true });
+        if (response.data.success) {
+          context.dispatch(
+            "alertMoules/updateMessage",
+            {
+              content: response.data.message,
+              style: "success"
+            },
+            {
+              root: true
+            }
+          );
+        } else {
+          context.dispatch(
+            "alertMoules/updateMessage",
+            {
+              content: "處理失敗",
+              style: "danger"
+            },
+            {
+              root: true
+            }
+          );
+        }
       });
     },
     addCouponCode(context, value) {
-      return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/api/Shopping/UseCoupon`;
-        const coupon = {
-          CouponCode: value.coupon_code
-        };
-        context.commit("LOADING", true, { root: true });
-        axios.post(url, { Coupon: coupon }).then(
-          response => {
-            if (response.data.success) {
-              context.dispatch("getCart");
-              context.commit("COUPON_CODE", "");
+      const url = `${process.env.APIPATH}/api/Shopping/UseCoupon`;
+      const coupon = {
+        CouponCode: value.coupon_code
+      };
+      context.commit("LOADING", true, { root: true });
+      axios.post(url, { Coupon: coupon }).then(response => {
+        if (response.data.success) {
+          context.dispatch("getCart");
+          context.commit("COUPON_CODE", "");
+        }
+        context.commit("LOADING", false, { root: true });
+
+        if (response.data.success) {
+          context.dispatch(
+            "alertMoules/updateMessage",
+            {
+              content: response.data.message,
+              style: "success"
+            },
+            {
+              root: true
             }
-            context.commit("LOADING", false, { root: true });
-            resolve(response);
-          },
-          error => {
-            reject(error);
-          }
-        );
+          );
+        } else {
+          context.dispatch(
+            "alertMoules/updateMessage",
+            {
+              content: response.data.message,
+              style: "danger"
+            },
+            {
+              root: true
+            }
+          );
+        }
       });
     },
     createOrder(context) {

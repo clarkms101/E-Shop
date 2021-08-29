@@ -150,7 +150,10 @@ export default {
     },
     addToCart(id, qty = 1) {
       if (qty === "") {
-        this.$bus.$emit("message:push", "請選擇數量!", "danger");
+        this.$store.dispatch("alertMoules/updateMessage", {
+          content: "請選擇數量!",
+          style: "danger"
+        });
       } else {
         this.$store
           .dispatch("portalProductModules/addToCart", {
@@ -159,11 +162,18 @@ export default {
           })
           .then(
             response => {
-              this.$bus.$emit("message:push", response.data.message, "success");
+              this.$store.dispatch("alertMoules/updateMessage", {
+                content: response.data.message,
+                style: "success"
+              });
             },
             error => {
               console.log(error);
-              this.$bus.$emit("message:push", "處理失敗", "danger");
+
+              this.$store.dispatch("alertMoules/updateMessage", {
+                content: "處理失敗",
+                style: "danger"
+              });
             }
           );
       }

@@ -1,6 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+// common
+import alertMoules from "./common/alert.module";
 // admin
 import loginModules from "./admin/login.module";
 import ordersModules from "./admin/orders.module";
@@ -72,6 +74,7 @@ export default new Vuex.Store({
   },
   // 載入Vuex獨立模組
   modules: {
+    alertMoules,
     loginModules,
     ordersModules,
     customerOrderCheckoutModules,
