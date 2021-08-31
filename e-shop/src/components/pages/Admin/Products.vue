@@ -307,9 +307,6 @@ export default {
     Pagination
   },
   methods: {
-    updateQueryProductCategory(category) {
-      this.$store.dispatch("updateProductCategory", category);
-    },
     getProducts(page) {
       this.$store.dispatch("getProducts", { page: page });
     },
@@ -478,7 +475,6 @@ export default {
     }
   },
   created() {
-    this.updateQueryProductCategory("");
     this.getProducts(1);
   }
 };

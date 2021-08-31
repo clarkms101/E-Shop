@@ -88,9 +88,6 @@ export default {
     Pagination
   },
   methods: {
-    updateQueryProductCategory(category) {
-      this.$store.dispatch("updateProductCategory", category);
-    },
     getProducts(page) {
       this.$store.dispatch("getProducts", { page: page });
     }
@@ -104,7 +101,6 @@ export default {
     }
   },
   created() {
-    this.updateQueryProductCategory(this.$route.params.category);
     this.getProducts(1);
   }
 };

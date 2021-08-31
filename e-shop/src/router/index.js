@@ -65,7 +65,7 @@ export default new Router({
     },
     {
       path: "/admin",
-      name: "Dashboard",
+      name: "DashboardForAdmin",
       component: Dashboard,
       meta: { requiresAuth: true },
       children: [

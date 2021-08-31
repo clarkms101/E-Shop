@@ -22,7 +22,6 @@ export default new Vuex.Store({
   // 資料狀態
   state: {
     isLoading: false,
-    productCategory: "",
     products: [],
     pagination: {}
     // route: {path, params, query} ps: vuex-router-sync 追加的路由狀態資訊,可以直接使用
@@ -32,11 +31,12 @@ export default new Vuex.Store({
     updateLoading(context, value) {
       context.commit("LOADING", value);
     },
-    updateProductCategory(context, value) {
-      context.commit("PRODUCT_CATEGORY", value);
-    },
     getProducts(context, value) {
-      let category = context.state.productCategory;
+      let routeParams = context.state.route.params;
+      let category = "";
+      if (routeParams.category) {
+        category = routeParams.category;
+      }
       const url = `${process.env.APIPATH}/api/Products?page=${value.page}&category=${category}`;
       // 處理中提示
       context.commit("LOADING", true);
@@ -57,9 +57,6 @@ export default new Vuex.Store({
     },
     PRODUCTS(state, payload) {
       state.products = payload;
-    },
-    PRODUCT_CATEGORY(state, payload) {
-      state.productCategory = payload;
     }
   },
   getters: {
@@ -68,9 +65,6 @@ export default new Vuex.Store({
     },
     pagination(state) {
       return state.pagination;
-    },
-    productCategory(state) {
-      return state.productCategory;
     }
   },
   // 載入Vuex獨立模組
