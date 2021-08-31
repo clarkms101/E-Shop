@@ -25,6 +25,7 @@ export default new Vuex.Store({
     productCategory: "",
     products: [],
     pagination: {}
+    // route: {path, params, query} ps: vuex-router-sync 追加的路由狀態資訊,可以直接使用
   },
   // 對外開放的動作
   actions: {

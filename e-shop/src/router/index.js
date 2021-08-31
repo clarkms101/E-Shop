@@ -22,11 +22,13 @@ export default new Router({
     // 不存在的路由，都導向指定的頁面
     {
       path: "*",
+      name: "Undefined",
       redirect: "portal_index/products/default"
     },
     // 入口頁面
     {
       path: "/",
+      name: "Entrance",
       redirect: "portal_index/products/default"
     },
     {

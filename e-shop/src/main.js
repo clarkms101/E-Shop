@@ -4,6 +4,7 @@
 // NPM下載的套件
 import Vue from "vue";
 import Vuex from "vuex";
+import { sync } from "vuex-router-sync";
 import axios from "axios";
 import VueAxios from "vue-axios";
 import {
@@ -50,6 +51,7 @@ Vue.use(Vuex);
 Vue.component("Loading", Loading);
 Vue.filter("currency", currencyFilter);
 Vue.filter("date", dateFilter);
+sync(store, router);
 
 /* eslint-disable no-new */
 new Vue({
