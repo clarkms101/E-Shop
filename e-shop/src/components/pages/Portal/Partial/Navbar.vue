@@ -108,55 +108,14 @@ export default {
       this.$store.dispatch("portalNavbarMoules/getCart");
     },
     removeFromCart(cartDetailId) {
-      this.$store
-        .dispatch("portalNavbarMoules/removeFromCart", {
-          cartDetailId: cartDetailId
-        })
-        .then(
-          response => {
-            this.$store.dispatch("alertMoules/addMessage", {
-              content: response.data.message,
-              style: "success"
-            });
-          },
-          error => {
-            console.log(error);
-
-            this.$store.dispatch("alertMoules/addMessage", {
-              content: "處理失敗",
-              style: "danger"
-            });
-          }
-        );
+      this.$store.dispatch("portalNavbarMoules/removeFromCart", {
+        cartDetailId: cartDetailId
+      });
     },
     addCouponCode(coupon_code) {
-      this.$store
-        .dispatch("portalNavbarMoules/addCouponCode", {
-          coupon_code: coupon_code
-        })
-        .then(
-          response => {
-            if (response.data.success) {
-              this.$store.dispatch("alertMoules/addMessage", {
-                content: response.data.message,
-                style: "success"
-              });
-            } else {
-              this.$store.dispatch("alertMoules/addMessage", {
-                content: response.data.message,
-                style: "danger"
-              });
-            }
-          },
-          error => {
-            console.log(error);
-
-            this.$store.dispatch("alertMoules/addMessage", {
-              content: "處理失敗",
-              style: "danger"
-            });
-          }
-        );
+      this.$store.dispatch("portalNavbarMoules/addCouponCode", {
+        coupon_code: coupon_code
+      });
     }
   },
   computed: {

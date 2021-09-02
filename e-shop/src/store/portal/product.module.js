@@ -18,29 +18,27 @@ export default {
       });
     },
     addToCart(context, value) {
-      return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/api/cart`;
+      const url = `${process.env.APIPATH}/api/cart`;
+      context.dispatch("updateLoadingProductId", {
+        loadingProductId: value.productId
+      });
+      const cartDetail = {
+        productId: value.productId,
+        qty: value.productQty
+      };
+      axios.post(url, { CartDetail: cartDetail }).then(response => {
         context.dispatch("updateLoadingProductId", {
-          loadingProductId: value.productId
+          loadingProductId: ""
         });
-        const cartDetail = {
-          productId: value.productId,
-          qty: value.productQty
-        };
-        axios.post(url, { CartDetail: cartDetail }).then(
-          response => {
-            context.dispatch("updateLoadingProductId", {
-              loadingProductId: ""
-            });
-            context.dispatch("portalNavbarMoules/getCart", null, {
-              root: true
-            });
-            resolve(response);
+        context.dispatch(
+          "alertMoules/addMessage",
+          {
+            content: response.data.message,
+            style: "success"
           },
-          error => {
-            reject(error);
-          }
+          { root: true }
         );
+        context.dispatch("portalNavbarMoules/getCart", null, { root: true });
       });
     },
     updateLoadingProductId(context, value) {

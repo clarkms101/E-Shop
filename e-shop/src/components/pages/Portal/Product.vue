@@ -155,27 +155,10 @@ export default {
           style: "danger"
         });
       } else {
-        this.$store
-          .dispatch("portalProductModules/addToCart", {
-            productId: id,
-            productQty: qty
-          })
-          .then(
-            response => {
-              this.$store.dispatch("alertMoules/addMessage", {
-                content: response.data.message,
-                style: "success"
-              });
-            },
-            error => {
-              console.log(error);
-
-              this.$store.dispatch("alertMoules/addMessage", {
-                content: "處理失敗",
-                style: "danger"
-              });
-            }
-          );
+        this.$store.dispatch("portalProductModules/addToCart", {
+          productId: id,
+          productQty: qty
+        });
       }
     }
   },
