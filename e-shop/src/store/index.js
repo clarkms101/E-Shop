@@ -13,6 +13,7 @@ import productsModules from "./admin/products.module";
 // portal
 import portalProductModules from "./portal/product.module";
 import portalNavbarMoules from "./portal/navbar.module";
+import portalOrderMoules from "./portal/order.module";
 
 Vue.use(Vuex);
 
@@ -77,6 +78,7 @@ export default new Vuex.Store({
     customerOrdersModules,
     productsModules,
     portalProductModules,
-    portalNavbarMoules
+    portalNavbarMoules,
+    portalOrderMoules
   }
 });

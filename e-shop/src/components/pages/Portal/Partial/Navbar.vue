@@ -48,7 +48,7 @@
                 {{ cartItem.qty }} {{ cartItem.product.unit }}
               </td>
               <td class="align-middle text-right">
-                {{ cartItem.product.price | currency }}
+                {{ (cartItem.product.price * cartItem.qty) | currency }}
               </td>
             </tr>
           </tbody>

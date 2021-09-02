@@ -35,7 +35,9 @@
                   顯示購物車細節
                   <i class="fa fa-angle-down" aria-hidden="true"></i>
                 </a>
-                <span class="h3 ml-auto mb-0">$520</span>
+                <span class="h3 ml-auto mb-0">{{
+                  cart.finalTotalAmount | currency
+                }}</span>
               </h6>
             </div>
           </div>
@@ -50,39 +52,47 @@
                   <th width="80">小計</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
+              <tbody v-if="cart.carts">
+                <tr v-for="cartItem in cart.carts" :key="cartItem.cartDetailId">
                   <td class="align-middle text-center">
                     <a
                       href="#removeModal"
                       class="text-muted"
                       data-toggle="modal"
-                      data-title="刪除 金牌西裝 1 件"
+                      :data-title="
+                        `刪除 ${cartItem.product.title} ${cartItem.qty} ${cartItem.product.unit}`
+                      "
+                      @click="removeFromCart(cartItem.cartDetailId)"
                     >
                       <i class="fa fa-trash-o" aria-hidden="true"></i>
                     </a>
                   </td>
                   <td class="align-middle">
                     <img
-                      src="https://images.unsplash.com/photo-1494281258937-45f28753affd?w=1350"
+                      :src="cartItem.product.imageUrl"
                       class="img-fluid img-thumbnail"
                       alt=""
                     />
                   </td>
-                  <td class="align-middle">金牌西裝</td>
-                  <td class="align-middle">1 件</td>
-                  <td class="align-middle text-right">$520</td>
+                  <td class="align-middle">{{ cartItem.product.title }}</td>
+                  <td class="align-middle">
+                    {{ cartItem.qty }} {{ cartItem.product.unit }}
+                  </td>
+                  <td class="align-middle text-right">
+                    {{ (cartItem.product.price * cartItem.qty) | currency }}
+                  </td>
                 </tr>
                 <tr>
                   <td colspan="4" class="text-right">運費</td>
                   <td class="text-right">
-                    <strong>$60</strong>
+                    <!-- todo -->
+                    <strong>$0</strong>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="4" class="text-right">合計</td>
                   <td class="text-right">
-                    <strong>$580</strong>
+                    <strong> {{ cart.finalTotalAmount | currency }}</strong>
                   </td>
                 </tr>
               </tbody>
@@ -92,64 +102,100 @@
           <h5 class="py-3 mt-5 mb-2 text-center bg-light">
             訂購人資訊
           </h5>
-          <form id="needs-validation" novalidate>
+
+          <!-- Order Form-->
+          <form id="needs-validation" novalidate @submit.prevent="createOrder">
             <div class="form-row">
+              <!-- User Name -->
               <div class="form-group col-md-6">
-                <label for="username">姓名</label>
+                <label for="username">收件人姓名</label>
                 <input
-                  type="text"
-                  class="form-control"
                   id="username"
-                  placeholder="姓名"
-                  required
+                  type="text"
+                  name="收件人姓名"
+                  v-model="orderForm_user_name"
+                  class="form-control"
+                  placeholder="輸入姓名"
                 />
                 <div class="invalid-feedback">
                   請輸入姓名
                 </div>
               </div>
+
+              <!-- Email -->
               <div class="form-group col-md-6">
                 <label for="email">Email</label>
                 <input
-                  type="email"
-                  class="form-control"
                   id="email"
-                  placeholder="Email"
-                  required
+                  type="email"
+                  name="email"
+                  v-model="orderForm_user_email"
+                  class="form-control"
+                  placeholder="輸入Email"
                 />
                 <div class="invalid-feedback">
                   請輸入正確的 Email
                 </div>
               </div>
             </div>
+
             <div class="form-row">
+              <!-- Country -->
               <div class="form-group col-md-4">
-                <label for="state">國家</label>
-                <select id="state" class="form-control" required>
-                  <option selected>台灣</option>
-                  <option>...</option>
+                <label for="country">國家</label>
+                <select
+                  name=""
+                  id="country"
+                  class="form-control"
+                  v-model="selectCountry"
+                  required
+                >
+                  <option disabled value="">請選擇</option>
+                  <option :value="item" v-for="item in country" :key="item">{{
+                    item
+                  }}</option>
                 </select>
               </div>
+
+              <!-- City -->
               <div class="form-group col-md">
                 <label for="city">城市</label>
-                <select name="" id="city" class="form-control" required>
-                  <option value="台北市">台北市</option>
-                  <option value="台南市">台南市</option>
-                  <option value="高雄市">高雄市</option>
+                <select
+                  name=""
+                  id="city"
+                  class="form-control"
+                  v-model="selectCity"
+                  required
+                >
+                  <option disabled value="">請選擇</option>
+                  <option :value="item" v-for="item in city" :key="item">{{
+                    item
+                  }}</option>
                 </select>
               </div>
+
+              <!-- Postal Code -->
               <div class="form-group col-md">
-                <label for="inputZip">郵遞區號</label>
-                <input type="text" class="form-control" id="inputZip" />
+                <label for="postalCode">郵遞區號</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="postalCode"
+                  v-model.number="postalCode"
+                />
               </div>
             </div>
+
+            <!-- Address -->
             <div class="form-group">
-              <label for="inputAddress">地址</label>
+              <label for="address">收件人地址</label>
               <input
+                id="address"
                 type="text"
+                name="收件人地址"
+                v-model="orderForm_user_address"
                 class="form-control"
-                id="inputAddress"
-                placeholder="重慶南路一段122號"
-                required
+                placeholder="請輸入地址"
               />
               <div class="invalid-feedback">
                 請輸入地址
@@ -180,11 +226,108 @@ export default {
     Navbar,
     Footer
   },
+  methods: {
+    getCart() {
+      this.$store.dispatch("portalOrderMoules/getCart");
+    },
+    removeFromCart(cartDetailId) {
+      this.$store.dispatch("portalOrderMoules/removeFromCart", {
+        cartDetailId: cartDetailId
+      });
+    },
+    createOrder() {
+      this.$store.dispatch("portalOrderMoules/createOrder");
+    }
+  },
   computed: {
     isLoading() {
       return this.$store.state.isLoading;
+    },
+    cart() {
+      return this.$store.getters["portalOrderMoules/cart"];
+    },
+    country() {
+      return this.$store.getters["portalOrderMoules/country"];
+    },
+    city() {
+      return this.$store.getters["portalOrderMoules/city"];
+    },
+    selectCountry: {
+      get() {
+        return this.$store.getters["portalOrderMoules/selectCountry"];
+      },
+      set(value) {
+        this.$store.dispatch("portalOrderMoules/updateSelectCountry", value);
+      }
+    },
+    postalCode: {
+      get() {
+        return this.$store.getters["portalOrderMoules/postalCode"];
+      },
+      set(value) {
+        this.$store.dispatch("portalOrderMoules/updatePostalCode", value);
+      }
+    },
+    selectCity: {
+      get() {
+        return this.$store.getters["portalOrderMoules/selectCity"];
+      },
+      set(value) {
+        this.$store.dispatch("portalOrderMoules/updateSelectCity", value);
+      }
+    },
+    orderForm_user_name: {
+      get() {
+        return this.$store.getters["portalOrderMoules/orderForm_user_name"];
+      },
+      set(value) {
+        this.$store.dispatch(
+          "portalOrderMoules/updateOrderFormUserName",
+          value
+        );
+      }
+    },
+    orderForm_user_email: {
+      get() {
+        return this.$store.getters["portalOrderMoules/orderForm_user_email"];
+      },
+      set(value) {
+        this.$store.dispatch(
+          "portalOrderMoules/updateOrderFormUserEmail",
+          value
+        );
+      }
+    },
+    orderForm_user_tel: {
+      get() {
+        return this.$store.getters["portalOrderMoules/orderForm_user_tel"];
+      },
+      set(value) {
+        this.$store.dispatch("portalOrderMoules/updateOrderFormUserTel", value);
+      }
+    },
+    orderForm_user_address: {
+      get() {
+        return this.$store.getters["portalOrderMoules/orderForm_user_address"];
+      },
+      set(value) {
+        this.$store.dispatch(
+          "portalOrderMoules/updateOrderFormUserAddress",
+          value
+        );
+      }
+    },
+    orderForm_message: {
+      get() {
+        return this.$store.getters["portalOrderMoules/orderForm_message"];
+      },
+      set(value) {
+        this.$store.dispatch("portalOrderMoules/updateOrderFormMessage", value);
+      }
     }
   },
-  created() {}
+  created() {
+    this.getCart();
+  }
 };
 </script>
