@@ -59,7 +59,7 @@ export default new Router({
       component: PortalOrder
     },
     {
-      path: "/portal_order_checkout",
+      path: "/portal_order_checkout/:orderId",
       name: "PortalOrderCheckout",
       component: PortalOrderCheckout
     },

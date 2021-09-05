@@ -10,6 +10,7 @@ export default {
       address: "",
       message: ""
     },
+    coupon_code: "",
     cart: {},
     selectCountry: "",
     selectCity: "",
@@ -84,11 +85,70 @@ export default {
       });
     },
     createOrder(context) {
-      // todo 送出訂單、訂單資料驗證
-      console.log(context.state.selectCountry);
-      console.log(context.state.selectCity);
-      console.log(context.state.postalCode);
-      console.log(context.state.orderForm);
+      return new Promise((resolve, reject) => {
+        const url = `${process.env.APIPATH}/api/order`;
+        const order = context.state.orderForm;
+        let address = `${context.state.selectCountry} ${context.state.selectCity} ${context.state.postalCode} ${context.state.orderForm.address}`;
+        context.commit("ORDER_FORM_USER_ADDRESS", address);
+        context.commit("LOADING", true, { root: true });
+        axios.post(url, { orderForm: order }).then(
+          response => {
+            console.log("訂單已建立", response);
+            context.commit("LOADING", false, { root: true });
+            // 清空訂單表單上的資料
+            context.commit("ORDER_FORM_USER_NAME", "");
+            context.commit("ORDER_FORM_USER_EMAIL", "");
+            context.commit("ORDER_FORM_USER_TEL", "");
+            context.commit("ORDER_FORM_USER_ADDRESS", "");
+            context.commit("ORDER_FORM_MESSAGE", "");
+            context.commit("COUPON_CODE", "");
+
+            resolve(response);
+          },
+          error => {
+            reject(error);
+          }
+        );
+      });
+    },
+    addCouponCode(context, value) {
+      const url = `${process.env.APIPATH}/api/Shopping/UseCoupon`;
+      const coupon = {
+        CouponCode: value.coupon_code
+      };
+      context.commit("LOADING", true, { root: true });
+      axios.post(url, { Coupon: coupon }).then(response => {
+        if (response.data.success) {
+          context.dispatch("getCart");
+          context.dispatch("portalNavbarMoules/getCart", null, { root: true });
+          context.commit("COUPON_CODE", "");
+        }
+        context.commit("LOADING", false, { root: true });
+
+        if (response.data.success) {
+          context.dispatch(
+            "alertMoules/addMessage",
+            {
+              content: response.data.message,
+              style: "success"
+            },
+            {
+              root: true
+            }
+          );
+        } else {
+          context.dispatch(
+            "alertMoules/addMessage",
+            {
+              content: response.data.message,
+              style: "danger"
+            },
+            {
+              root: true
+            }
+          );
+        }
+      });
     },
     updateOrderFormUserName(context, value) {
       context.commit("ORDER_FORM_USER_NAME", value);
@@ -113,6 +173,9 @@ export default {
     },
     updatePostalCode(context, value) {
       context.commit("POSTALCODE", value);
+    },
+    updateCouponCode(context, value) {
+      context.commit("COUPON_CODE", value);
     }
   },
   mutations: {
@@ -142,6 +205,9 @@ export default {
     },
     POSTALCODE(state, payload) {
       state.postalCode = payload;
+    },
+    COUPON_CODE(state, payload) {
+      state.coupon_code = payload;
     }
   },
   getters: {
@@ -177,6 +243,9 @@ export default {
     },
     postalCode(state) {
       return state.postalCode;
+    },
+    coupon_code(state) {
+      return state.coupon_code;
     }
   }
 };

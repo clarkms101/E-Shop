@@ -2,6 +2,9 @@
   <div>
     <loading :active.sync="isLoading"></loading>
 
+    <!-- 訊息通知 -->
+    <Alert />
+
     <!-- 上層導覽列 (headers) -->
     <Navbar />
 
@@ -31,8 +34,12 @@
           <div class="card">
             <div class="card-header" id="headingOne">
               <h6 class="mb-0 d-flex align-items-center">
-                <a data-toggle="collapse" href="#collapseOne">
-                  顯示購物車細節
+                <a
+                  data-toggle="collapse"
+                  href="#collapseOne"
+                  class="btn btn-info"
+                >
+                  購物車明細
                   <i class="fa fa-angle-down" aria-hidden="true"></i>
                 </a>
                 <span class="h3 ml-auto mb-0">{{
@@ -41,7 +48,7 @@
               </h6>
             </div>
           </div>
-          <div id="collapseOne" class="collapse mt-3">
+          <div id="collapseOne" class="collapse show mt-3">
             <table class="table table-sm">
               <thead>
                 <tr>
@@ -74,7 +81,12 @@
                       alt=""
                     />
                   </td>
-                  <td class="align-middle">{{ cartItem.product.title }}</td>
+                  <td class="align-middle">
+                    {{ cartItem.product.title }}
+                    <div v-if="cartItem.coupon" class="text-success">
+                      已套用優惠券
+                    </div>
+                  </td>
                   <td class="align-middle">
                     {{ cartItem.qty }} {{ cartItem.product.unit }}
                   </td>
@@ -89,123 +101,229 @@
                     <strong>$0</strong>
                   </td>
                 </tr>
-                <tr>
+
+                <tr v-if="cart.finalTotalAmount !== cart.totalAmount">
+                  <td colspan="4" class="text-right text-success">合計</td>
+                  <td class="text-right text-success">
+                    <strong> {{ cart.finalTotalAmount | currency }}</strong>
+                  </td>
+                </tr>
+                <tr v-else>
                   <td colspan="4" class="text-right">合計</td>
                   <td class="text-right">
-                    <strong> {{ cart.finalTotalAmount | currency }}</strong>
+                    <strong> {{ cart.totalAmount | currency }}</strong>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
+          <!-- Coupon -->
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              v-model="coupon_code"
+              placeholder="請輸入優惠碼"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                @click="addCouponCode(coupon_code)"
+              >
+                套用優惠碼
+              </button>
+            </div>
+          </div>
+
           <h5 class="py-3 mt-5 mb-2 text-center bg-light">
             訂購人資訊
           </h5>
+          <validation-observer v-slot="{ invalid }">
+            <!-- Order Form-->
+            <form
+              id="needs-validation"
+              novalidate
+              @submit.prevent="createOrder"
+            >
+              <!-- row-1 -->
+              <div class="form-row">
+                <!-- User Name -->
+                <validation-provider
+                  rules="required|max:10"
+                  v-slot="{ errors, classes }"
+                  class="form-group col-md-6"
+                >
+                  <div>
+                    <label for="username">收件人姓名</label>
+                    <input
+                      id="username"
+                      type="text"
+                      name="收件人姓名"
+                      v-model="orderForm_user_name"
+                      class="form-control"
+                      :class="classes"
+                      placeholder="輸入姓名"
+                    />
+                    <span class="invalid-feedback">{{ errors[0] }}</span>
+                  </div>
+                </validation-provider>
 
-          <!-- Order Form-->
-          <form id="needs-validation" novalidate @submit.prevent="createOrder">
-            <div class="form-row">
-              <!-- User Name -->
-              <div class="form-group col-md-6">
-                <label for="username">收件人姓名</label>
-                <input
-                  id="username"
-                  type="text"
-                  name="收件人姓名"
-                  v-model="orderForm_user_name"
-                  class="form-control"
-                  placeholder="輸入姓名"
-                />
-                <div class="invalid-feedback">
-                  請輸入姓名
+                <!-- Email -->
+                <validation-provider
+                  rules="required|email|max:50"
+                  v-slot="{ errors, classes }"
+                  class="form-group col-md-6"
+                >
+                  <div>
+                    <label for="email">Email</label>
+                    <input
+                      id="email"
+                      type="email"
+                      name="email"
+                      v-model="orderForm_user_email"
+                      class="form-control"
+                      :class="classes"
+                      placeholder="輸入Email"
+                    />
+                    <span class="invalid-feedback">{{ errors[0] }}</span>
+                  </div>
+                </validation-provider>
+              </div>
+
+              <!-- row-2 -->
+              <div class="form-row">
+                <!-- Phone Number -->
+                <validation-provider
+                  rules="required|numeric|max:15"
+                  v-slot="{ errors, classes }"
+                  class="form-group col-md-6"
+                >
+                  <div>
+                    <label for="usertel">收件人電話</label>
+                    <input
+                      id="usertel"
+                      type="text"
+                      name="收件人電話"
+                      v-model="orderForm_user_tel"
+                      class="form-control"
+                      :class="classes"
+                      placeholder="請輸入電話"
+                    />
+                    <span class="invalid-feedback">{{ errors[0] }}</span>
+                  </div>
+                </validation-provider>
+              </div>
+
+              <!-- row-3 -->
+              <div class="form-row">
+                <!-- Country -->
+                <div class="form-group col-md-4">
+                  <label for="country">國家</label>
+                  <select
+                    name=""
+                    id="country"
+                    class="form-control"
+                    v-model="selectCountry"
+                    required
+                  >
+                    <option disabled value="">請選擇</option>
+                    <option :value="item" v-for="item in country" :key="item">{{
+                      item
+                    }}</option>
+                  </select>
+                </div>
+
+                <!-- City -->
+                <div class="form-group col-md-4">
+                  <label for="city">城市</label>
+                  <select
+                    name=""
+                    id="city"
+                    class="form-control"
+                    v-model="selectCity"
+                    required
+                  >
+                    <option disabled value="">請選擇</option>
+                    <option :value="item" v-for="item in city" :key="item">{{
+                      item
+                    }}</option>
+                  </select>
+                </div>
+
+                <!-- Postal Code -->
+                <div class="form-group col-md-4">
+                  <label for="postalCode">郵遞區號</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="postalCode"
+                    v-model.number="postalCode"
+                  />
                 </div>
               </div>
 
-              <!-- Email -->
-              <div class="form-group col-md-6">
-                <label for="email">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  v-model="orderForm_user_email"
-                  class="form-control"
-                  placeholder="輸入Email"
-                />
-                <div class="invalid-feedback">
-                  請輸入正確的 Email
-                </div>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <!-- Country -->
-              <div class="form-group col-md-4">
-                <label for="country">國家</label>
-                <select
-                  name=""
-                  id="country"
-                  class="form-control"
-                  v-model="selectCountry"
-                  required
+              <!-- row-4 -->
+              <div class="form-row">
+                <!-- Address -->
+                <validation-provider
+                  rules="required|max:100"
+                  v-slot="{ errors, classes }"
+                  class="form-group col-md-12"
                 >
-                  <option disabled value="">請選擇</option>
-                  <option :value="item" v-for="item in country" :key="item">{{
-                    item
-                  }}</option>
-                </select>
+                  <div>
+                    <label for="address">收件人地址</label>
+                    <input
+                      id="address"
+                      type="text"
+                      name="收件人地址"
+                      v-model="orderForm_user_address"
+                      class="form-control"
+                      :class="classes"
+                      placeholder="請輸入地址"
+                    />
+                    <span class="invalid-feedback">{{ errors[0] }}</span>
+                  </div>
+                </validation-provider>
               </div>
 
-              <!-- City -->
-              <div class="form-group col-md">
-                <label for="city">城市</label>
-                <select
-                  name=""
-                  id="city"
-                  class="form-control"
-                  v-model="selectCity"
-                  required
+              <!-- row-5 -->
+              <div class="form-row">
+                <!-- Comment -->
+                <validation-provider
+                  rules="max:200"
+                  v-slot="{ errors, classes }"
+                  class="form-group col-md-12"
                 >
-                  <option disabled value="">請選擇</option>
-                  <option :value="item" v-for="item in city" :key="item">{{
-                    item
-                  }}</option>
-                </select>
+                  <div>
+                    <label for="address">留言</label>
+                    <textarea
+                      id="comment"
+                      name="留言"
+                      rows="3"
+                      class="form-control"
+                      :class="classes"
+                      v-model="orderForm_message"
+                    ></textarea>
+                    <span class="invalid-feedback">{{ errors[0] }}</span>
+                  </div>
+                </validation-provider>
               </div>
 
-              <!-- Postal Code -->
-              <div class="form-group col-md">
-                <label for="postalCode">郵遞區號</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="postalCode"
-                  v-model.number="postalCode"
-                />
+              <!-- Next Step -->
+              <div class="text-right">
+                <a href="#/" class="btn btn-secondary">繼續選購</a>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  :disabled="invalid"
+                >
+                  確認付款
+                </button>
               </div>
-            </div>
-
-            <!-- Address -->
-            <div class="form-group">
-              <label for="address">收件人地址</label>
-              <input
-                id="address"
-                type="text"
-                name="收件人地址"
-                v-model="orderForm_user_address"
-                class="form-control"
-                placeholder="請輸入地址"
-              />
-              <div class="invalid-feedback">
-                請輸入地址
-              </div>
-            </div>
-            <div class="text-right">
-              <a href="#/" class="btn btn-secondary">繼續選購</a>
-              <button type="submit" class="btn btn-primary">確認付款</button>
-            </div>
-          </form>
+            </form>
+          </validation-observer>
         </div>
       </section>
     </div>
@@ -218,13 +336,16 @@
 <script>
 import Navbar from "./Partial/Navbar.vue";
 import Footer from "./Partial/Footer.vue";
+import Alert from "../../AlertMessage.vue";
+
 export default {
   data() {
     return {};
   },
   components: {
     Navbar,
-    Footer
+    Footer,
+    Alert
   },
   methods: {
     getCart() {
@@ -236,7 +357,33 @@ export default {
       });
     },
     createOrder() {
-      this.$store.dispatch("portalOrderMoules/createOrder");
+      this.$store.dispatch("portalOrderMoules/createOrder").then(
+        response => {
+          if (response.data.success) {
+            // 轉跳到確認頁面
+            this.$router.push(
+              `/portal_order_checkout/${response.data.orderId}`
+            );
+          } else {
+            this.$store.dispatch("alertMoules/addMessage", {
+              content: response.data.message,
+              style: "danger"
+            });
+          }
+        },
+        error => {
+          console.log(error);
+          this.$store.dispatch("alertMoules/addMessage", {
+            content: "處理失敗",
+            style: "danger"
+          });
+        }
+      );
+    },
+    addCouponCode(coupon_code) {
+      this.$store.dispatch("portalOrderMoules/addCouponCode", {
+        coupon_code: coupon_code
+      });
     }
   },
   computed: {
@@ -323,6 +470,14 @@ export default {
       },
       set(value) {
         this.$store.dispatch("portalOrderMoules/updateOrderFormMessage", value);
+      }
+    },
+    coupon_code: {
+      get() {
+        return this.$store.getters["portalOrderMoules/coupon_code"];
+      },
+      set(value) {
+        this.$store.dispatch("portalOrderMoules/updateCouponCode", value);
       }
     }
   },
