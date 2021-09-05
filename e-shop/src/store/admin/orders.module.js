@@ -3,7 +3,8 @@ import axios from "axios";
 export default {
   namespaced: true,
   state: {
-    orders: {}
+    orders: {},
+    pagination: {}
   },
   actions: {
     getOrders(context, value) {
@@ -13,18 +14,8 @@ export default {
       // { root: true } => 表示為根節點的mutations
       context.commit("LOADING", true, { root: true });
       axios.get(url).then(response => {
-        let newOrders = [];
-        var oldOrders = response.data.orderInfos;
-        // 已付款排前面
-        if (oldOrders.length) {
-          newOrders = oldOrders.sort((a, b) => {
-            const aIsPaid = a.is_paid ? 1 : 0;
-            const bIsPaid = b.is_paid ? 1 : 0;
-            return bIsPaid - aIsPaid;
-          });
-        }
-        context.commit("ORDERS", newOrders);
-        context.commit("PAGINATION", response.data.pagination, { root: true });
+        context.commit("ORDERS", response.data.orderInfos);
+        context.commit("PAGINATION", response.data.pagination);
         context.commit("LOADING", false, { root: true });
         console.log(response);
       });
@@ -33,11 +24,17 @@ export default {
   mutations: {
     ORDERS(state, payload) {
       state.orders = payload;
+    },
+    PAGINATION(state, payload) {
+      state.pagination = payload;
     }
   },
   getters: {
     orders(state) {
       return state.orders;
+    },
+    pagination(state) {
+      return state.pagination;
     }
   }
 };

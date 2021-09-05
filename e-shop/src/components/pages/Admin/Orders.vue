@@ -15,7 +15,6 @@
         <tr
           v-for="(item, key) in orders"
           :key="key"
-          v-if="orders.length"
           :class="{ 'text-secondary': !item.isPaid }"
         >
           <td>{{ item.createDateTime | date }}</td>
@@ -39,16 +38,16 @@
     </table>
 
     <!-- 資料清單分頁 -->
-    <Pagination :pagination="pagination" @emitPages="getOrders"></Pagination>
+    <OrdersPagination />
   </div>
 </template>
 
 <script>
-import Pagination from "../../Pagination.vue";
+import OrdersPagination from "../Admin/Partial/OrdersPagination";
 
 export default {
   components: {
-    Pagination
+    OrdersPagination
   },
   methods: {
     getOrders(page = 1) {
@@ -61,9 +60,6 @@ export default {
     },
     isLoading() {
       return this.$store.state.isLoading;
-    },
-    pagination() {
-      return this.$store.state.pagination;
     }
   },
   created() {
