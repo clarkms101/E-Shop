@@ -10,11 +10,10 @@
       <div class="row justify-content-center">
         <div class="col-md-8">
           <h1 class="text-center mb-3 text-secondary">結帳完成</h1>
-          <section class="form-row align-items-center text-center">
+          <section class="form-row align-items">
             <div class="col">
-              <div class="alert alert-success alert-rounded mb-0" role="alert">
-                完成
-              </div>
+              <a href="#/" class="btn btn-info">繼續購物</a>
+              <a href="javascript:window.print()" class="btn btn-info">訂單列印</a> 
             </div>
           </section>
 
@@ -29,28 +28,32 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr v-for="item in order.orderDetailInfos" :key="item.id">
                 <td class="align-middle">
                   <img
-                    src="https://images.unsplash.com/photo-1494281258937-45f28753affd?w=1350"
+                    :src="item.imageUrl"
                     class="img-fluid img-thumbnail"
                     alt=""
                   />
                 </td>
-                <td class="align-middle">金牌西裝</td>
-                <td class="align-middle">1 件</td>
-                <td class="align-middle text-right">$520</td>
+                <td class="align-middle">{{ item.productTitle }}</td>
+                <td class="align-middle">
+                  {{ item.qty }}/{{ item.productUnit }}
+                </td>
+                <td class="align-middle text-right">
+                  {{ item.productPrice | currency }}
+                </td>
               </tr>
               <tr>
                 <td colspan="3" class="text-right">運費</td>
                 <td class="text-right">
-                  <strong>$60</strong>
+                  <strong>$0</strong>
                 </td>
               </tr>
               <tr>
                 <td colspan="3" class="text-right">合計</td>
                 <td class="text-right">
-                  <strong>$580</strong>
+                  <strong>{{ order.totalAmount | currency }}</strong>
                 </td>
               </tr>
             </tbody>
@@ -61,19 +64,19 @@
             <tbody>
               <tr>
                 <th width="200">Email</th>
-                <td>ag3456***@gmail.com</td>
+                <td>{{ order.email }}</td>
               </tr>
               <tr>
                 <th>姓名</th>
-                <td>咬 * 手手</td>
+                <td>{{ order.userName }}</td>
               </tr>
               <tr>
                 <th>電話</th>
-                <td>987654***</td>
+                <td>{{ order.tel }}</td>
               </tr>
               <tr>
                 <th>地址</th>
-                <td>重慶南路一段122號</td>
+                <td>{{ order.address }}</td>
               </tr>
             </tbody>
           </table>
@@ -97,11 +100,25 @@ export default {
     Navbar,
     Footer
   },
+  methods: {
+    getOrder() {
+      this.$store.dispatch("portalOrderCheckout/getOrder");
+    }
+  },
   computed: {
     isLoading() {
       return this.$store.state.isLoading;
+    },
+    order() {
+      return this.$store.getters["portalOrderCheckout/order"];
     }
   },
-  created() {}
+  created() {
+    this.$store.dispatch(
+      "portalOrderCheckout/updateOrderId",
+      this.$route.params.orderId
+    );
+    this.getOrder();
+  }
 };
 </script>
