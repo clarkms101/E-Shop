@@ -8,15 +8,8 @@
     <!-- 上層導覽列 (headers) -->
     <Navbar />
 
-    <!-- jumbotron -->
-    <div class="jumbotron jumbotron-fluid jumbotron-bg d-flex align-items-end">
-      <div class="container">
-        <div class="p-3 bg-lighter">
-          <h1 class="display-3 font-weight-bold">買到剁手手！最後出清</h1>
-          <p class="lead"></p>
-        </div>
-      </div>
-    </div>
+    <!-- Carousel -->
+    <Carousel />
 
     <div class="container main-contant mb-1">
       <div class="row">
@@ -80,6 +73,7 @@ import Sidebar from "./Partial/Sidebar.vue";
 import Navbar from "./Partial/Navbar.vue";
 import Footer from "./Partial/Footer.vue";
 import Alert from "../../AlertMessage.vue";
+import Carousel from "../Portal/Partial/Carousel.vue";
 
 export default {
   data() {
@@ -89,7 +83,8 @@ export default {
     Sidebar,
     Navbar,
     Footer,
-    Alert
+    Alert,
+    Carousel
   },
   methods: {
     removeCart() {
