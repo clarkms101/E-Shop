@@ -4,7 +4,6 @@
 // NPM下載的套件
 import Vue from "vue";
 import Vuex from "vuex";
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import { sync } from "vuex-router-sync";
 import axios from "axios";
 import VueAxios from "vue-axios";
@@ -22,7 +21,6 @@ import Loading from "vue-loading-overlay";
 // Import stylesheet
 import "vue-loading-overlay/dist/vue-loading.css";
 import "bootstrap";
-import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 // 自行定義的
 import App from "./App";
@@ -50,8 +48,6 @@ configure({
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
 Vue.use(Vuex);
-Vue.use(BootstrapVue)
-Vue.use(IconsPlugin)
 Vue.component("Loading", Loading);
 Vue.filter("currency", currencyFilter);
 Vue.filter("date", dateFilter);
