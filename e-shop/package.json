@@ -21,6 +21,7 @@
     "vue-axios": "^3.2.4",
     "vue-loading-overlay": "^3.0.1",
     "vue-router": "^3.0.1",
+    "vue2-datepicker": "^3.10.1",
     "vuex": "^3.0.1",
     "vuex-router-sync": "^5.0.0"
   },

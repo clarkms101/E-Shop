@@ -41,6 +41,8 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- 編輯視窗 -->
     <div
       class="modal fade"
       id="couponModal"
@@ -85,13 +87,12 @@
             </div>
             <div class="form-group">
               <label for="due_date">到期日</label>
+              <br>
               <!-- watch : timestamp to date -->
-              <input
-                type="date"
-                class="form-control"
-                id="due_date"
+              <date-picker
                 v-model="display_due_date"
-              />
+                valueType="format"
+              ></date-picker>
             </div>
             <div class="form-group">
               <label for="price">折扣百分比</label>
@@ -139,15 +140,19 @@
 
 <script>
 import $ from "jquery";
+// vue2-datepicker
+import DatePicker from "vue2-datepicker";
+import "vue2-datepicker/index.css";
+import "vue2-datepicker/locale/zh-cn";
 
 export default {
-  props: {
-    config: Object
-  },
   data() {
     return {
       display_due_date: new Date()
     };
+  },
+  components: {
+    DatePicker
   },
   watch: {
     display_due_date() {
