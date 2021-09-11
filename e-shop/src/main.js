@@ -21,6 +21,7 @@ import Loading from "vue-loading-overlay";
 // Import stylesheet
 import "vue-loading-overlay/dist/vue-loading.css";
 import "bootstrap";
+import VueLazyload from "vue-lazyload";
 
 // 自行定義的
 import App from "./App";
@@ -48,6 +49,15 @@ configure({
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
 Vue.use(Vuex);
+const loadimage = require("./assets/images/image_loading.jpg");
+const errorimage = require("./assets/images/image_loading_fail.png");
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+  error: errorimage,
+  loading: loadimage,
+  // 重試次數
+  attempt: 1
+});
 Vue.component("Loading", Loading);
 Vue.filter("currency", currencyFilter);
 Vue.filter("date", dateFilter);

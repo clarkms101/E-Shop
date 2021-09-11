@@ -31,7 +31,7 @@
             <div class="card border-0 box-shadow text-center h-100">
               <img
                 class="card-img-top"
-                :src="productItem.imageUrl"
+                v-lazy="productItem.imageUrl"
                 alt="Card image cap"
               />
               <div class="card-body">
