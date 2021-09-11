@@ -14,10 +14,12 @@
       <nav aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb bg-transparent pl-0">
           <li class="breadcrumb-item">
-            <a href="#">首頁</a>
+            <a href="#/">首頁</a>
           </li>
           <li class="breadcrumb-item">
-            <a href="#">金牌專賣店</a>
+            <a :href="'#/portal_index/products/' + product.category">{{
+              product.category
+            }}</a>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
             {{ product.title }}

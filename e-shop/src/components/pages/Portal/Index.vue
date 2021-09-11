@@ -1,7 +1,5 @@
 <template>
   <div>
-    <loading :active.sync="isLoading"></loading>
-
     <!-- 訊息通知 -->
     <Alert />
 
@@ -95,11 +93,6 @@ export default {
         var modal = $(this);
         modal.find(".modal-title").text("確認" + title); // 寫入資料
       });
-    }
-  },
-  computed: {
-    isLoading() {
-      return this.$store.state.isLoading;
     }
   },
   created() {}
