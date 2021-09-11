@@ -106,5 +106,12 @@ export default new Router({
         }
       ]
     }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    if (to.name === "PortalProduct") {
+      return { x: 0, y: 0 };
+    } else {
+      return savedPosition;
+    }
+  }
 });
