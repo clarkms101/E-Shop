@@ -5,11 +5,11 @@
     <!-- 上層導覽列 (headers) -->
     <Navbar />
 
-    <!-- 確認頁面 -->
+    <!-- 訂單確認頁面 -->
     <div class="container main-contant py-5">
       <div class="row justify-content-center">
         <div class="col-md-8">
-          <h1 class="text-center mb-3 text-secondary">結帳完成</h1>
+          <h1 class="text-center mb-3 text-secondary">訂購完成</h1>
           <section class="form-row align-items">
             <div class="col">
               <a href="#/" class="btn btn-info">繼續購物</a>

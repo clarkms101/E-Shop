@@ -84,8 +84,10 @@ export default {
         }
       });
     },
-    createOrder(context) {
+    createOrder(context, value) {
       return new Promise((resolve, reject) => {
+        // todo 呼叫對應處理的api
+        console.log(value.paymentMethod);
         const url = `${process.env.APIPATH}/api/order`;
         const order = context.state.orderForm;
         let address = `${context.state.selectCountry} ${context.state.selectCity} ${context.state.postalCode} ${context.state.orderForm.address}`;

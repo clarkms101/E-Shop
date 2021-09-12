@@ -13,23 +13,36 @@
       <h1 class="text-center mb-3 text-secondary">結帳</h1>
       <section class="form-row align-items-center text-center">
         <div class="col">
-          <div class="alert alert-success alert-rounded mb-0" role="alert">
+          <div
+            class="alert active alert-rounded mb-0"
+            role="alert"
+            :class="[step == 'step1' ? 'alert-success' : 'alert-light']"
+          >
             1.輸入訂單資料
           </div>
         </div>
         <div class="col">
-          <div class="alert alert-light alert-rounded mb-0" role="alert">
-            2.金流付款
+          <div
+            class="alert alert-rounded mb-0"
+            role="alert"
+            :class="[step == 'step2' ? 'alert-success' : 'alert-light']"
+          >
+            2.付款方式
           </div>
         </div>
         <div class="col">
-          <div class="alert alert-light alert-rounded mb-0" role="alert">
-            3.完成
+          <div
+            class="alert alert-rounded mb-0"
+            role="alert"
+            :class="[step == 'step3' ? 'alert-success' : 'alert-light']"
+          >
+            3.訂購完成
           </div>
         </div>
       </section>
 
-      <section class="row justify-content-center mt-5">
+      <!-- step1 購物清單、買家資訊 -->
+      <section class="row justify-content-center mt-5" v-if="step == 'step1'">
         <div class="col-md-8">
           <div class="card">
             <div class="card-header" id="headingOne">
@@ -82,7 +95,11 @@
                     />
                   </td>
                   <td class="align-middle">
-                    {{ cartItem.product.title }}
+                    <a
+                      :href="'/#/portal_product/' + cartItem.product.productId"
+                      target="_blank"
+                      >{{ cartItem.product.title }}</a
+                    >
                     <div v-if="cartItem.coupon" class="text-success">
                       已套用優惠券
                     </div>
@@ -97,7 +114,7 @@
                 <tr>
                   <td colspan="4" class="text-right">運費</td>
                   <td class="text-right">
-                    <!-- todo -->
+                    <!-- todo 運費計算-->
                     <strong>$0</strong>
                   </td>
                 </tr>
@@ -311,21 +328,168 @@
                 </validation-provider>
               </div>
 
-              <!-- Next Step -->
               <div class="text-right">
                 <a href="#/" class="btn btn-secondary">繼續選購</a>
+
+                <!-- Next Step -->
                 <button
                   type="submit"
                   class="btn btn-primary"
                   :disabled="invalid"
+                  @click.prevent="step = 'step2'"
                 >
-                  確認付款
+                  下一步
                 </button>
               </div>
             </form>
           </validation-observer>
         </div>
       </section>
+
+      <!-- step2 付款方式 -->
+      <section
+        class="row justify-content-center mt-5"
+        v-else-if="step == 'step2'"
+      >
+        <div class="col-md-8">
+          <!-- 貨到付款 -->
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-6">
+                  <span><strong>貨到付款</strong></span>
+                </div>
+                <div class="col-md-6 text-right" style="margin-top:-5px"></div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="numeric" class="control-label">
+                  <strong>收件者地址</strong>
+                </label>
+                <p class="lead">
+                  {{
+                    selectCountry +
+                      "-" +
+                      selectCity +
+                      "-" +
+                      postalCode +
+                      "-" +
+                      orderForm_user_address
+                  }}
+                </p>
+              </div>
+
+              <div class="form-group">
+                <input
+                  value="貨到付款"
+                  type="button"
+                  class="btn btn-info form-control mt-1"
+                  @click="createOrder('cashOnDelivery')"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 信用卡付款 -->
+          <!-- todo 加上輸入驗證 -->
+          <div class="card mt-5">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-6">
+                  <span><strong>信用卡付款</strong></span>
+                </div>
+                <div class="col-md-6 text-right" style="margin-top:-5px">
+                  <i class="fa fa-cc-visa" style="font-size:24px"></i>
+                  <i class="fa fa-cc-mastercard" style="font-size:24px"></i>
+                  <i class="fa fa-cc-jcb" style="font-size:24px"></i>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="numeric" class="control-label">
+                  <strong>持有者姓名</strong>
+                </label>
+                <input type="text" class="input-lg form-control" />
+              </div>
+              <div class="form-group">
+                <label for="cc-number" class="control-label">
+                  <strong>卡號</strong></label
+                >
+                <input
+                  id="cc-number"
+                  type="tel"
+                  class="input-lg form-control cc-number"
+                  autocomplete="cc-number"
+                  placeholder="•••• •••• •••• ••••"
+                  required
+                />
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="cc-exp" class="control-label">
+                      <strong>到期日</strong>
+                    </label>
+                    <input
+                      id="cc-exp"
+                      type="tel"
+                      class="input-lg form-control cc-exp"
+                      autocomplete="cc-exp"
+                      placeholder="•• / ••"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="cc-cvc" class="control-label">CVC</label>
+                    <input
+                      id="cc-cvc"
+                      type="tel"
+                      class="input-lg form-control cc-cvc"
+                      autocomplete="off"
+                      placeholder="••••"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <input
+                  value="信用卡付款"
+                  type="button"
+                  class="btn btn-info form-control mt-1"
+                  @click="createOrder('creditCardPayment')"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Previous -->
+          <div class="mt-3">
+            <button
+              type="submit"
+              class="btn btn-secondary"
+              @click.prevent="step = 'step1'"
+            >
+              上一步
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- step3 購買完成 -->
+      <!-- <section
+        class="row justify-content-center mt-5"
+        v-else-if="step == 'step3'"
+      >
+        <div class="col-md-8">
+          <p>step3</p>
+        </div>
+      </section> -->
     </div>
 
     <!-- 底層資訊區 -->
@@ -340,7 +504,9 @@ import Alert from "../../AlertMessage.vue";
 
 export default {
   data() {
-    return {};
+    return {
+      step: "step1"
+    };
   },
   components: {
     Navbar,
@@ -356,29 +522,33 @@ export default {
         cartDetailId: cartDetailId
       });
     },
-    createOrder() {
-      this.$store.dispatch("portalOrderMoules/createOrder").then(
-        response => {
-          if (response.data.success) {
-            // 轉跳到確認頁面
-            this.$router.push(
-              `/portal_order_checkout/${response.data.orderId}`
-            );
-          } else {
+    createOrder(paymentMethod) {
+      this.$store
+        .dispatch("portalOrderMoules/createOrder", {
+          paymentMethod: paymentMethod
+        })
+        .then(
+          response => {
+            if (response.data.success) {
+              // 轉跳到確認頁面
+              this.$router.push(
+                `/portal_order_checkout/${response.data.orderId}`
+              );
+            } else {
+              this.$store.dispatch("alertMoules/addMessage", {
+                content: response.data.message,
+                style: "danger"
+              });
+            }
+          },
+          error => {
+            console.log(error);
             this.$store.dispatch("alertMoules/addMessage", {
-              content: response.data.message,
+              content: "處理失敗",
               style: "danger"
             });
           }
-        },
-        error => {
-          console.log(error);
-          this.$store.dispatch("alertMoules/addMessage", {
-            content: "處理失敗",
-            style: "danger"
-          });
-        }
-      );
+        );
     },
     addCouponCode(coupon_code) {
       this.$store.dispatch("portalOrderMoules/addCouponCode", {
