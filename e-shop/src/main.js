@@ -22,6 +22,7 @@ import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import "bootstrap";
 import VueLazyload from "vue-lazyload";
+import VueCardFormat from 'vue-credit-card-validation';
 
 // 自行定義的
 import App from "./App";
@@ -58,6 +59,7 @@ Vue.use(VueLazyload, {
   // 重試次數
   attempt: 1
 });
+Vue.use(VueCardFormat);
 Vue.component("Loading", Loading);
 Vue.filter("currency", currencyFilter);
 Vue.filter("date", dateFilter);

@@ -392,7 +392,6 @@
           </div>
 
           <!-- 信用卡付款 -->
-          <!-- todo 加上輸入驗證 -->
           <div class="card mt-5">
             <div class="card-header">
               <div class="row">
@@ -411,7 +410,11 @@
                 <label for="numeric" class="control-label">
                   <strong>持有者姓名</strong>
                 </label>
-                <input type="text" class="input-lg form-control" />
+                <input
+                  type="text"
+                  class="input-lg form-control"
+                  v-model="cardInfo_user_name"
+                />
               </div>
               <div class="form-group">
                 <label for="cc-number" class="control-label">
@@ -424,6 +427,8 @@
                   autocomplete="cc-number"
                   placeholder="•••• •••• •••• ••••"
                   required
+                  v-model="cardInfo_number"
+                  v-cardformat:formatCardNumber
                 />
               </div>
               <div class="row">
@@ -439,6 +444,8 @@
                       autocomplete="cc-exp"
                       placeholder="•• / ••"
                       required
+                      v-model="cardInfo_expiration"
+                      v-cardformat:formatCardExpiry
                     />
                   </div>
                 </div>
@@ -452,6 +459,8 @@
                       autocomplete="off"
                       placeholder="••••"
                       required
+                      v-model="cardInfo_cvc"
+                      v-cardformat:formatCardCVC
                     />
                   </div>
                 </div>
@@ -648,6 +657,41 @@ export default {
       },
       set(value) {
         this.$store.dispatch("portalOrderMoules/updateCouponCode", value);
+      }
+    },
+    cardInfo_user_name: {
+      get() {
+        return this.$store.getters["portalOrderMoules/cardInfo_user_name"];
+      },
+      set(value) {
+        this.$store.dispatch("portalOrderMoules/updateCardInfoUserName", value);
+      }
+    },
+    cardInfo_number: {
+      get() {
+        return this.$store.getters["portalOrderMoules/cardInfo_number"];
+      },
+      set(value) {
+        this.$store.dispatch("portalOrderMoules/updateCardInfoNumber", value);
+      }
+    },
+    cardInfo_expiration: {
+      get() {
+        return this.$store.getters["portalOrderMoules/cardInfo_expiration"];
+      },
+      set(value) {
+        this.$store.dispatch(
+          "portalOrderMoules/updateCardInfoExpiration",
+          value
+        );
+      }
+    },
+    cardInfo_cvc: {
+      get() {
+        return this.$store.getters["portalOrderMoules/cardInfo_cvc"];
+      },
+      set(value) {
+        this.$store.dispatch("portalOrderMoules/updateCardInfoCVC", value);
       }
     }
   },

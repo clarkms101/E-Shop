@@ -11,6 +11,12 @@ export default {
       message: "",
       paymentMethod: ""
     },
+    cardInfo: {
+      userName: "",
+      number: "",
+      expiration: "",
+      cvc: ""
+    },
     coupon_code: "",
     cart: {},
     selectCountry: "",
@@ -86,8 +92,16 @@ export default {
       });
     },
     payOrderByCreditCard(context, value) {
-      const url = `${process.env.APIPATH}/api/Shopping/CreditCardPay/${value.orderId}`;
-      axios.post(url).then(response => {
+      const url = `${process.env.APIPATH}/api/Shopping/CreditCardPay`;
+      let postData = {
+        orderId: value.orderId,
+        cardUserName: context.state.cardInfo.userName,
+        cardNumber: context.state.cardInfo.number,
+        cardExpiration: context.state.cardInfo.expiration,
+        cardCvc: context.state.cardInfo.cvc
+      };
+      console.log(postData);
+      axios.post(url, postData).then(response => {
         if (response.data.success) {
           context.dispatch(
             "alertMoules/addMessage",
@@ -99,6 +113,11 @@ export default {
               root: true
             }
           );
+
+          context.commit("CARD_INFO_USER_NAME", "");
+          context.commit("CARD_INFO_NUMBER", "");
+          context.commit("CARD_INFO_EXPIRATION", "");
+          context.commit("CARD_INFO_CVC", "");
         }
       });
     },
@@ -193,6 +212,18 @@ export default {
     updateOrderFormMessage(context, value) {
       context.commit("ORDER_FORM_MESSAGE", value);
     },
+    updateCardInfoUserName(context, value) {
+      context.commit("CARD_INFO_USER_NAME", value);
+    },
+    updateCardInfoNumber(context, value) {
+      context.commit("CARD_INFO_NUMBER", value);
+    },
+    updateCardInfoExpiration(context, value) {
+      context.commit("CARD_INFO_EXPIRATION", value);
+    },
+    updateCardInfoCVC(context, value) {
+      context.commit("CARD_INFO_CVC", value);
+    },
     updateSelectCountry(context, value) {
       context.commit("SELECT_COUNTRY", value);
     },
@@ -228,6 +259,18 @@ export default {
     ORDER_FORM_MESSAGE(state, payload) {
       state.orderForm.message = payload;
     },
+    CARD_INFO_USER_NAME(state, payload) {
+      state.cardInfo.userName = payload;
+    },
+    CARD_INFO_NUMBER(state, payload) {
+      state.cardInfo.number = payload;
+    },
+    CARD_INFO_EXPIRATION(state, payload) {
+      state.cardInfo.expiration = payload;
+    },
+    CARD_INFO_CVC(state, payload) {
+      state.cardInfo.cvc = payload;
+    },
     SELECT_COUNTRY(state, payload) {
       state.selectCountry = payload;
     },
@@ -259,6 +302,18 @@ export default {
     },
     orderForm_message(state) {
       return state.orderForm.message;
+    },
+    cardInfo_user_name(state) {
+      return state.cardInfo.userName;
+    },
+    cardInfo_number(state) {
+      return state.cardInfo.number;
+    },
+    cardInfo_expiration(state) {
+      return state.cardInfo.expiration;
+    },
+    cardInfo_cvc(state) {
+      return state.cardInfo.cvc;
     },
     country(state) {
       return state.country;
