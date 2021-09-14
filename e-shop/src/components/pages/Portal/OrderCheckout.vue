@@ -2,6 +2,9 @@
   <div>
     <loading :active.sync="isLoading"></loading>
 
+    <!-- 訊息通知 -->
+    <Alert />
+
     <!-- 上層導覽列 (headers) -->
     <Navbar />
 
@@ -13,7 +16,9 @@
           <section class="form-row align-items">
             <div class="col">
               <a href="#/" class="btn btn-info">繼續購物</a>
-              <a href="javascript:window.print()" class="btn btn-info">訂單列印</a> 
+              <a href="javascript:window.print()" class="btn btn-info"
+                >訂單列印</a
+              >
             </div>
           </section>
 
@@ -92,13 +97,16 @@
 <script>
 import Navbar from "./Partial/Navbar.vue";
 import Footer from "./Partial/Footer.vue";
+import Alert from "../../AlertMessage.vue";
+
 export default {
   data() {
     return {};
   },
   components: {
     Navbar,
-    Footer
+    Footer,
+    Alert
   },
   methods: {
     getOrder() {

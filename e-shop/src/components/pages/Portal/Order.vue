@@ -385,7 +385,7 @@
                   value="貨到付款"
                   type="button"
                   class="btn btn-info form-control mt-1"
-                  @click="createOrder('cashOnDelivery')"
+                  @click="createOrder('CashOnDelivery')"
                 />
               </div>
             </div>
@@ -462,7 +462,7 @@
                   value="信用卡付款"
                   type="button"
                   class="btn btn-info form-control mt-1"
-                  @click="createOrder('creditCardPayment')"
+                  @click="createOrder('CreditCardPayment')"
                 />
               </div>
             </div>

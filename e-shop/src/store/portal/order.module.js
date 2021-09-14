@@ -8,7 +8,8 @@ export default {
       email: "",
       tel: "",
       address: "",
-      message: ""
+      message: "",
+      paymentMethod: ""
     },
     coupon_code: "",
     cart: {},
@@ -84,14 +85,30 @@ export default {
         }
       });
     },
+    payOrderByCreditCard(context, value) {
+      const url = `${process.env.APIPATH}/api/Shopping/CreditCardPay/${value.orderId}`;
+      axios.post(url).then(response => {
+        if (response.data.success) {
+          context.dispatch(
+            "alertMoules/addMessage",
+            {
+              content: response.data.message,
+              style: "success"
+            },
+            {
+              root: true
+            }
+          );
+        }
+      });
+    },
     createOrder(context, value) {
       return new Promise((resolve, reject) => {
-        // todo 呼叫對應處理的api
-        console.log(value.paymentMethod);
         const url = `${process.env.APIPATH}/api/order`;
         const order = context.state.orderForm;
         let address = `${context.state.selectCountry} ${context.state.selectCity} ${context.state.postalCode} ${context.state.orderForm.address}`;
         context.commit("ORDER_FORM_USER_ADDRESS", address);
+        context.commit("ORDER_FORM_USER_PAYMENT_METHOD", value.paymentMethod);
         context.commit("LOADING", true, { root: true });
         axios.post(url, { orderForm: order }).then(
           response => {
@@ -104,6 +121,15 @@ export default {
             context.commit("ORDER_FORM_USER_ADDRESS", "");
             context.commit("ORDER_FORM_MESSAGE", "");
             context.commit("COUPON_CODE", "");
+
+            if (
+              response.data.success &&
+              value.paymentMethod === "CreditCardPayment"
+            ) {
+              context.dispatch("payOrderByCreditCard", {
+                orderId: response.data.orderId
+              });
+            }
 
             resolve(response);
           },
@@ -195,6 +221,9 @@ export default {
     },
     ORDER_FORM_USER_ADDRESS(state, payload) {
       state.orderForm.address = payload;
+    },
+    ORDER_FORM_USER_PAYMENT_METHOD(state, payload) {
+      state.orderForm.paymentMethod = payload;
     },
     ORDER_FORM_MESSAGE(state, payload) {
       state.orderForm.message = payload;
