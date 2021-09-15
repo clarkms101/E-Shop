@@ -22,33 +22,22 @@ export default {
     selectCountry: "",
     selectCity: "",
     postalCode: "",
-    country: ["台灣"],
-    city: [
-      "臺北市",
-      "新北市",
-      "桃園市",
-      "臺中市",
-      "臺南市",
-      "高雄市",
-      "新竹縣",
-      "苗栗縣",
-      "彰化縣",
-      "南投縣",
-      "雲林縣",
-      "嘉義縣",
-      "屏東縣",
-      "宜蘭縣",
-      "花蓮縣",
-      "臺東縣",
-      "基隆市",
-      "新竹市",
-      "嘉義市",
-      "澎湖縣",
-      "金門縣",
-      "連江縣"
-    ]
+    country: [],
+    city: []
   },
   actions: {
+    getCountry(context) {
+      const url = `${process.env.APIPATH}/api/address/country`;
+      axios.get(url).then(response => {
+        context.commit("COUNTRY", response.data);
+      });
+    },
+    getCity(context, value) {
+      const url = `${process.env.APIPATH}/api/address/city/${value.selectCountry}`;
+      axios.get(url).then(response => {
+        context.commit("CITY", response.data);
+      });
+    },
     getCart(context) {
       const url = `${process.env.APIPATH}/api/cart`;
       context.commit("LOADING", true, { root: true });
@@ -125,7 +114,7 @@ export default {
       return new Promise((resolve, reject) => {
         const url = `${process.env.APIPATH}/api/order`;
         const order = context.state.orderForm;
-        let address = `${context.state.selectCountry} ${context.state.selectCity} ${context.state.postalCode} ${context.state.orderForm.address}`;
+        let address = `${context.getters.select_country_name} ${context.getters.select_city_name} ${context.state.postalCode} ${context.state.orderForm.address}`;
         context.commit("ORDER_FORM_USER_ADDRESS", address);
         context.commit("ORDER_FORM_USER_PAYMENT_METHOD", value.paymentMethod);
         context.commit("LOADING", true, { root: true });
@@ -271,6 +260,12 @@ export default {
     CARD_INFO_CVC(state, payload) {
       state.cardInfo.cvc = payload;
     },
+    COUNTRY(state, payload) {
+      state.country = payload;
+    },
+    CITY(state, payload) {
+      state.city = payload;
+    },
     SELECT_COUNTRY(state, payload) {
       state.selectCountry = payload;
     },
@@ -332,6 +327,16 @@ export default {
     },
     coupon_code(state) {
       return state.coupon_code;
+    },
+    select_country_name(state) {
+      let selectCountryId = state.selectCountry;
+      let country = state.country.find(item => item.value === selectCountryId);
+      return country.text;
+    },
+    select_city_name(state) {
+      let selectCityId = state.selectCity;
+      let city = state.city.find(item => item.value === selectCityId);
+      return city.text;
     }
   }
 };

@@ -246,9 +246,12 @@
                     required
                   >
                     <option disabled value="">請選擇</option>
-                    <option :value="item" v-for="item in country" :key="item">{{
-                      item
-                    }}</option>
+                    <option
+                      v-for="item in country"
+                      :value="item.value"
+                      :key="item.value"
+                      >{{ item.text }}</option
+                    >
                   </select>
                 </div>
 
@@ -263,9 +266,12 @@
                     required
                   >
                     <option disabled value="">請選擇</option>
-                    <option :value="item" v-for="item in city" :key="item">{{
-                      item
-                    }}</option>
+                    <option
+                      v-for="item in city"
+                      :value="item.value"
+                      :key="item.value"
+                      >{{ item.text }}</option
+                    >
                   </select>
                 </div>
 
@@ -369,9 +375,9 @@
                 </label>
                 <p class="lead">
                   {{
-                    selectCountry +
+                    select_country_name +
                       "-" +
-                      selectCity +
+                      select_city_name +
                       "-" +
                       postalCode +
                       "-" +
@@ -526,6 +532,9 @@ export default {
     getCart() {
       this.$store.dispatch("portalOrderMoules/getCart");
     },
+    getCountry() {
+      this.$store.dispatch("portalOrderMoules/getCountry");
+    },
     removeFromCart(cartDetailId) {
       this.$store.dispatch("portalOrderMoules/removeFromCart", {
         cartDetailId: cartDetailId
@@ -584,6 +593,9 @@ export default {
       },
       set(value) {
         this.$store.dispatch("portalOrderMoules/updateSelectCountry", value);
+        this.$store.dispatch("portalOrderMoules/getCity", {
+          selectCountry: value
+        });
       }
     },
     postalCode: {
@@ -693,10 +705,21 @@ export default {
       set(value) {
         this.$store.dispatch("portalOrderMoules/updateCardInfoCVC", value);
       }
+    },
+    select_country_name: {
+      get() {
+        return this.$store.getters["portalOrderMoules/select_country_name"];
+      }
+    },
+    select_city_name: {
+      get() {
+        return this.$store.getters["portalOrderMoules/select_city_name"];
+      }
     }
   },
   created() {
     this.getCart();
+    this.getCountry();
   }
 };
 </script>
