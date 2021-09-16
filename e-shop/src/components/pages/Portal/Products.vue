@@ -1,23 +1,8 @@
 <template>
   <div class="col-md-9">
-    <div class="d-flex mb-4">
-      <!-- Search bar -->
-      <form class="form-inline my-3 my-lg-0">
-        <div class="input-group">
-          <input
-            class="form-control"
-            type="text"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <div class="input-group-append">
-            <button class="btn btn-outline-warning" type="submit">
-              <i class="fa fa-search" aria-hidden="true"></i> Search
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
+    <!-- Search bar -->
+    <SearchBar />
+
     <!-- 主要商品列表 (Card) -->
     <div class="tab-content">
       <div class="tab-pane active">
@@ -82,10 +67,12 @@
 
 <script>
 import Pagination from "../../Pagination.vue";
+import SearchBar from "../../SearchBar.vue";
 
 export default {
   components: {
-    Pagination
+    Pagination,
+    SearchBar
   },
   methods: {
     getProducts(page) {

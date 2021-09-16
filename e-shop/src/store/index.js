@@ -24,6 +24,7 @@ export default new Vuex.Store({
   // 資料狀態
   state: {
     isLoading: false,
+    searchProductName: "",
     products: [],
     pagination: {}
     // route: {path, params, query} ps: vuex-router-sync 追加的路由狀態資訊,可以直接使用
@@ -33,13 +34,17 @@ export default new Vuex.Store({
     updateLoading(context, value) {
       context.commit("LOADING", value);
     },
+    updateSearchProductName(context, value) {
+      context.commit("SEARCH_PRODUCT_NAME", value);
+    },
     getProducts(context, value) {
       let routeParams = context.state.route.params;
       let category = "";
       if (routeParams.category) {
         category = routeParams.category;
       }
-      const url = `${process.env.APIPATH}/api/Products?page=${value.page}&category=${category}`;
+      let productName = context.state.searchProductName;
+      const url = `${process.env.APIPATH}/api/Products?page=${value.page}&category=${category}&productName=${productName}`;
       // 處理中提示
       context.commit("LOADING", true);
       axios.get(url).then(response => {
@@ -59,11 +64,17 @@ export default new Vuex.Store({
     },
     PRODUCTS(state, payload) {
       state.products = payload;
+    },
+    SEARCH_PRODUCT_NAME(state, payload) {
+      state.searchProductName = payload;
     }
   },
   getters: {
     products(state) {
       return state.products;
+    },
+    search_product_name(state) {
+      return state.searchProductName;
     },
     pagination(state) {
       return state.pagination;

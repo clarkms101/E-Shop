@@ -3,6 +3,9 @@
     <!-- Loading 遮罩 -->
     <loading :active.sync="isLoading"></loading>
 
+    <!-- Search bar -->
+    <SearchBar />
+
     <!-- 上層新增按鈕 -->
     <div class="text-right mt-4">
       <button class="btn btn-primary" @click="openModal(true)">
@@ -298,13 +301,15 @@
 // 使用JQuery
 import $ from "jquery";
 import Pagination from "../../Pagination.vue";
+import SearchBar from "../../SearchBar.vue";
 
 export default {
   data() {
     return {};
   },
   components: {
-    Pagination
+    Pagination,
+    SearchBar
   },
   methods: {
     getProducts(page) {
