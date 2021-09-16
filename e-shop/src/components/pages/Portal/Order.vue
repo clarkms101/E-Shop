@@ -43,7 +43,7 @@
 
       <!-- step1 購物清單、買家資訊 -->
       <section class="row justify-content-center mt-5" v-if="step == 'step1'">
-        <div class="col-md-8">
+        <div class="col-md-8" v-if="cart.totalAmount !== 0">
           <div class="card">
             <div class="card-header" id="headingOne">
               <h6 class="mb-0 d-flex align-items-center">
@@ -72,7 +72,7 @@
                   <th width="80">小計</th>
                 </tr>
               </thead>
-              <tbody v-if="cart.carts">
+              <tbody>
                 <tr v-for="cartItem in cart.carts" :key="cartItem.cartDetailId">
                   <td class="align-middle text-center">
                     <a
@@ -349,6 +349,13 @@
               </div>
             </form>
           </validation-observer>
+        </div>
+        <div class="col-md-8" v-else-if="cart.totalAmount === 0">
+          <div class="text-center">
+            <h2>購物車沒有商品</h2>
+            <hr />
+            <a href="#/" class="btn btn-secondary">繼續選購</a>
+          </div>
         </div>
       </section>
 
