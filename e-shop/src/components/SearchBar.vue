@@ -1,29 +1,27 @@
 <template>
-  <div class="d-flex mb-4">
-    <form class="form-inline my-3 my-lg-0">
-      <div class="input-group">
-        <input
-          class="form-control"
-          type="text"
-          placeholder="Search"
-          aria-label="Search"
-          v-model="search_product_name"
-        />
-        <div class="input-group-append">
-          <button class="btn btn-outline-warning" @click="getProducts">
-            <i class="fa fa-search" aria-hidden="true"></i> Search
-          </button>
-        </div>
+  <div class="d-flex mb-4 form-inline">
+    <div class="input-group">
+      <input
+        class="form-control"
+        type="text"
+        placeholder="Search"
+        aria-label="Search"
+        v-model="search_product_name"
+      />
+      <div class="input-group-append">
+        <button class="btn btn-outline-warning" @click="getProducts(1)">
+          <i class="fa fa-search" aria-hidden="true"></i> Search
+        </button>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   methods: {
-    getProducts() {
-      this.$store.dispatch("getProducts", { page: 1 });
+    getProducts(page) {
+      this.$store.dispatch("getProducts", { page: page });
     }
   },
   computed: {

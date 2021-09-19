@@ -44,14 +44,20 @@ export default new Vuex.Store({
         category = routeParams.category;
       }
       let productName = context.state.searchProductName;
-      const url = `${process.env.APIPATH}/api/Products?page=${value.page}&category=${category}&productName=${productName}`;
+      const url = `${process.env.APIPATH}/api/Products`;
       // 處理中提示
       context.commit("LOADING", true);
-      axios.get(url).then(response => {
-        context.commit("LOADING", false);
-        context.commit("PRODUCTS", response.data.products);
-        context.commit("PAGINATION", response.data.pagination);
-      });
+      axios
+        .post(url, {
+          page: value.page,
+          category: category,
+          productName: productName
+        })
+        .then(response => {
+          context.commit("LOADING", false);
+          context.commit("PRODUCTS", response.data.products);
+          context.commit("PAGINATION", response.data.pagination);
+        });
     }
   },
   // 操作資料狀態

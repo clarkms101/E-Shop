@@ -7,7 +7,7 @@
     <SearchBar />
 
     <!-- 上層新增按鈕 -->
-    <div class="text-right mt-4">
+    <div class="text-left mt-4">
       <button class="btn btn-primary" @click="openModal(true)">
         建立新的產品
       </button>
