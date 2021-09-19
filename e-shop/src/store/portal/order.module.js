@@ -27,13 +27,13 @@ export default {
   },
   actions: {
     getCountry(context) {
-      const url = `${process.env.APIPATH}/api/address/country`;
+      const url = `${process.env.APIPATH}/api/selection/country`;
       axios.get(url).then(response => {
         context.commit("COUNTRY", response.data);
       });
     },
     getCity(context, value) {
-      const url = `${process.env.APIPATH}/api/address/city/${value.selectCountry}`;
+      const url = `${process.env.APIPATH}/api/selection/city/${value.selectCountry}`;
       axios.get(url).then(response => {
         context.commit("CITY", response.data);
       });
