@@ -1,5 +1,8 @@
 import Vue from "vue";
 import axios from "axios";
+import { deleteAPI_deleteProduct } from "../../_helpers/api/product";
+import { postAPI_createProduct } from "../../_helpers/api/product";
+import { putAPI_updateProduct } from "../../_helpers/api/product";
 
 export default {
   namespaced: true,
@@ -24,13 +27,9 @@ export default {
   },
   actions: {
     deleteProduct(context) {
-      let token = localStorage.getItem("adminJWT");
-      axios.defaults.headers.common.Authorization = `${token}`;
-      var productId = context.state.tempProduct.productId;
-      const url = `${process.env.APIPATH}/api/product/${productId}`;
-      // 處理中提示
       context.commit("LOADING", true, { root: true });
-      axios.delete(url).then(response => {
+      var productId = context.state.tempProduct.productId;
+      deleteAPI_deleteProduct(productId).then(response => {
         if (response.data.success) {
           context.dispatch("getProducts", { page: 1 }, { root: true });
         } else {
@@ -40,38 +39,33 @@ export default {
       });
     },
     updateProduct(context) {
-      let token = localStorage.getItem("adminJWT");
-      axios.defaults.headers.common.Authorization = `${token}`;
-      const url = `${process.env.APIPATH}/api/product`;
       // 處理中提示
       context.commit("LOADING", true, { root: true });
       // Create
       if (context.state.isNewProduct) {
-        let tempProduct = context.state.tempProduct;
-        console.log(tempProduct);
-        axios.post(url, { Product: tempProduct }).then(response => {
-          console.log(response.data);
-          if (response.data.success) {
-            context.dispatch("getProducts", { page: 1 }, { root: true });
-          } else {
-            context.dispatch("getProducts", { page: 1 }, { root: true });
-            console.log("新增失敗");
+        postAPI_createProduct({ Product: context.state.tempProduct }).then(
+          response => {
+            if (response.data.success) {
+              context.dispatch("getProducts", { page: 1 }, { root: true });
+            } else {
+              context.dispatch("getProducts", { page: 1 }, { root: true });
+              console.log("新增失敗");
+            }
           }
-        });
+        );
       }
       // Update
       else {
-        let tempProduct = context.state.tempProduct;
-        console.log(tempProduct);
-        axios.put(url, { Product: tempProduct }).then(response => {
-          console.log(response.data);
-          if (response.data.success) {
-            context.dispatch("getProducts", { page: 1 }, { root: true });
-          } else {
-            context.dispatch("getProducts", { page: 1 }, { root: true });
-            console.log("更新失敗");
+        putAPI_updateProduct({ Product: context.state.tempProduct }).then(
+          response => {
+            if (response.data.success) {
+              context.dispatch("getProducts", { page: 1 }, { root: true });
+            } else {
+              context.dispatch("getProducts", { page: 1 }, { root: true });
+              console.log("更新失敗");
+            }
           }
-        });
+        );
       }
     },
     uploadFile(context, value) {

@@ -8,6 +8,9 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   function(config) {
+    let token = localStorage.getItem("adminJWT");
+    // todo: check token value
+    config.headers.Authorization = token;
     return config;
   },
   function(error) {

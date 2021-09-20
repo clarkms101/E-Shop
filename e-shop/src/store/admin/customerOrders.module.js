@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getAPI_getProduct } from "../../_helpers/api/product";
 
 export default {
   namespaced: true,
@@ -18,9 +19,8 @@ export default {
   },
   actions: {
     async getProduct(context, value) {
-      const url = `${process.env.APIPATH}/api/product/${value.productId}`;
       context.commit("LOADING_PRODUCTID", value.productId);
-      await axios.get(url).then(response => {
+      await getAPI_getProduct(value.productId).then(response => {
         context.commit("PRODUCT", response.data.product);
         context.commit("QTY", "");
         context.commit("LOADING_PRODUCTID", "");

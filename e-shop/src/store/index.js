@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { getProducts } from "../_helpers/api/product";
+import { postAPI_getProducts } from "../_helpers/api/product";
 
 // common
 import alertMoules from "./common/alert.module";
@@ -47,7 +47,7 @@ export default new Vuex.Store({
       let productName = context.state.searchProductName;
       // 處理中提示
       context.commit("LOADING", true);
-      getProducts({
+      postAPI_getProducts({
         page: value.page,
         category: category,
         productName: productName
