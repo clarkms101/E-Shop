@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
+import { getProducts } from "../_helpers/api/product";
+
 // common
 import alertMoules from "./common/alert.module";
 // admin
@@ -44,20 +45,17 @@ export default new Vuex.Store({
         category = routeParams.category;
       }
       let productName = context.state.searchProductName;
-      const url = `${process.env.APIPATH}/api/Products`;
       // 處理中提示
       context.commit("LOADING", true);
-      axios
-        .post(url, {
-          page: value.page,
-          category: category,
-          productName: productName
-        })
-        .then(response => {
-          context.commit("LOADING", false);
-          context.commit("PRODUCTS", response.data.products);
-          context.commit("PAGINATION", response.data.pagination);
-        });
+      getProducts({
+        page: value.page,
+        category: category,
+        productName: productName
+      }).then(response => {
+        context.commit("LOADING", false);
+        context.commit("PRODUCTS", response.data.products);
+        context.commit("PAGINATION", response.data.pagination);
+      });
     }
   },
   // 操作資料狀態
