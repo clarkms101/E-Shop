@@ -1,4 +1,5 @@
 import axios from "axios";
+import { postAPI_getOrders } from "../../_helpers/api/order";
 
 export default {
   namespaced: true,
@@ -18,26 +19,20 @@ export default {
       });
     },
     getOrders(context, value) {
-      let token = localStorage.getItem("adminJWT");
-      axios.defaults.headers.common.Authorization = `${token}`;
       let selectPaymentMethod = context.state.selectPaymentMethod;
       let startDate = context.state.startDate;
       let endDate = context.state.endDate;
-      const url = `${process.env.APIPATH}/api/orders`;
-      // { root: true } => 表示為根節點的mutations
       context.commit("LOADING", true, { root: true });
-      axios
-        .post(url, {
-          page: value.page,
-          startDate: startDate,
-          endDate: endDate,
-          paymentMethod: selectPaymentMethod
-        })
-        .then(response => {
-          context.commit("ORDERS", response.data.orderInfos);
-          context.commit("PAGINATION", response.data.pagination);
-          context.commit("LOADING", false, { root: true });
-        });
+      postAPI_getOrders({
+        page: value.page,
+        startDate: startDate,
+        endDate: endDate,
+        paymentMethod: selectPaymentMethod
+      }).then(response => {
+        context.commit("ORDERS", response.data.orderInfos);
+        context.commit("PAGINATION", response.data.pagination);
+        context.commit("LOADING", false, { root: true });
+      });
     },
     updateStartDate(context, value) {
       context.commit("START_DATE", value);

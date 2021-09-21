@@ -1,4 +1,5 @@
 import axios from "axios";
+import { postAPI_createOrder } from "../../_helpers/api/order";
 
 export default {
   namespaced: true,
@@ -112,13 +113,12 @@ export default {
     },
     createOrder(context, value) {
       return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/api/order`;
         const order = context.state.orderForm;
         let address = `${context.getters.select_country_name} ${context.getters.select_city_name} ${context.state.postalCode} ${context.state.orderForm.address}`;
         context.commit("ORDER_FORM_USER_ADDRESS", address);
         context.commit("ORDER_FORM_USER_PAYMENT_METHOD", value.paymentMethod);
         context.commit("LOADING", true, { root: true });
-        axios.post(url, { orderForm: order }).then(
+        postAPI_createOrder({ orderForm: order }).then(
           response => {
             console.log("訂單已建立", response);
             context.commit("LOADING", false, { root: true });

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getAPI_getProduct } from "../../_helpers/api/product";
+import { postAPI_createOrder } from "../../_helpers/api/order";
 
 export default {
   namespaced: true,
@@ -122,10 +123,9 @@ export default {
     },
     createOrder(context) {
       return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/api/order`;
         const order = context.state.orderForm;
         context.commit("LOADING", true, { root: true });
-        axios.post(url, { orderForm: order }).then(
+        postAPI_createOrder({ orderForm: order }).then(
           response => {
             console.log("訂單已建立", response);
             context.commit("LOADING", false, { root: true });
