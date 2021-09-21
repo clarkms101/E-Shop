@@ -22,7 +22,7 @@ import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import "bootstrap";
 import VueLazyload from "vue-lazyload";
-import VueCardFormat from 'vue-credit-card-validation';
+import VueCardFormat from "vue-credit-card-validation";
 
 // 自行定義的
 import App from "./App";
@@ -31,6 +31,7 @@ import currencyFilter from "./filters/currency";
 import dateFilter from "./filters/date";
 import store from "./store";
 import parseJwt from "./_helpers/parseJwt";
+import { postAPI_loginCheck } from "./_helpers/api/admin";
 
 // vee-validate 載入判斷規則(全部)
 Object.keys(rules).forEach(rule => {
@@ -79,9 +80,8 @@ router.beforeEach((to, from, next) => {
 
   // 需要驗證的頁面
   if (to.meta.requiresAuth) {
-    const url = `${process.env.APIPATH}/api/Admin/LoginCheck`;
     let apiAccessKey = parseJwt().JwtKeyApiAccessKey;
-    axios.post(url, { ApiAccessKey: apiAccessKey }).then(response => {
+    postAPI_loginCheck({ ApiAccessKey: apiAccessKey }).then(response => {
       console.log("login check", response.data);
       if (response.data.success) {
         // 驗證成功，導向指定頁面

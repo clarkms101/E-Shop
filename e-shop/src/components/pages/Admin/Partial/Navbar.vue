@@ -17,16 +17,14 @@
 
 <script>
 import parseJwt from "../../../../_helpers/parseJwt";
+import { postAPI_logout } from "../../../../_helpers/api/admin";
 
 export default {
   methods: {
     signout() {
-      const url = `${process.env.APIPATH}/api/Admin/Logout`;
-      let token = localStorage.getItem("adminJWT");
-      // 將login JWT放到headers再請求
-      this.$http.defaults.headers.common.Authorization = `${token}`;
+      // 登入時取得的 api access key
       let apiAccessKey = parseJwt().JwtKeyApiAccessKey;
-      this.$http.post(url, { ApiAccessKey: apiAccessKey }).then(response => {
+      postAPI_logout({ ApiAccessKey: apiAccessKey }).then(response => {
         console.log(response.data);
         // 登出成功導到登入頁面
         if (response.data.success) {

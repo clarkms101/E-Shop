@@ -1,4 +1,4 @@
-import axios from "axios";
+import { postAPI_login } from "../../_helpers/api/admin";
 
 export default {
   // 加上 namespaced: true 可以把 actions, mutations, getters 變成區域變數
@@ -12,12 +12,10 @@ export default {
   actions: {
     signin(context) {
       return new Promise((resolve, reject) => {
-        const url = `${process.env.APIPATH}/api/Admin/Login`;
         let admin = context.state.admin;
-        axios.post(url, admin).then(
+        postAPI_login(admin).then(
           response => {
             console.log("login msg", response.data);
-
             resolve(response);
           },
           error => {
