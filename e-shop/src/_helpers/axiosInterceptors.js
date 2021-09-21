@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "../router";
 
 const instance = axios.create({
   baseURL: process.env.APIPATH,
@@ -26,7 +27,7 @@ instance.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          // todo 登入驗證失敗,導入到登入頁面
+          router.push("/login");
           break;
         case 404:
           // todo 頁面不存在訊息提示
