@@ -2,6 +2,8 @@ import axios from "axios";
 import { postAPI_createOrder } from "../../_helpers/api/order";
 import { getAPI_getCountry } from "../../_helpers/api/selection";
 import { getAPI_getCity } from "../../_helpers/api/selection";
+import { getAPI_getCart } from "../../_helpers/api/cart";
+import { deleteAPI_removeFromCart } from "../../_helpers/api/cart";
 
 export default {
   namespaced: true,
@@ -40,17 +42,15 @@ export default {
       });
     },
     getCart(context) {
-      const url = `${process.env.APIPATH}/api/cart`;
       context.commit("LOADING", true, { root: true });
-      axios.get(url).then(response => {
+      getAPI_getCart().then(response => {
         context.commit("CART", response.data);
         context.commit("LOADING", false, { root: true });
       });
     },
     removeFromCart(context, value) {
-      const url = `${process.env.APIPATH}/api/cart/${value.cartDetailId}`;
       context.commit("LOADING", true, { root: true });
-      axios.delete(url).then(response => {
+      deleteAPI_removeFromCart(value.cartDetailId).then(response => {
         // 刷新結帳頁面的購物車清單
         context.dispatch("getCart");
         // 刷新導覽列的購物車清單

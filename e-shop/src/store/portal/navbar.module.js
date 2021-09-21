@@ -1,4 +1,6 @@
 import axios from "axios";
+import { getAPI_getCart } from "../../_helpers/api/cart";
+import { deleteAPI_removeFromCart } from "../../_helpers/api/cart";
 
 export default {
   namespaced: true,
@@ -8,17 +10,15 @@ export default {
   },
   actions: {
     getCart(context) {
-      const url = `${process.env.APIPATH}/api/cart`;
       context.commit("LOADING", true, { root: true });
-      axios.get(url).then(response => {
+      getAPI_getCart().then(response => {
         context.commit("CART", response.data);
         context.commit("LOADING", false, { root: true });
       });
     },
     removeFromCart(context, value) {
-      const url = `${process.env.APIPATH}/api/cart/${value.cartDetailId}`;
       context.commit("LOADING", true, { root: true });
-      axios.delete(url).then(response => {
+      deleteAPI_removeFromCart(value.cartDetailId).then(response => {
         context.dispatch("getCart");
         context.commit("LOADING", false, { root: true });
         if (response.data.success) {

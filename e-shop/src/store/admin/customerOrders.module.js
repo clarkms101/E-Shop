@@ -1,6 +1,9 @@
 import axios from "axios";
 import { getAPI_getProduct } from "../../_helpers/api/product";
 import { postAPI_createOrder } from "../../_helpers/api/order";
+import { getAPI_getCart } from "../../_helpers/api/cart";
+import { postAPI_addToCart } from "../../_helpers/api/cart";
+import { deleteAPI_removeFromCart } from "../../_helpers/api/cart";
 
 export default {
   namespaced: true,
@@ -28,16 +31,14 @@ export default {
       });
     },
     getCart(context) {
-      const url = `${process.env.APIPATH}/api/cart`;
       context.commit("LOADING", true, { root: true });
-      axios.get(url).then(response => {
+      getAPI_getCart().then(response => {
         console.log(`getCart: ${response.data}`);
         context.commit("CART", response.data);
         context.commit("LOADING", false, { root: true });
       });
     },
     async addToCart(context, value) {
-      const url = `${process.env.APIPATH}/api/cart`;
       context.dispatch("updateLoadingProductId", {
         loadingProductId: value.productId
       });
@@ -45,7 +46,7 @@ export default {
         productId: value.productId,
         qty: value.productQty
       };
-      await axios.post(url, { CartDetail: cartDetail }).then(response => {
+      await postAPI_addToCart({ CartDetail: cartDetail }).then(response => {
         context.dispatch("updateLoadingProductId", {
           loadingProductId: ""
         });
@@ -53,9 +54,8 @@ export default {
       });
     },
     removeFromCart(context, value) {
-      const url = `${process.env.APIPATH}/api/cart/${value.cartDetailId}`;
       context.commit("LOADING", true, { root: true });
-      axios.delete(url).then(response => {
+      deleteAPI_removeFromCart(value.cartDetailId).then(response => {
         context.dispatch("getCart");
         context.commit("LOADING", false, { root: true });
         if (response.data.success) {

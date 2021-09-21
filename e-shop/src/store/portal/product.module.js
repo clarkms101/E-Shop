@@ -1,5 +1,5 @@
-import axios from "axios";
 import { getAPI_getProduct } from "../../_helpers/api/product";
+import { postAPI_addToCart } from "../../_helpers/api/cart";
 
 export default {
   namespaced: true,
@@ -18,7 +18,6 @@ export default {
       });
     },
     addToCart(context, value) {
-      const url = `${process.env.APIPATH}/api/cart`;
       context.dispatch("updateLoadingProductId", {
         loadingProductId: value.productId
       });
@@ -26,7 +25,7 @@ export default {
         productId: value.productId,
         qty: value.productQty
       };
-      axios.post(url, { CartDetail: cartDetail }).then(response => {
+      postAPI_addToCart({ CartDetail: cartDetail }).then(response => {
         context.dispatch("updateLoadingProductId", {
           loadingProductId: ""
         });
