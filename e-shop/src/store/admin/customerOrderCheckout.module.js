@@ -1,5 +1,5 @@
-import axios from "axios";
 import { getAPI_getOrder } from "../../_helpers/api/order";
+import { postAPI_creditCardPay } from "../../_helpers/api/shopping";
 
 export default {
   namespaced: true,
@@ -21,10 +21,15 @@ export default {
       });
     },
     payOrder(context) {
-      let orderId = context.state.orderId;
-      const url = `${process.env.APIPATH}/api/Shopping/CreditCardPay/${orderId}`;
+      let postData = {
+        orderId: parseInt(context.state.orderId, 10),
+        cardUserName: "",
+        cardNumber: "",
+        cardExpiration: "",
+        cardCvc: ""
+      };
       context.commit("LOADING", true, { root: true });
-      axios.post(url).then(response => {
+      postAPI_creditCardPay(postData).then(response => {
         if (response.data.success) {
           context.dispatch("getOrder");
         }

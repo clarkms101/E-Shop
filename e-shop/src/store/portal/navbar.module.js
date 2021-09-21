@@ -1,6 +1,6 @@
-import axios from "axios";
 import { getAPI_getCart } from "../../_helpers/api/cart";
 import { deleteAPI_removeFromCart } from "../../_helpers/api/cart";
+import { postAPI_addCouponCode } from "../../_helpers/api/shopping";
 
 export default {
   namespaced: true,
@@ -46,12 +46,11 @@ export default {
       context.commit("COUPON_CODE", value);
     },
     addCouponCode(context, value) {
-      const url = `${process.env.APIPATH}/api/Shopping/UseCoupon`;
       const coupon = {
         CouponCode: value.coupon_code
       };
       context.commit("LOADING", true, { root: true });
-      axios.post(url, { Coupon: coupon }).then(response => {
+      postAPI_addCouponCode({ Coupon: coupon }).then(response => {
         if (response.data.success) {
           context.dispatch("getCart");
           context.commit("COUPON_CODE", "");

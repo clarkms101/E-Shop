@@ -1,9 +1,10 @@
-import axios from "axios";
 import { postAPI_createOrder } from "../../_helpers/api/order";
 import { getAPI_getCountry } from "../../_helpers/api/selection";
 import { getAPI_getCity } from "../../_helpers/api/selection";
 import { getAPI_getCart } from "../../_helpers/api/cart";
 import { deleteAPI_removeFromCart } from "../../_helpers/api/cart";
+import { postAPI_creditCardPay } from "../../_helpers/api/shopping";
+import { postAPI_addCouponCode } from "../../_helpers/api/shopping";
 
 export default {
   namespaced: true,
@@ -82,7 +83,6 @@ export default {
       });
     },
     payOrderByCreditCard(context, value) {
-      const url = `${process.env.APIPATH}/api/Shopping/CreditCardPay`;
       let postData = {
         orderId: value.orderId,
         cardUserName: context.state.cardInfo.userName,
@@ -90,8 +90,7 @@ export default {
         cardExpiration: context.state.cardInfo.expiration,
         cardCvc: context.state.cardInfo.cvc
       };
-      console.log(postData);
-      axios.post(url, postData).then(response => {
+      postAPI_creditCardPay(postData).then(response => {
         if (response.data.success) {
           context.dispatch(
             "alertMoules/addMessage",
@@ -148,12 +147,11 @@ export default {
       });
     },
     addCouponCode(context, value) {
-      const url = `${process.env.APIPATH}/api/Shopping/UseCoupon`;
       const coupon = {
         CouponCode: value.coupon_code
       };
       context.commit("LOADING", true, { root: true });
-      axios.post(url, { Coupon: coupon }).then(response => {
+      postAPI_addCouponCode({ Coupon: coupon }).then(response => {
         if (response.data.success) {
           context.dispatch("getCart");
           context.dispatch("portalNavbarMoules/getCart", null, { root: true });
