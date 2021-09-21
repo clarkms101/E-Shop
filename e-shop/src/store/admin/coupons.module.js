@@ -1,4 +1,6 @@
-import axios from "axios";
+import { getAPI_getCoupons } from "../../_helpers/api/coupon";
+import { postAPI_createCoupon } from "../../_helpers/api/coupon";
+import { putAPI_updateCoupon } from "../../_helpers/api/coupon";
 
 export default {
   namespaced: true,
@@ -15,29 +17,24 @@ export default {
   },
   actions: {
     updateCoupon(context) {
-      let token = localStorage.getItem("adminJWT");
-      axios.defaults.headers.common.Authorization = `${token}`;
-      const url = `${process.env.APIPATH}/api/coupon`;
-
       // create
       if (context.state.isNewCoupon) {
         let newCoupon = context.state.tempCoupon;
-        axios.post(url, { Coupon: newCoupon }).then(response => {
+        postAPI_createCoupon({ Coupon: newCoupon }).then(response => {
           context.dispatch("getCoupons", { page: 1 });
         });
       }
       // update
       else {
         let oldCoupon = context.state.tempCoupon;
-        axios.put(url, { Coupon: oldCoupon }).then(response => {
+        putAPI_updateCoupon({ Coupon: oldCoupon }).then(response => {
           context.dispatch("getCoupons", { page: 1 });
         });
       }
     },
     getCoupons(context, value) {
-      const url = `${process.env.APIPATH}/api/Coupons?page=${value.page}`;
       context.commit("LOADING", true, { root: true });
-      axios.get(url).then(response => {
+      getAPI_getCoupons(value.page).then(response => {
         console.log(response);
         context.commit("COUPONS", response.data.coupons);
         context.commit("LOADING", false, { root: true });
