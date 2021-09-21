@@ -1,5 +1,7 @@
 import axios from "axios";
 import { postAPI_createOrder } from "../../_helpers/api/order";
+import { getAPI_getCountry } from "../../_helpers/api/selection";
+import { getAPI_getCity } from "../../_helpers/api/selection";
 
 export default {
   namespaced: true,
@@ -28,14 +30,12 @@ export default {
   },
   actions: {
     getCountry(context) {
-      const url = `${process.env.APIPATH}/api/selection/country`;
-      axios.get(url).then(response => {
+      getAPI_getCountry().then(response => {
         context.commit("COUNTRY", response.data);
       });
     },
     getCity(context, value) {
-      const url = `${process.env.APIPATH}/api/selection/city/${value.selectCountry}`;
-      axios.get(url).then(response => {
+      getAPI_getCity(value.selectCountry).then(response => {
         context.commit("CITY", response.data);
       });
     },

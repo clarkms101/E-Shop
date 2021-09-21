@@ -1,5 +1,5 @@
-import axios from "axios";
 import { postAPI_getOrders } from "../../_helpers/api/order";
+import { getAPI_getPaymentMethod } from "../../_helpers/api/selection";
 
 export default {
   namespaced: true,
@@ -13,8 +13,7 @@ export default {
   },
   actions: {
     getPaymentMethod(context) {
-      const url = `${process.env.APIPATH}/api/selection/paymentmethod`;
-      axios.get(url).then(response => {
+      getAPI_getPaymentMethod().then(response => {
         context.commit("PAYMENTMETHOD", response.data);
       });
     },
