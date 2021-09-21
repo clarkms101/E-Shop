@@ -14,6 +14,8 @@ import PortalProducts from "@/components/pages/Portal/Products";
 import PortalProduct from "@/components/pages/Portal/Product";
 import PortalOrder from "@/components/pages/Portal/Order";
 import PortalOrderCheckout from "@/components/pages/Portal/OrderCheckout";
+// Common
+import Error from "@/components/pages/Common/Error";
 
 Vue.use(Router);
 
@@ -35,6 +37,11 @@ export default new Router({
       path: "/login",
       name: "Login",
       component: Login
+    },
+    {
+      path: "/error",
+      name: "Error",
+      component: Error
     },
     {
       path: "/portal_index",

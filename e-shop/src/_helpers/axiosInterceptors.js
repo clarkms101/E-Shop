@@ -33,7 +33,7 @@ instance.interceptors.response.use(
           // todo 頁面不存在訊息提示
           break;
         case 500:
-          // todo server噴錯訊息提示
+          router.push("/error");
           break;
         default:
           console.log(error.message);
