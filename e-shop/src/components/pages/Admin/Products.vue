@@ -300,8 +300,8 @@
 <script>
 // 使用JQuery
 import $ from "jquery";
-import Pagination from "../../Pagination.vue";
-import SearchBar from "../../SearchBar.vue";
+import Pagination from "../../ProductsPagination.vue";
+import SearchBar from "../../ProductsSearchBar.vue";
 
 export default {
   data() {
